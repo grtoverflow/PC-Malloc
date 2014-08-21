@@ -53,6 +53,3 @@ The memory manager organizes memory into two structures, one for free memory mai
 The locality monitor collects locality information from previously allocated chunks. It periodically samples the references to pages of the target chunks, and evaluate the chunk’s locality property, which is sent to the locality predictor. Based on the historical locality information, the locality predictor determines the proper mapping for pending allocation requests. When a new request arrives, the predictor first checks its allocation context, and uses its predecessor chunks’ locality profiles to predict the pending chunk’s locality property. Then, the predictor notifies the memory manager to perform the
 allocation.
 
-
-Evaluation on SPEC CPU2006
----------
