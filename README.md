@@ -22,6 +22,13 @@ For this set of interface, PC-Malloc relies on the user's explicit description t
 Supporting the standard interface dues to the following reasons:
 Firstly, such interface does not require source code modification, thus will benefit a large base of existed program. Secondly, this will greatly reduce the users’ burden, as locality analysis calls for deep understandings of program’s behavior, which beyond the capacity of most non-expert programmers.
 
+In case there are experts that need to manually control the cache resource allocation, we also provide another set of interface, which support explicit cache demand description.
+```c
+void* pc_malloc(int type, size_t sz);
+void* pc_realloc(int type, void *p, size_t newsize);
+void* pc_calloc(int type, size_t nmemb, size_t sz);
+void pc_free(void *p);
+```
 
 Setup
 ---------
