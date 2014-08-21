@@ -31,7 +31,7 @@ void* pc_realloc(int type, void *p, size_t newsize);
 void* pc_calloc(int type, size_t nmemb, size_t sz);
 void pc_free(void *p);
 ```
-The first parameter "int type" is the description of cache demand. The current version of PC-Malloc supports two types of cache demand, namely RESTRICT\_MAPPING and OPEN\_MAPPING. The RESTRICT\_MAPPING is used for low-locality chunks, and OPEN\_MAPPING is used for high-locality chunks. Please be caution, if RESTRICT\_MAPPING is mistakenly assigned to a high-locality chunk, the chunk’s cache miss may increase, and may significantly decrease system performance. If the user is uncertain about the locality of a given chunk, it is highly recommended to use the standard interface, or set "type" to OPEN\_MAPPING in a conservative way. For more details about the RESTRICT\_MAPPING and OPEN\_MAPPING, please see section "Background of Page coloring".
+The first parameter "int type" is the description of cache demand. The current version of PC-Malloc supports two types of cache demand, namely RESTRICT\_MAPPING and OPEN\_MAPPING. The RESTRICT\_MAPPING is used for low-locality chunks, and OPEN\_MAPPING is used for high-locality chunks. Please be caution, if RESTRICT\_MAPPING is mistakenly assigned to a high-locality chunk, the chunk’s cache miss may increase, and may significantly decrease system performance. If the user is uncertain about the locality of a given chunk, it is highly recommended to use the standard interface, or set "type" to OPEN\_MAPPING in a conservative way.
 
 
 Setup
@@ -44,18 +44,15 @@ In order to use PC-Malloc, there needs to make two efforts.
 
 Syetem Framework
 ---------
-The system framework is illustrated in figure 1. There are three main components: memory manager, locality monitor, and locality predictor.
+The system framework is illustrated in the following figure. There are three main components: memory manager, locality monitor, and locality predictor.
 
-![image](https://github.com/grtoverflow/PC-Malloc/blob/master/figure/system_design.jpg "Figure 1. System framework.")
+![image](https://github.com/grtoverflow/PC-Malloc/blob/master/figure/system_design.jpg)
 
 The memory manager organizes memory into two structures, one for free memory maintenance and the other for guiding cache mapping selection. With the first structure, free memory is organized in four types of containers of different sizes and purposes, in a way similar to the approach of glibc. The main difference is that the memory manager uses two sets of such containers for open mapping and restrictive mapping separately. The second structure targets allocated chunks, which are grouped by allocation context. The chunks’ locality profiles will serve as guidance for future mapping type decision within the same context.
 
 The locality monitor collects locality information from previously allocated chunks. It periodically samples the references to pages of the target chunks, and evaluate the chunk’s locality property, which is sent to the locality predictor. Based on the historical locality information, the locality predictor determines the proper mapping for pending allocation requests. When a new request arrives, the predictor first checks its allocation context, and uses its predecessor chunks’ locality profiles to predict the pending chunk’s locality property. Then, the predictor notifies the memory manager to perform the
 allocation.
 
-Background of Page coloring
----------
-![image](https://github.com/grtoverflow/PC-Malloc/blob/master/open_mapping_2.jpg)
 
 Evaluation on SPEC CPU2006
 ---------
