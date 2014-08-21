@@ -11,7 +11,8 @@ PC-Malloc is a novel allocator that targeting on this goal. Compared with tradit
 Example
 ---------
 There are two sets of interface available. The first set of interface is the standard allocation interface:
-        void* malloc(size_t sz);
+···c
+void* malloc(size_t sz);
         void* realloc(void *p, size_t newsize);
         void* calloc(size_t nmemb, size_t sz);
         void free(void *p);
