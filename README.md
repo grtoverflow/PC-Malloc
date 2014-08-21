@@ -34,6 +34,10 @@ The first parameter "int type" is the description of cache demand. The current v
 
 Setup
 ---------
+In order to use PC-Malloc, there needs to make two efforts. 
+1.	OS kernel modification. PC-Malloc relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the kernel version kernel-2.6.32-71. Please see /kernel_patch/readme.txt for more details.
+2.	Install PC-Malloc library. The source code of PC-Malloc library is under /pcmalloc. Please see /pcmalloc/readme.txt for more details.
+
 Syetem Framework
 ---------
 Background of Page coloring
