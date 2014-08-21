@@ -29,7 +29,7 @@ void* pc_realloc(int type, void *p, size_t newsize);
 void* pc_calloc(int type, size_t nmemb, size_t sz);
 void pc_free(void *p);
 ```
-The first parameter "int type" is the description of cache demand. The current version of PC-Malloc supports two types of cache demand, namely RESTRICT\_MAPPING and OPEN\_MAPPING. The RESTRICT\_MAPPING is used for low-locality chunks, and OPEN\_MAPPING is used for high-locality chunks. Please note that if a high-locality chunk is mistakenly assigned to RESTRICT\_MAPPING, the chunk’s cache miss may increase, and significant decrease system performance. If the user does not sure the locality of certain chunk, it is highly recommended to use the standard interface, or set type to OPEN_MAPPING in a conservative way.
+The first parameter "int type" is the description of cache demand. The current version of PC-Malloc supports two types of cache demand, namely RESTRICT\_MAPPING and OPEN\_MAPPING. The RESTRICT\_MAPPING is used for low-locality chunks, and OPEN\_MAPPING is used for high-locality chunks. Please note that if RESTRICT\_MAPPING is mistakenly assigned to a high-locality chunk, the chunk’s cache miss may increase, and may significant decrease system performance. If the user does not sure the locality of certain chunk, it is highly recommended to use the standard interface, or set "type" to OPEN_MAPPING in a conservative way.
 
 
 Setup
