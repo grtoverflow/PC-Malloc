@@ -29,6 +29,7 @@ void* pc_realloc(int type, void *p, size_t newsize);
 void* pc_calloc(int type, size_t nmemb, size_t sz);
 void pc_free(void *p);
 ```
+The first parameter "int type" is the description of cache demand. The current version of PC-Malloc supports two types of cache demand, namely RESTRICT\_MAPPING and OPEN\_MAPPING.
 
 Setup
 ---------
