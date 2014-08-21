@@ -51,5 +51,7 @@ allocation.
 
 Background of Page coloring
 ---------
+![image](https://github.com/grtoverflow/PC-Malloc/restrict_mapping_2.pdf)
+
 Evaluation on SPEC CPU2006
 ---------
