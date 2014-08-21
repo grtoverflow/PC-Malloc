@@ -46,7 +46,7 @@ Syetem Framework
 ---------
 The system framework is illustrated in the following figure. There are three main components: memory manager, locality monitor, and locality predictor.
 
-![image](https://github.com/grtoverflow/PC-Malloc/blob/master/figure/system_overview.jpg)
+![image](https://github.com/grtoverflow/PC-Malloc/blob/master/figure/system_design.jpg)
 
 The memory manager organizes memory into two structures, one for free memory maintenance and the other for guiding cache mapping selection. With the first structure, free memory is organized in four types of containers of different sizes and purposes, in a way similar to the approach of glibc. The main difference is that the memory manager uses two sets of such containers for open mapping and restrictive mapping separately. The second structure targets allocated chunks, which are grouped by allocation context. The chunks’ locality profiles will serve as guidance for future mapping type decision within the same context.
 
