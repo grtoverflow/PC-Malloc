@@ -8,6 +8,10 @@ From this point of view, it is necessary to integrate cache resource management 
 
 PC-Malloc is a novel allocator that targeting on this goal. Compared with traditional memory allocator, its major difference lies on the management of cache resources: Once an allocation request arrives, PC-Malloc quantifies the demand on both main memory resources and CPU cache resources, and makes the resource allocation on the two memory layers simultaneously to complete the single allocation request.
 
+Example
+---------
+There are two sets of interface available. The first set of interface is the standard allocation interface:
+
 
 Setup
 ---------
