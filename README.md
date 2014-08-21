@@ -42,6 +42,13 @@ In order to use PC-Malloc, there needs to make two efforts.
 
 Syetem Framework
 ---------
+The system framework is illustrated in Figure 1. There are three main components: memory manager, locality monitor, and locality predictor.
+
+The memory manager organizes memory into two structures, one for free memory maintenance and the other for guiding cache mapping selection. With the first structure, free memory is organized in four types of containers of different sizes and purposes, in a way similar to the approach of glibc. The main difference is that the memory manager uses two sets of such containers for open mapping and restrictive mapping separately. The second structure targets allocated chunks, which are grouped by allocation context. The chunks’ locality profiles will serve as guidance for future mapping type decision within the same context.
+
+The locality monitor collects locality information from previously allocated chunks. It periodically samples the references to pages of the target chunks, and evaluate the chunk’s locality property, which is sent to the locality predictor. Based on the historical locality information, the locality predictor determines the proper mapping for pending allocation requests. When a new request arrives, the predictor first checks its allocation context, and uses its predecessor chunks’ locality profiles to predict the pending chunk’s locality property. Then, the predictor notifies the memory manager to perform the
+allocation.
+
 Background of Page coloring
 ---------
 Evaluation on SPEC CPU2006
