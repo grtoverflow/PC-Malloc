@@ -13,9 +13,9 @@ Example
 There are two sets of interface available. The first set of interface is the standard allocation interface:
 ```c
 void* malloc(size_t sz);
-        void* realloc(void *p, size_t newsize);
-        void* calloc(size_t nmemb, size_t sz);
-        void free(void *p);
+void* realloc(void *p, size_t newsize);
+void* calloc(size_t nmemb, size_t sz);
+void free(void *p);
 ```
 
 Setup
