@@ -18,6 +18,7 @@ void* calloc(size_t nmemb, size_t sz);
 void free(void *p);
 ```
 For this set of interface, PC-Malloc relies on the user's explicit description to acquire the main memory demand. As to cache resource demand, PC-Malloc transparently monitors and predicts whether the current allocated memory chunk is referenced in a low-locality manner or not.
+
 Supporting the standard interface dues to the following reasons:
 Firstly, such interface does not require source code modification, thus will benefit a large base of existed program. Secondly, this will greatly reduce the users’ burden, as locality analysis calls for deep understandings of program’s behavior, which beyond the capacity of most non-expert programmers.
 
