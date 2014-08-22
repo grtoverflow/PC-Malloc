@@ -375,7 +375,9 @@ detach_chunk_from_context(void *p)
 		if (chunk_under_monit(chunk)) {
 			stop_monit_chunk(chunk);
 		}
+#ifdef PCMALLOC_DEBUG
 		print_chunk(chunk);
+#endif /* PCMALLOC_DEBUG */
 		chunk->context->nr_freed++;
 		chunk_free(chunk);
 		list_del(&chunk->sibling);
@@ -437,7 +439,9 @@ locality_profile_destroy()
 		list_for_each_entry (chunk, &context->chunk, sibling) {
 			n_detach++;
 			stop_monit_chunk(chunk);
+#ifdef PCMALLOC_DEBUG
 			print_chunk(chunk);
+#endif /* PCMALLOC_DEBUG */
 		}
 	}
 }
