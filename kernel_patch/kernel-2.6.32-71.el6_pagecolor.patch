@@ -1,0 +1,3232 @@
+diff -uNr linux-2.6.32-71.el6/arch/x86/kernel/sys_x86_64.c linux-2.6.32-71.el6.x86_64/arch/x86/kernel/sys_x86_64.c
+--- linux-2.6.32-71.el6/arch/x86/kernel/sys_x86_64.c	2010-09-01 12:56:55.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/arch/x86/kernel/sys_x86_64.c	2014-08-21 20:02:45.523993440 +0800
+@@ -24,10 +24,16 @@
+ {
+ 	long error;
+ 	error = -EINVAL;
+-	if (off & ~PAGE_MASK)
++
++	/* pagecolor modify begin */
++	if (!(flags & (MAP_CACHE_AWARE_STATE | REMAP_CACHE_AWARE_STATE)) && (off & ~PAGE_MASK))
+ 		goto out;
+ 
+-	error = sys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
++	if (!(flags & (MAP_CACHE_AWARE_STATE | REMAP_CACHE_AWARE_STATE)))
++		off >>= PAGE_SHIFT;
++	//clsa modify end
++	
++	error = sys_mmap_pgoff(addr, len, prot, flags, fd, off);
+ out:
+ 	return error;
+ }
+@@ -57,6 +63,7 @@
+ 	}
+ }
+ 
++
+ unsigned long
+ arch_get_unmapped_area(struct file *filp, unsigned long addr,
+ 		unsigned long len, unsigned long pgoff, unsigned long flags)
+@@ -81,6 +88,7 @@
+ 		    (!vma || addr + len <= vma->vm_start))
+ 			return addr;
+ 	}
++
+ 	if (((flags & MAP_32BIT) || test_thread_flag(TIF_IA32))
+ 	    && len <= mm->cached_hole_size) {
+ 		mm->cached_hole_size = 0;
+@@ -104,12 +112,14 @@
+ 				mm->cached_hole_size = 0;
+ 				goto full_search;
+ 			}
++
+ 			return -ENOMEM;
+ 		}
+ 		if (!vma || addr + len <= vma->vm_start) {
+ 			/*
+ 			 * Remember the place where we stopped the search:
+ 			 */
++
+ 			mm->free_area_cache = addr + len;
+ 			return addr;
+ 		}
+diff -uNr linux-2.6.32-71.el6/crypto/signature/key.h linux-2.6.32-71.el6.x86_64/crypto/signature/key.h
+--- linux-2.6.32-71.el6/crypto/signature/key.h	2010-09-01 12:58:38.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/crypto/signature/key.h	2014-08-21 20:02:45.779993442 +0800
+@@ -1,76 +1,39 @@
+ const char ksign_def_public_key[] __initdata=
+-	"\x99\x01\xa2\x04\x4c\x7d\xdd\x7e\x11\x04\x00\x8e\xc5\xf4\x6f\x49"
+-	"\x47\x43\x52\x9a\xaa\x0b\x1d\xa3\x14\xf7\xa1\x84\x35\x70\x7a\x1d"
+-	"\x21\x5f\xa2\x1c\x06\xa6\x59\xf9\x0a\xcb\x3a\x44\xb3\x83\xf9\x63"
+-	"\xa1\x3f\x17\xed\x7c\x39\x3c\xdd\x55\x8e\xc4\x32\xdc\x41\xb0\x17"
+-	"\x79\xcc\xf2\xc1\x85\x24\x6b\x9d\x80\x4c\x2d\x4d\xea\x2c\x7a\x05"
+-	"\xf0\xff\xaf\x19\x23\xfb\x2e\xc5\x4f\xc8\x11\xa5\xbe\xaf\x9f\x27"
+-	"\x7f\x4d\x4b\x0a\xae\x5f\xb5\x8d\x52\x43\x71\x63\x11\x73\x1d\xa5"
+-	"\x70\x9b\x1a\xb2\xb5\xf4\xc7\x26\xbf\x43\x7e\x65\xdc\xbf\xba\xa2"
+-	"\x0f\x68\x16\xff\x9a\x8c\xe5\xf6\xe5\x26\x0b\x00\xa0\xfd\x1d\x83"
+-	"\x31\x0d\xac\xc4\x26\x2c\x69\x91\x21\xa6\x6a\x59\xb4\xd5\x2c\x2d"
+-	"\x1b\x03\xff\x63\xf3\x32\x45\x93\x3d\xb4\x51\x8e\x77\x34\x10\x15"
+-	"\xb5\x4d\xe8\xd0\xd1\x09\x58\x57\x9f\x47\x97\xc8\xae\xfc\xbd\x47"
+-	"\x88\xfe\x93\xf9\x33\x3e\x51\xa0\xb7\x57\xc1\xd8\x1d\x52\x79\x64"
+-	"\x8e\xbc\x70\x2e\x92\xcd\x90\x0c\x7c\x89\x09\x8c\xc5\x54\x65\x52"
+-	"\x45\x35\x7a\xa7\xbe\xe4\x33\xb8\xb2\xb4\x7d\x6b\x1d\x3b\xf6\x06"
+-	"\x4a\x47\x93\x0e\x68\x1e\x16\xa5\x1e\x9f\x1b\x91\x99\x24\x5e\x57"
+-	"\xe9\xd4\xd4\xc8\xd7\x45\x12\x7c\x68\x88\x3c\xc4\x7d\x49\x8e\xf2"
+-	"\xe9\xad\x31\xef\xb6\xc7\x88\x5e\x9d\x3c\x51\xad\x6b\x0e\xab\x5c"
+-	"\x5a\x96\x92\x03\xfe\x32\xf9\x58\x2d\x88\x09\xd0\x48\xad\x97\x07"
+-	"\xbf\x7b\x0a\x70\x1d\x93\x31\x62\xad\xf5\xe7\x1a\x45\x0c\x60\xa2"
+-	"\x6e\x36\x97\xc2\x9a\x0f\xb3\x2d\x3c\xbb\x79\xc2\x42\x28\x10\xd1"
+-	"\x83\x40\x64\x99\x90\xe4\x1e\xd3\x3f\xdc\x46\xc5\x09\x27\x8d\xdb"
+-	"\x21\x64\xea\x6f\x06\xd7\x86\x0b\x3e\xf8\x5b\x31\xe3\x2b\x28\x5b"
+-	"\x7d\x46\xfc\xe3\xe5\x9c\xaf\x08\xfe\x5b\xc0\xd8\x6b\x10\xfc\x54"
+-	"\x1e\x8a\x42\xa3\xc2\xb9\x1b\x00\xba\xed\x4e\xa4\x70\x15\x69\x30"
+-	"\xb0\x32\xde\x3b\x9b\x52\xee\x38\xcf\x48\xca\x3f\xe7\xd8\x00\x71"
+-	"\x5f\xff\xf7\xe1\xed\xb4\x25\x52\x65\x64\x20\x48\x61\x74\x2c\x20"
+-	"\x49\x6e\x63\x2e\x20\x28\x4b\x65\x72\x6e\x65\x6c\x20\x4d\x6f\x64"
+-	"\x75\x6c\x65\x20\x47\x50\x47\x20\x6b\x65\x79\x29\x88\x60\x04\x13"
+-	"\x11\x02\x00\x20\x05\x02\x4c\x7d\xdd\x7e\x02\x1b\x23\x06\x0b\x09"
+-	"\x08\x07\x03\x02\x04\x15\x02\x08\x03\x04\x16\x02\x03\x01\x02\x1e"
+-	"\x01\x02\x17\x80\x00\x0a\x09\x10\xac\xf6\x0b\x38\x23\x3c\xee\x9d"
+-	"\xfc\x8e\x00\xa0\xa4\x89\x90\x9d\x9b\xba\xa3\x57\x67\xc4\x46\x79"
+-	"\x86\x27\x41\x8d\x0e\x2d\xeb\x0a\x00\x9e\x28\x0f\x1e\xa3\x44\x5d"
+-	"\xef\x8f\xb1\xb6\xbe\x19\xaf\x5c\xa1\x71\x77\xf6\x9e\xa3\x99\x01"
+-	"\xa2\x04\x4b\x9f\x60\x5c\x11\x04\x00\xe8\x9d\xf7\xee\xa1\x42\x33"
+-	"\x6c\x33\xfa\x4e\x08\xca\x23\xd0\xd1\x60\x16\xb1\x6a\x7f\x61\xad"
+-	"\xe1\xc7\x63\x81\xe3\xc8\xfc\xac\xe9\xa3\x38\x7e\x16\x3a\x33\x7f"
+-	"\xfd\x04\x10\x76\xd8\x83\x77\x8d\x37\x53\x95\x61\x1d\xaf\x3c\xc9"
+-	"\xc3\x30\xff\x69\x83\xb0\x70\xa9\x44\xfb\xee\xab\x8a\x04\xdb\x2a"
+-	"\xfd\xee\xe2\x89\x2c\xab\x3a\xf9\x7a\x7b\x04\xd8\x4a\x14\x1f\x78"
+-	"\x4c\xc2\xf9\xf3\xc8\xe2\x7a\x0f\xde\xef\x96\xe0\x61\xb1\xbc\x4c"
+-	"\xec\x08\xf4\x5a\x94\x6f\x26\x31\xf1\xea\x73\x99\xae\x34\xd9\xb1"
+-	"\x23\x20\x64\x53\x03\xf2\xeb\x68\x13\x00\xa0\x9d\xe8\xbb\x78\x16"
+-	"\xfd\x70\xff\x87\x95\xf5\x8e\xe0\xcd\x6c\x74\x82\x09\x57\x2d\x04"
+-	"\x00\x9e\x25\x32\x03\x39\x27\xd0\x12\x11\xb9\x3a\x13\x23\x7d\xb4"
+-	"\xb0\x50\x8d\x23\xfd\xf4\x00\x98\x68\x93\xa9\xa1\x06\x0d\x6e\x2f"
+-	"\x3b\xca\x42\xbd\xb7\xac\xcc\xea\x26\x7e\x8e\xc2\x73\xfc\x44\xc4"
+-	"\xfc\xd0\xdb\x9a\xcc\xed\xe3\x97\x47\x24\xbd\x59\xc1\x39\x6f\xac"
+-	"\x8b\xf4\xd8\xd3\xfb\x57\xfb\x65\x9e\x1a\x7d\x69\x19\x2a\xcd\x77"
+-	"\x87\xdd\xb1\x49\x4b\x94\x76\x71\x4c\xc5\x5d\x35\xe8\x5c\xc7\x4d"
+-	"\x99\xf8\x23\x19\x4f\x77\x3e\x63\xab\xee\x02\x32\xc5\x78\x61\x0d"
+-	"\x14\x6d\x13\x7a\x69\x51\xf4\xd3\x1b\xd5\x34\x17\x11\x15\xe8\x0d"
+-	"\xb0\x03\xfe\x30\xf1\x34\x14\x74\xbf\x53\xef\x20\xac\x6e\xc4\x8e"
+-	"\x82\xc1\x3a\x1a\x55\x65\x6a\x97\x6a\x3b\x0f\x39\x00\x53\x15\x29"
+-	"\xa0\xf0\xe2\xe1\xf8\x3a\x9a\xb7\x71\xce\x8b\x13\xa9\xc1\xfb\xb7"
+-	"\xa1\x13\xb8\x4f\xac\xfd\x91\xd8\x57\xa0\x02\x85\x76\x88\xf8\x37"
+-	"\xc9\x79\x7f\xe9\x69\xe5\x85\x01\x7f\xe1\x83\xf4\x0b\xcc\xcf\xf8"
+-	"\xc5\x20\x4a\xb5\x05\x07\x54\xd0\x1f\x64\x15\x35\xe9\xb3\xdc\xf4"
+-	"\xe7\x36\x44\xe0\xc0\x68\x9c\xa4\x02\xa3\x79\xe7\xe2\xb9\x01\xa0"
+-	"\x98\x0d\xc2\xf5\x3b\x4a\x08\x4a\x8e\xb3\x1b\xe9\xa4\x9e\x85\x33"
+-	"\x04\xd3\x98\xb4\x44\x52\x65\x64\x20\x48\x61\x74\x20\x45\x6e\x74"
+-	"\x65\x72\x70\x72\x69\x73\x65\x20\x4c\x69\x6e\x75\x78\x20\x44\x72"
+-	"\x69\x76\x65\x72\x20\x55\x70\x64\x61\x74\x65\x20\x50\x72\x6f\x67"
+-	"\x72\x61\x6d\x20\x3c\x73\x65\x63\x61\x6c\x65\x72\x74\x40\x72\x65"
+-	"\x64\x68\x61\x74\x2e\x63\x6f\x6d\x3e\x88\x60\x04\x13\x11\x02\x00"
+-	"\x20\x05\x02\x4b\xe9\x39\x1c\x02\x1b\x03\x06\x0b\x09\x08\x07\x03"
+-	"\x02\x04\x15\x02\x08\x03\x04\x16\x02\x03\x01\x02\x1e\x01\x02\x17"
+-	"\x80\x00\x0a\x09\x10\xd4\xa2\x6c\x9c\xcd\x09\xbe\xda\xc6\xa6\x00"
+-	"\x9e\x33\x63\x02\x64\x37\xe3\x19\x36\x54\xf4\xcb\x60\xb1\xd8\xe9"
+-	"\x71\x35\x7a\xb8\xd1\x00\x9e\x3f\x4d\xca\xbf\xf6\x1f\x15\x34\x4e"
+-	"\x04\x5d\x62\xcd\x5c\x8a\x11\x53\xe3\x01\x1a"
++	"\x99\x01\xa2\x04\x52\x51\x27\xe6\x11\x04\x00\xd6\x76\x41\x40\x59"
++	"\x62\xd5\xd9\x50\xb7\xd7\xba\x1a\x1c\xef\x03\x04\xcb\x49\xb3\xac"
++	"\x40\x86\x7a\x57\xfb\xb5\x7f\x5c\xcb\xea\x2e\xc9\x4c\xe0\xa9\x75"
++	"\xd3\x8c\x7f\xe9\x84\x22\x1c\x9c\xc8\x5d\x56\xa2\x64\x11\x55\xcf"
++	"\xd1\x84\xeb\x39\xbd\xc9\x5e\x75\x6a\xf5\xbe\x6c\x7f\x70\xae\xa3"
++	"\xb4\x42\x8e\xd2\xc2\x59\xa5\xc1\xc5\x77\x9d\xcd\x49\x77\xf3\x9d"
++	"\x4b\x82\x9d\xc0\x82\xfb\x35\x3a\x45\x64\x50\x9d\x3f\x37\xd1\x06"
++	"\xca\x2e\x9d\xce\x75\xb2\x5b\x8e\x5a\xe1\x8e\x67\x6e\xd9\xa4\xe5"
++	"\xb1\x2f\xda\x88\x6e\xed\x22\x43\x4e\xe0\x0b\x00\xa0\xba\xab\xc9"
++	"\xbb\xdc\x03\x33\xf5\x45\x7a\x2d\x0a\xfe\xba\x67\x40\xfe\xe3\xff"
++	"\xb3\x04\x00\x8a\xdb\x65\x8a\x32\xf4\xb4\x1a\x81\x27\xc7\x8c\xab"
++	"\xe5\xb5\x31\x9b\xd4\x6f\xe8\xf5\xb5\xfb\x83\x63\xc5\xae\xfc\xbe"
++	"\x45\xec\xc9\x4b\xf1\x8f\x19\xe0\x5e\x3a\x03\xa7\x8e\x39\xad\xa5"
++	"\x29\xde\xc1\x44\x83\x7f\xac\x9b\xb8\xe9\xca\x37\x49\x9b\x9b\x91"
++	"\x64\x7d\x7d\x16\xdc\xce\x26\x61\xc1\x98\xde\x0e\x73\x57\x81\x74"
++	"\x3b\x29\xfb\xa7\xa0\x07\x89\x5c\x23\xc1\xfd\xb1\x4c\xac\x6c\x70"
++	"\xf0\x21\x47\xde\xab\xca\x2c\xdf\x39\x72\xdd\xc9\x43\x77\x48\xad"
++	"\xc8\x66\x3c\xbc\xc5\x55\x6a\x2d\x48\x5c\xa4\x25\x65\x5e\xfb\x01"
++	"\x83\x30\x74\x03\xff\x56\x87\xc3\xe2\x3b\x47\x00\x47\xcc\x75\x0f"
++	"\x6e\xda\xde\xb8\x60\x1b\xc1\x1a\xf2\xda\x9f\x6b\x93\x18\xfe\x3c"
++	"\xca\x5b\x8f\x8d\x2a\xb9\x31\x1b\x91\x22\x49\x4b\x2c\x3a\x0c\xdf"
++	"\x4e\xb5\x45\x21\x5c\x91\xef\x66\x45\x60\x34\x26\x4f\x6b\x18\x92"
++	"\xa5\x3b\x6e\x0c\x34\x4c\xcc\xa5\x17\x7a\x3f\xb7\xe0\x78\x7f\xe6"
++	"\x0e\x68\xe9\xd7\x78\xc6\xdb\x3d\x6e\x59\x8a\xed\x34\x12\x60\xe4"
++	"\x6e\x4f\xd2\x12\x17\x87\xbb\xbc\xfe\x4b\x2c\x0a\xca\x31\xbc\xb3"
++	"\x10\x0b\x56\x12\x5c\xdf\x97\xd6\xfd\x66\xc9\x9c\x0a\x91\xf5\xc8"
++	"\x08\xf4\x7b\x65\xdb\xb4\x1e\x43\x65\x6e\x74\x4f\x53\x20\x28\x4b"
++	"\x65\x72\x6e\x65\x6c\x20\x4d\x6f\x64\x75\x6c\x65\x20\x47\x50\x47"
++	"\x20\x6b\x65\x79\x29\x88\x62\x04\x13\x11\x02\x00\x22\x05\x02\x52"
++	"\x51\x27\xe6\x02\x1b\x23\x06\x0b\x09\x08\x07\x03\x02\x06\x15\x08"
++	"\x02\x09\x0a\x0b\x04\x16\x02\x03\x01\x02\x1e\x01\x02\x17\x80\x00"
++	"\x0a\x09\x10\xac\x78\x62\xed\x29\x9b\xca\x56\x41\x5f\x00\x9c\x0c"
++	"\x85\x86\xe9\xb8\x21\x84\xa4\x8e\x6b\x47\xb7\xfb\x21\x08\xad\x99"
++	"\x23\xdf\x6e\x00\x9e\x32\x15\xd4\xed\xeb\x62\x41\x5d\x07\xf6\x8a"
++	"\xe4\x8b\x53\x03\xc9\x56\xf2\x27\x95"
+ 	;
+ 
+-const int ksign_def_public_key_size = 1147;
++const int ksign_def_public_key_size = 553;
+diff -uNr linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r100_reg_safe.h linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r100_reg_safe.h
+--- linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r100_reg_safe.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r100_reg_safe.h	2014-08-21 20:02:45.839993439 +0800
+@@ -0,0 +1,28 @@
++static const unsigned r100_reg_safe_bm[102] = {
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x17FF1FFF, 0xFFFFFFFC, 0xFFFFFFFF, 0xFF30FFBF,
++	0xFFFFFFF8, 0xC3E6FFFF, 0xFFFFF6DF, 0xFFFFFFFF,
++	0xFFFFFFCF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFF9F, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x38E7FE1F, 0xFFC3FF8E, 0x7FF8FFFF, 0xFFFF803C,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFEFFFF, 0xFFFFFFFF,
++	0x00000000, 0xFFFFFFFD, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFCFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFEF,
++};
+diff -uNr linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r200_reg_safe.h linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r200_reg_safe.h
+--- linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r200_reg_safe.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r200_reg_safe.h	2014-08-21 20:02:45.839993439 +0800
+@@ -0,0 +1,28 @@
++static const unsigned r200_reg_safe_bm[102] = {
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x17FF1FFF, 0xFFFFFFFC, 0xFFFFFFFF, 0xFF30FFBF,
++	0xFFFFFFF8, 0xC3E6FFFF, 0xFFFFF6DF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFE7FE1F, 0xF003FFFF, 0x7EFFFFFF, 0xFFFF803C,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFEFCE, 0xFFFEFFFF, 0xFFFFFFFE,
++	0x020E0FF0, 0xFFCC83FD, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFBFFFF, 0xEFFCFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xDFDFDFDF, 0x3FFDDFDF, 0xFFFFFFFF, 0xFFFFFF7F,
++	0xFFFFFFFF, 0x00FFFFFF, 0x00000000, 0x00000000,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFE3F, 0xFFFFFFEF,
++};
+diff -uNr linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r300_reg_safe.h linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r300_reg_safe.h
+--- linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r300_reg_safe.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r300_reg_safe.h	2014-08-21 20:02:45.835993440 +0800
+@@ -0,0 +1,42 @@
++static const unsigned r300_reg_safe_bm[159] = {
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x17FF1FFF, 0xFFFFFFFC, 0xFFFFFFFF, 0xFF30FFBF,
++	0xFFFFFFF8, 0xC3E6FFFF, 0xFFFFF6DF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFF03F,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFEFCE, 0xF00EBFFF, 0x007C0000,
++	0xF0000078, 0xFF000009, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFF7FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFC78, 0xFFFFFFFF, 0xFFFFFFFE, 0xFFFFFFFF,
++	0x38FF8F50, 0xFFF88082, 0xF000000C, 0xFAE009FF,
++	0x0000FFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
++	0x00000000, 0x0000C100, 0x00000000, 0x00000000,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x00000000, 0xFFFF0000, 0xFFFFFFFF, 0xFF80FFFF,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x0003FC01, 0xFFFFFCF8, 0xFF800B19,
++};
+diff -uNr linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r420_reg_safe.h linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r420_reg_safe.h
+--- linux-2.6.32-71.el6/drivers/gpu/drm/radeon/r420_reg_safe.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/r420_reg_safe.h	2014-08-21 20:02:45.835993440 +0800
+@@ -0,0 +1,42 @@
++static const unsigned r420_reg_safe_bm[159] = {
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x17FF1FFF, 0xFFFFFFFC, 0xFFFFFFFF, 0xFF30FFBF,
++	0xFFFFFFF8, 0xC3E6FFFF, 0xFFFFF6DF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFF03F,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFEFCE, 0xF00EBFFF, 0x007C0000,
++	0xF0000078, 0xFF000009, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFF7FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFC78, 0xFFFFFFFF, 0xFFFFFFFE, 0xFFFFFFFF,
++	0x38FF8F50, 0xFFF88082, 0xF000000C, 0xFAE009FF,
++	0x0000FFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
++	0x00000000, 0x00000100, 0x00000000, 0x00000000,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x00000000, 0x00000000, 0x00000000, 0xFF800000,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x0003FC01, 0xFFFFFCF8, 0xFF800B19,
++};
+diff -uNr linux-2.6.32-71.el6/drivers/gpu/drm/radeon/rn50_reg_safe.h linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/rn50_reg_safe.h
+--- linux-2.6.32-71.el6/drivers/gpu/drm/radeon/rn50_reg_safe.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/rn50_reg_safe.h	2014-08-21 20:02:45.839993439 +0800
+@@ -0,0 +1,28 @@
++static const unsigned rn50_reg_safe_bm[102] = {
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x17FF1FFF, 0xFFFFFFFC, 0xFFFFFFFF, 0xFF30FFBF,
++	0xFFFFFFF8, 0xC3E6FFFF, 0xFFFFF6DF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF,
++};
+diff -uNr linux-2.6.32-71.el6/drivers/gpu/drm/radeon/rs600_reg_safe.h linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/rs600_reg_safe.h
+--- linux-2.6.32-71.el6/drivers/gpu/drm/radeon/rs600_reg_safe.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/rs600_reg_safe.h	2014-08-21 20:02:45.839993439 +0800
+@@ -0,0 +1,57 @@
++static const unsigned rs600_reg_safe_bm[219] = {
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x17FF1FFF, 0xFFFFFFFC, 0xFFFFFFFF, 0xFF30FFBF,
++	0xFFFFFFF8, 0xC3E6FFFF, 0xFFFFF6DF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFF03F,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFEFCE, 0xF00EBFFF, 0x007C0000,
++	0xF0000078, 0xFF000009, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFF7FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFC78, 0xFFFFFFFF, 0xFFFFFFFE, 0xFFFFFFFF,
++	0x38FF8F50, 0xFFF88082, 0xF000000C, 0xFAE009FF,
++	0x0000FFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
++	0x00000000, 0x00000100, 0x00000000, 0x00000000,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x00000000, 0x00000000, 0x00000000, 0xFF800000,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x0003FC01, 0xFFFFFCF8, 0xFF800B19, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++};
+diff -uNr linux-2.6.32-71.el6/drivers/gpu/drm/radeon/rv515_reg_safe.h linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/rv515_reg_safe.h
+--- linux-2.6.32-71.el6/drivers/gpu/drm/radeon/rv515_reg_safe.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/drivers/gpu/drm/radeon/rv515_reg_safe.h	2014-08-21 20:02:45.835993440 +0800
+@@ -0,0 +1,57 @@
++static const unsigned rv515_reg_safe_bm[219] = {
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x17FF1FFF, 0xFFFFFFFC, 0xFFFFFFFF, 0xFF30FFBF,
++	0xFFFFFFF8, 0xC3E6FFFF, 0xFFFFF6DF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFF03F,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFEFCE, 0xF00EBFFF, 0x007C0000,
++	0xF0000038, 0xFF000009, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFF7FF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0x1FFFF878, 0xFFFFE000, 0xFFFFFE1E, 0xFFFFFFFF,
++	0x388F8F50, 0xFFF88082, 0xFF0000FC, 0xFAE009FF,
++	0x0000FFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000,
++	0xFFFF8CFC, 0xFFFFC1FF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFF80FFFF,
++	0x00000000, 0x00000000, 0x00000000, 0x00000000,
++	0x0003FC01, 0x3FFFFCF8, 0xFF800B19, 0xFFDFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
++};
+Binary files linux-2.6.32-71.el6/extract.pub and linux-2.6.32-71.el6.x86_64/extract.pub differ
+diff -uNr linux-2.6.32-71.el6/include/asm-generic/mman-common.h linux-2.6.32-71.el6.x86_64/include/asm-generic/mman-common.h
+--- linux-2.6.32-71.el6/include/asm-generic/mman-common.h	2010-09-01 12:56:57.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/include/asm-generic/mman-common.h	2014-08-21 20:02:45.435993439 +0800
+@@ -19,6 +19,24 @@
+ #define MAP_TYPE	0x0f		/* Mask for type of mapping */
+ #define MAP_FIXED	0x10		/* Interpret addr exactly */
+ #define MAP_ANONYMOUS	0x20		/* don't use a file */
++/* pagecolor modify begin */
++#define MAP_CACHE_AWARE_STATE		0x40UL	/* do mapping in cache aware manner */ 
++#define REMAP_CACHE_AWARE_STATE		0x80UL	/* do remapping in cache aware manner */ 
++#define CACHE_AWARE_STATE_MASK		(~0xf0UL)	/* do remapping in cache aware manner */ 
++
++#define set_cache_aware_map(t) \
++((t->rh_reserved[0]) |= MAP_CACHE_AWARE_STATE)
++#define set_cache_aware_remap(t) \
++((t->rh_reserved[0]) |= REMAP_CACHE_AWARE_STATE)
++#define clr_cache_aware_state(t) \
++((t->rh_reserved[0]) &= CACHE_AWARE_STATE_MASK)
++
++#define MAP_CACHE_AWARE \
++(get_current()->rh_reserved[0] & MAP_CACHE_AWARE_STATE)
++#define REMAP_CACHE_AWARE \
++(get_current()->rh_reserved[0] & REMAP_CACHE_AWARE_STATE)
++
++/* pagecolor modify end */
+ 
+ #define MS_ASYNC	1		/* sync memory asynchronously */
+ #define MS_INVALIDATE	2		/* invalidate the caches */
+diff -uNr linux-2.6.32-71.el6/include/linux/gfp.h linux-2.6.32-71.el6.x86_64/include/linux/gfp.h
+--- linux-2.6.32-71.el6/include/linux/gfp.h	2010-09-01 12:57:09.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/include/linux/gfp.h	2014-08-21 20:02:45.403993440 +0800
+@@ -323,6 +323,40 @@
+ extern unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order);
+ extern unsigned long get_zeroed_page(gfp_t gfp_mask);
+ 
++/* pagecolor modify begin */
++//#define CACHE_AWARE_MAP_DEBUG
++extern int recolor_page_range(unsigned long addr, unsigned long end,
++		    struct mm_struct *mm);
++
++#ifdef CACHE_AWARE_MAP_DEBUG
++#define CA_DEBUG_ALLOC_IDX	0
++#define CA_DEBUG_FREE_IDX	1
++#define CA_DEBUG_PINPOINT_IDX0	2
++#define CA_DEBUG_PINPOINT_IDX1	3
++#define CA_DEBUG_PINPOINT_IDX2	4
++#define CA_DEBUG_PINPOINT_IDX3	5
++#define CA_DEBUG_PINPOINT_IDX4	6
++#define CA_DEBUG_PINPOINT_IDX5	7
++#define CA_DEBUG_PINPOINT_IDX6	8
++#define CA_DEBUG_PINPOINT_IDX7	9
++#define CA_DEBUG_PINPOINT_IDX8	10
++#define CA_DEBUG_PINPOINT_IDX9	11
++#define CA_DEBUG_PINPOINT_IDX10	12
++#define CA_DEBUG_PINPOINT_IDX11	13
++#define CA_DEBUG_PINPOINT_IDX12	14
++#define CA_DEBUG_PINPOINT_IDX13	15
++#define CA_DEBUG_PINPOINT_IDX14	16
++#define CA_DEBUG_PINPOINT_IDX15	17
++#define CA_DEBUG_PINPOINT_IDX16	18
++#define CA_DEBUG_PINPOINT_IDX17	19
++
++extern void print_ca_free_area_info(void);
++extern void clr_page_allocation_result(void);
++extern void add_page_allocation_result(int idx);
++extern void print_page_allocation_result(void);
++#endif /* CACHE_AWARE_MAP_DEBUG */
++// clsa modity end
++
+ void *alloc_pages_exact(size_t size, gfp_t gfp_mask);
+ void free_pages_exact(void *virt, size_t size);
+ 
+diff -uNr linux-2.6.32-71.el6/include/linux/mm_types.h linux-2.6.32-71.el6.x86_64/include/linux/mm_types.h
+--- linux-2.6.32-71.el6/include/linux/mm_types.h	2010-09-01 12:57:21.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/include/linux/mm_types.h	2014-08-21 20:02:45.411993439 +0800
+@@ -108,6 +108,14 @@
+ #endif
+ };
+ 
++/* page color modification begin */
++#define tst_in_color(page) \
++(!!((page)->flags & (1UL << PG_in_color)))
++
++#define set_in_color(page) \
++((page)->flags |= (1UL << PG_in_color))
++/* page color modification end */
++
+ /*
+  * A region containing a mapping of a non-memory backed file under NOMMU
+  * conditions.  These are held in a global tree and are pinned by the VMAs that
+diff -uNr linux-2.6.32-71.el6/include/linux/mmzone.h linux-2.6.32-71.el6.x86_64/include/linux/mmzone.h
+--- linux-2.6.32-71.el6/include/linux/mmzone.h	2010-09-01 12:57:20.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/include/linux/mmzone.h	2014-08-21 20:02:45.411993439 +0800
+@@ -256,6 +256,23 @@
+  * match the requested limits. See gfp_zone() in include/linux/gfp.h
+  */
+ 
++/* pagecolor modify begin */
++#define L1_COLOR_SHIFT          0
++#define L2_COLOR_SHIFT          4
++#define L3_COLOR_SHIFT          8
++#define NR_L1_COLOR             (1 << L1_COLOR_SHIFT)
++#define NR_L2_COLOR             (1 << L2_COLOR_SHIFT)
++#define NR_L3_COLOR             (1 << L3_COLOR_SHIFT)
++#define L1_COLOR_MASK           (~(uint64_t)(NR_L1_COLOR - 1))
++#define L2_COLOR_MASK           (~(uint64_t)(NR_L2_COLOR - 1))
++#define L3_COLOR_MASK           (~(uint64_t)(NR_L3_COLOR - 1))
++#define COLOR_SHIFT             L3_COLOR_SHIFT
++#define NR_COLOR                NR_L3_COLOR
++#define MAX_COLOR_IDX           (NR_COLOR - 1) 
++
++/* pagecolor modify end */
++
++
+ #if MAX_NR_ZONES < 2
+ #define ZONES_SHIFT 0
+ #elif MAX_NR_ZONES <= 2
+@@ -284,6 +301,28 @@
+ 	unsigned long		nr_saved_scan[NR_LRU_LISTS];
+ };
+ 
++#define L1_COLOR_SPREAD		1
++#define L2_COLOR_SPREAD		2
++#define L3_COLOR_SPREAD		3
++#define INVALID_COLOR	 	-1
++
++/* pagecolor modify begin */
++struct cache_aware_free_area {
++	int enable;
++	struct list_head page_in_color[NR_COLOR];
++	unsigned long free_page_count[NR_COLOR];
++	unsigned long max_page_count[NR_COLOR];
++	int l2_spread_start_color;
++	int l2_spread_end_color;
++	int l2_spread_next_color;
++	int l3_spread_start_color;
++	int l3_spread_end_color;
++	int l3_spread_next_color;
++//	unsigned long *in_color_map;
++	int pg_cnt;
++};
++/* pagecolor modify end */
++
+ struct zone {
+ 	/* Fields commonly accessed by the page allocator */
+ 
+@@ -432,10 +471,22 @@
+ 	 * rarely used fields:
+ 	 */
+ 	const char		*name;
++	
++	/* pagecolor modify begin */
++//	struct cache_aware_free_area cache_aware_free_area;
++	/* pagecolor modify end */
+ 
+ 	unsigned long padding[16];
+ } ____cacheline_internodealigned_in_smp;
+ 
++/* pagecolor modify begin */
++#define zone_ca_free_area(zone) \
++((struct cache_aware_free_area *)(zone)->padding[0])
++//((zone)->cache_aware_free_area)
++//((zone)->cache_aware_free_area)
++//(&(zone)->cache_aware_free_area)
++/* pagecolor modify end */
++
+ typedef enum {
+ 	ZONE_ALL_UNRECLAIMABLE,		/* all pages pinned */
+ 	ZONE_RECLAIM_LOCKED,		/* prevents concurrent reclaim */
+@@ -668,6 +719,7 @@
+ void get_zone_counts(unsigned long *active, unsigned long *inactive,
+ 			unsigned long *free);
+ void build_all_zonelists(void *data);
++int page_color_page_map_init(void);
+ void wakeup_kswapd(struct zone *zone, int order);
+ int zone_watermark_ok(struct zone *z, int order, unsigned long mark,
+ 		int classzone_idx, int alloc_flags);
+diff -uNr linux-2.6.32-71.el6/include/linux/page-flags.h linux-2.6.32-71.el6.x86_64/include/linux/page-flags.h
+--- linux-2.6.32-71.el6/include/linux/page-flags.h	2010-09-01 12:57:04.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/include/linux/page-flags.h	2014-08-21 20:02:45.427993440 +0800
+@@ -111,6 +111,7 @@
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	PG_compound_lock,
+ #endif
++	PG_in_color,
+ 	__NR_PAGEFLAGS,
+ 
+ 	/* Filesystems */
+@@ -440,7 +441,7 @@
+  * Pages being prepped should not have any flags set.  It they are set,
+  * there has been a kernel bug or struct page corruption.
+  */
+-#define PAGE_FLAGS_CHECK_AT_PREP	((1 << NR_PAGEFLAGS) - 1)
++#define PAGE_FLAGS_CHECK_AT_PREP	(((1UL << NR_PAGEFLAGS) - 1) & ~(1UL << PG_in_color))
+ 
+ #define PAGE_FLAGS_PRIVATE				\
+ 	(1 << PG_private | 1 << PG_private_2)
+diff -uNr linux-2.6.32-71.el6/include/linux/sched.h linux-2.6.32-71.el6.x86_64/include/linux/sched.h
+--- linux-2.6.32-71.el6/include/linux/sched.h	2010-09-01 12:57:17.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/include/linux/sched.h	2014-08-21 20:02:45.415993441 +0800
+@@ -1554,10 +1554,33 @@
+ 	/* bitmask of trace recursion */
+ 	unsigned long trace_recursion;
+ #endif /* CONFIG_TRACING */
++
++	/* pagecolor modify begin */
++//	int cache_spread_type;
++	/* pagecolor modify end */
++
+ 	/* reserved for Red Hat */
+ 	unsigned long rh_reserved[2];
+ };
+ 
++/* pagecolor modify begin */
++#define CACHE_SPREAD_TYPE_RMASK	0xfUL
++#define CACHE_SPREAD_TYPE_MASK	(~0xfUL)
++#define task_cache_spread_type(t) \
++((t->rh_reserved[0]) & CACHE_SPREAD_TYPE_RMASK)
++#define set_cache_spread_type(t, type) \
++((t->rh_reserved[0]) = \
++((t->rh_reserved[0]) & CACHE_SPREAD_TYPE_MASK) | ((type) & CACHE_SPREAD_TYPE_RMASK))
++#define clr_cache_spread_type(t) \
++(t->rh_reserved[0] &= CACHE_SPREAD_TYPE_MASK)
++
++
++#define cache_aware_alloc(t) \
++(MAP_CACHE_AWARE && (task_cache_spread_type(t) == L1_COLOR_SPREAD || \
++task_cache_spread_type(t) == L2_COLOR_SPREAD || \
++task_cache_spread_type(t) == L3_COLOR_SPREAD))
++/* pagecolor modify end */
++
+ /* Future-safe accessor for struct task_struct's cpus_allowed. */
+ #define tsk_cpumask(tsk) (&(tsk)->cpus_allowed)
+ 
+diff -uNr linux-2.6.32-71.el6/init/main.c linux-2.6.32-71.el6.x86_64/init/main.c
+--- linux-2.6.32-71.el6/init/main.c	2010-09-01 12:57:21.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/init/main.c	2014-08-21 20:02:45.391993441 +0800
+@@ -596,6 +596,11 @@
+ 	sort_main_extable();
+ 	trap_init();
+ 	mm_init();
++
++	/* page color modification begin */
++	page_color_page_map_init();
++	/* page color modification end */
++
+ 	/*
+ 	 * Set up the scheduler prior starting any interrupts (such as the
+ 	 * timer interrupt). Full topology setup happens at smp_init()
+diff -uNr linux-2.6.32-71.el6/kabitool linux-2.6.32-71.el6.x86_64/kabitool
+--- linux-2.6.32-71.el6/kabitool	2010-09-01 12:56:47.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/kabitool	2014-08-21 20:02:45.283992645 +0800
+@@ -17,7 +17,7 @@
+ 
+ __author__ = "Jon Masters <jcm@redhat.com>"
+ __version__ = "$Revisions: 2.0 $"
+-__date__ = "$Date: 2009/08/01 18:21:15 $"
++__date__ = "$Date: 2010/09/01 04:58:18 $"
+ __copyright__ = "Copyright (C) 2009 Red Hat, Inc"
+ __license__ = "GPL"
+ 
+Binary files linux-2.6.32-71.el6/kernel.pub and linux-2.6.32-71.el6.x86_64/kernel.pub differ
+Binary files linux-2.6.32-71.el6/kernel.pub~ and linux-2.6.32-71.el6.x86_64/kernel.pub~ differ
+Binary files linux-2.6.32-71.el6/kernel.sec and linux-2.6.32-71.el6.x86_64/kernel.sec differ
+diff -uNr linux-2.6.32-71.el6/Makefile linux-2.6.32-71.el6.x86_64/Makefile
+--- linux-2.6.32-71.el6/Makefile	2010-09-01 12:57:21.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/Makefile	2014-08-21 20:02:45.747993439 +0800
+@@ -1,7 +1,7 @@
+ VERSION = 2
+ PATCHLEVEL = 6
+ SUBLEVEL = 32
+-EXTRAVERSION =
++EXTRAVERSION =-CLSA
+ NAME = Man-Eating Seals of Antiquity
+ RHEL_MAJOR = 6
+ RHEL_MINOR = 0
+diff -uNr linux-2.6.32-71.el6/mm/memory.c linux-2.6.32-71.el6.x86_64/mm/memory.c
+--- linux-2.6.32-71.el6/mm/memory.c	2010-09-01 12:57:21.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/mm/memory.c	2014-08-21 20:02:45.439993441 +0800
+@@ -1202,23 +1202,27 @@
+ 
+ 	page = NULL;
+ 	pgd = pgd_offset(mm, address);
+-	if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd)))
++	if (pgd_none(*pgd) || unlikely(pgd_bad(*pgd))) {
+ 		goto no_page_table;
++	}
+ 
+ 	pud = pud_offset(pgd, address);
+-	if (pud_none(*pud))
++	if (pud_none(*pud)) {
+ 		goto no_page_table;
++	}
+ 	if (pud_huge(*pud)) {
+ 		BUG_ON(flags & FOLL_GET);
+ 		page = follow_huge_pud(mm, address, pud, flags & FOLL_WRITE);
+ 		goto out;
+ 	}
+-	if (unlikely(pud_bad(*pud)))
++	if (unlikely(pud_bad(*pud))) {
+ 		goto no_page_table;
++	}
+ 
+ 	pmd = pmd_offset(pud, address);
+-	if (pmd_none(*pmd))
++	if (pmd_none(*pmd)) {
+ 		goto no_page_table;
++	}
+ 	if (pmd_huge(*pmd) && vma->vm_flags & VM_HUGETLB) {
+ 		BUG_ON(flags & FOLL_GET);
+ 		page = follow_huge_pmd(mm, address, pmd, flags & FOLL_WRITE);
+@@ -1245,22 +1249,26 @@
+ 		/* fall through */
+ 	}
+ split_fallthrough:
+-	if (unlikely(pmd_bad(*pmd)))
++	if (unlikely(pmd_bad(*pmd))) {
+ 		goto no_page_table;
++	}
+ 
+ 	ptep = pte_offset_map_lock(mm, pmd, address, &ptl);
+ 
+ 	pte = *ptep;
+-	if (!pte_present(pte))
++	if (!pte_present(pte)) {
+ 		goto no_page;
+-	if ((flags & FOLL_WRITE) && !pte_write(pte))
++	}
++	if ((flags & FOLL_WRITE) && !pte_write(pte)) {
+ 		goto unlock;
++	}
+ 
+ 	page = vm_normal_page(vma, address, pte);
+ 	if (unlikely(!page)) {
+ 		if ((flags & FOLL_DUMP) ||
+-		    !is_zero_pfn(pte_pfn(pte)))
++		    !is_zero_pfn(pte_pfn(pte))) {
+ 			goto bad_page;
++		}
+ 		page = pte_page(pte);
+ 	}
+ 
+@@ -1340,6 +1348,11 @@
+ 			pmd_t *pmd;
+ 			pte_t *pte;
+ 
++#ifdef CACHE_AWARE_MAP_DEBUG
++			if (MAP_CACHE_AWARE) {
++				add_page_allocation_result(CA_DEBUG_PINPOINT_IDX1);
++			}
++#endif
+ 			/* user gate pages are read-only */
+ 			if (gup_flags & FOLL_WRITE)
+ 				return i ? : -EFAULT;
+@@ -1370,16 +1383,31 @@
+ 				vmas[i] = gate_vma;
+ 			i++;
+ 			start += PAGE_SIZE;
++
+ 			nr_pages--;
++
+ 			continue;
+ 		}
+ 
+ 		if (!vma ||
+ 		    (vma->vm_flags & (VM_IO | VM_PFNMAP)) ||
+-		    !(vm_flags & vma->vm_flags))
++		    !(vm_flags & vma->vm_flags)) {
++
++#ifdef CACHE_AWARE_MAP_DEBUG
++			if (MAP_CACHE_AWARE) {
++				add_page_allocation_result(CA_DEBUG_PINPOINT_IDX2);
++			}
++#endif
+ 			return i ? : -EFAULT;
++		}
+ 
+ 		if (is_vm_hugetlb_page(vma)) {
++
++#ifdef CACHE_AWARE_MAP_DEBUG
++			if (MAP_CACHE_AWARE) {
++				add_page_allocation_result(CA_DEBUG_PINPOINT_IDX3);
++			}
++#endif
+ 			i = follow_hugetlb_page(mm, vma, pages, vmas,
+ 					&start, &nr_pages, i, gup_flags);
+ 			continue;
+@@ -1393,13 +1421,18 @@
+ 			 * If we have a pending SIGKILL, don't keep faulting
+ 			 * pages and potentially allocating memory.
+ 			 */
+-			if (unlikely(fatal_signal_pending(current)))
++			if (unlikely(fatal_signal_pending(current))) {
+ 				return i ? i : -ERESTARTSYS;
++			}
+ 
+ 			cond_resched();
+ 			while (!(page = follow_page(vma, start, foll_flags))) {
+ 				int ret;
+-
++#ifdef CACHE_AWARE_MAP_DEBUG
++				if (MAP_CACHE_AWARE) {
++					add_page_allocation_result(CA_DEBUG_PINPOINT_IDX4);
++				}
++#endif
+ 				ret = handle_mm_fault(mm, vma, start,
+ 					(foll_flags & FOLL_WRITE) ?
+ 					FAULT_FLAG_WRITE : 0);
+@@ -1435,8 +1468,14 @@
+ 
+ 				cond_resched();
+ 			}
+-			if (IS_ERR(page))
++			if (IS_ERR(page)) {
++#ifdef CACHE_AWARE_MAP_DEBUG
++			if (MAP_CACHE_AWARE) {
++				add_page_allocation_result(CA_DEBUG_PINPOINT_IDX5);
++			}
++#endif
+ 				return i ? i : PTR_ERR(page);
++			}
+ 			if (pages) {
+ 				pages[i] = page;
+ 
+@@ -1448,6 +1487,7 @@
+ 			i++;
+ 			start += PAGE_SIZE;
+ 			nr_pages--;
++
+ 		} while (nr_pages && start < vma->vm_end);
+ 	} while (nr_pages);
+ 	return i;
+@@ -2770,6 +2810,7 @@
+  * but allow concurrent faults), and pte mapped but not yet locked.
+  * We return with mmap_sem still held, but pte unmapped and unlocked.
+  */
++
+ static int do_anonymous_page(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		unsigned long address, pte_t *page_table, pmd_t *pmd,
+ 		unsigned int flags)
+@@ -2798,6 +2839,7 @@
+ 	if (unlikely(anon_vma_prepare(vma)))
+ 		goto oom;
+ 	page = alloc_zeroed_user_highpage_movable(vma, address);
++
+ 	if (!page)
+ 		goto oom;
+ 	__SetPageUptodate(page);
+@@ -3096,6 +3138,12 @@
+ 					return do_linear_fault(mm, vma, address,
+ 						pte, pmd, flags, entry);
+ 			}
++
++#ifdef CACHE_AWARE_MAP_DEBUG
++			if (MAP_CACHE_AWARE) {
++				add_page_allocation_result(CA_DEBUG_PINPOINT_IDX13);
++			}
++#endif
+ 			return do_anonymous_page(mm, vma, address,
+ 						 pte, pmd, flags);
+ 		}
+@@ -3149,17 +3197,44 @@
+ 
+ 	count_vm_event(PGFAULT);
+ 
+-	if (unlikely(is_vm_hugetlb_page(vma)))
++	if (unlikely(is_vm_hugetlb_page(vma))) {
++#ifdef CACHE_AWARE_MAP_DEBUG
++		if (MAP_CACHE_AWARE) {
++			add_page_allocation_result(CA_DEBUG_PINPOINT_IDX6);
++		}
++#endif
+ 		return hugetlb_fault(mm, vma, address, flags);
++	}
+ 
+ 	pgd = pgd_offset(mm, address);
+ 	pud = pud_alloc(mm, pgd, address);
+-	if (!pud)
++	if (!pud) {
++#ifdef CACHE_AWARE_MAP_DEBUG
++		if (MAP_CACHE_AWARE) {
++			add_page_allocation_result(CA_DEBUG_PINPOINT_IDX7);
++		}
++#endif
+ 		return VM_FAULT_OOM;
++	}
+ 	pmd = pmd_alloc(mm, pud, address);
+-	if (!pmd)
++	if (!pmd) {
++#ifdef CACHE_AWARE_MAP_DEBUG
++		if (MAP_CACHE_AWARE) {
++			add_page_allocation_result(CA_DEBUG_PINPOINT_IDX8);
++		}
++#endif
+ 		return VM_FAULT_OOM;
+-	if (pmd_none(*pmd) && transparent_hugepage_enabled(vma)) {
++	}
++
++	/* pagecolor modify begin */
++	if ((!cache_aware_alloc(current)) && 
++		pmd_none(*pmd) && transparent_hugepage_enabled(vma)) {
++	/* pagecolor modify end */
++#ifdef CACHE_AWARE_MAP_DEBUG
++		if (MAP_CACHE_AWARE) {
++			add_page_allocation_result(CA_DEBUG_PINPOINT_IDX9);
++		}
++#endif
+ 		if (!vma->vm_ops)
+ 			return do_huge_pmd_anonymous_page(mm, vma, address,
+ 							  pmd, flags);
+@@ -3167,6 +3242,29 @@
+ 		pmd_t orig_pmd = *pmd;
+ 		barrier();
+ 		if (pmd_trans_huge(orig_pmd)) {
++#ifdef CACHE_AWARE_MAP_DEBUG
++			if (MAP_CACHE_AWARE) {
++				add_page_allocation_result(CA_DEBUG_PINPOINT_IDX10);
++			}
++#endif
++			if (flags & FAULT_FLAG_WRITE &&
++			    !pmd_write(orig_pmd) &&
++			    !pmd_trans_splitting(orig_pmd))
++				return do_huge_pmd_wp_page(mm, vma, address,
++							   pmd, orig_pmd);
++			return 0;
++		}
++	}
++
++#if 0
++	if (pmd_none(*pmd) && transparent_hugepage_enabled(vma)) {
++		if (!vma->vm_ops)
++			return do_huge_pmd_anonymous_page(mm, vma, address,
++							  pmd, flags);
++	} else {
++		orig_pmd = *pmd;
++		barrier();
++		if (pmd_trans_huge(orig_pmd)) {
+ 			if (flags & FAULT_FLAG_WRITE &&
+ 			    !pmd_write(orig_pmd) &&
+ 			    !pmd_trans_splitting(orig_pmd))
+@@ -3175,10 +3273,23 @@
+ 			return 0;
+ 		}
+ 	}
++#endif
++
+ 	pte = pte_alloc_map(mm, vma, pmd, address);
+-	if (!pte)
++	if (!pte) {
++#ifdef CACHE_AWARE_MAP_DEBUG
++		if (MAP_CACHE_AWARE) {
++			add_page_allocation_result(CA_DEBUG_PINPOINT_IDX11);
++		}
++#endif
+ 		return VM_FAULT_OOM;
++	}
+ 
++#ifdef CACHE_AWARE_MAP_DEBUG
++	if (MAP_CACHE_AWARE) {
++		add_page_allocation_result(CA_DEBUG_PINPOINT_IDX12);
++	}
++#endif
+ 	return handle_pte_fault(mm, vma, address, pte, pmd, flags);
+ }
+ 
+diff -uNr linux-2.6.32-71.el6/mm/migrate.c linux-2.6.32-71.el6.x86_64/mm/migrate.c
+--- linux-2.6.32-71.el6/mm/migrate.c	2010-09-01 12:57:09.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/mm/migrate.c	2014-08-21 20:02:45.439993441 +0800
+@@ -37,6 +37,7 @@
+ 
+ #define lru_to_page(_head) (list_entry((_head)->prev, struct page, lru))
+ 
++
+ /*
+  * migrate_prep() needs to be called before we start compiling a list of pages
+  * to be migrated using isolate_lru_page(). If scheduling work on other CPUs is
+@@ -1166,6 +1167,8 @@
+  	struct vm_area_struct *vma;
+  	int err = 0;
+ 
++	printk(KERN_ALERT "migrate_vmas\n");
++
+ 	for (vma = mm->mmap; vma && !err; vma = vma->vm_next) {
+  		if (vma->vm_ops && vma->vm_ops->migrate) {
+  			err = vma->vm_ops->migrate(vma, to, from, flags);
+diff -uNr linux-2.6.32-71.el6/mm/mmap.c linux-2.6.32-71.el6.x86_64/mm/mmap.c
+--- linux-2.6.32-71.el6/mm/mmap.c	2010-09-01 12:57:21.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/mm/mmap.c	2014-08-21 20:02:45.439993441 +0800
+@@ -1114,8 +1114,9 @@
+ 	}
+ 
+ 	error = security_file_mmap(file, reqprot, prot, flags, addr, 0);
+-	if (error)
++	if (error) {
+ 		return error;
++	}
+ 
+ 	return mmap_region(file, addr, len, flags, vm_flags, pgoff);
+ }
+@@ -1183,17 +1184,20 @@
+ 
+ 	/* Clear old maps */
+ 	error = -ENOMEM;
++
+ munmap_back:
+ 	vma = find_vma_prepare(mm, addr, &prev, &rb_link, &rb_parent);
+ 	if (vma && vma->vm_start < addr + len) {
+-		if (do_munmap(mm, addr, len))
++		if (do_munmap(mm, addr, len)) {
+ 			return -ENOMEM;
++		}
+ 		goto munmap_back;
+ 	}
+ 
+ 	/* Check against address space limit. */
+-	if (!may_expand_vm(mm, len >> PAGE_SHIFT))
++	if (!may_expand_vm(mm, len >> PAGE_SHIFT)) {
+ 		return -ENOMEM;
++	}
+ 
+ 	/*
+ 	 * Set 'VM_NORESERVE' if we should not account for the
+@@ -1214,8 +1218,9 @@
+ 	 */
+ 	if (accountable_mapping(file, vm_flags)) {
+ 		charged = len >> PAGE_SHIFT;
+-		if (security_vm_enough_memory(charged))
++		if (security_vm_enough_memory(charged)) {
+ 			return -ENOMEM;
++		}
+ 		vm_flags |= VM_ACCOUNT;
+ 	}
+ 
+@@ -1246,6 +1251,7 @@
+ 	INIT_LIST_HEAD(&vma->anon_vma_chain);
+ 
+ 	if (file) {
++
+ 		error = -EINVAL;
+ 		if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
+ 			goto free_vma;
+@@ -1286,11 +1292,13 @@
+ 	/* Once vma denies write, undo our temporary denial count */
+ 	if (correct_wcount)
+ 		atomic_inc(&inode->i_writecount);
++
+ out:
+ 	perf_event_mmap(vma);
+ 
+ 	mm->total_vm += len >> PAGE_SHIFT;
+ 	vm_stat_account(mm, vm_flags, file, len >> PAGE_SHIFT);
++	/* pagecolor modify begin */
+ 	if (vm_flags & VM_LOCKED) {
+ 		/*
+ 		 * makes pages present; downgrades, drops, reacquires mmap_sem
+@@ -1299,8 +1307,15 @@
+ 		if (nr_pages < 0)
+ 			return nr_pages;	/* vma gone! */
+ 		mm->locked_vm += (len >> PAGE_SHIFT) - nr_pages;
+-	} else if ((flags & MAP_POPULATE) && !(flags & MAP_NONBLOCK))
++	} else if ((flags & MAP_POPULATE) && !(flags & MAP_NONBLOCK)) {
++		make_pages_present(addr, addr + len);
++	} else if (MAP_CACHE_AWARE) {
++#ifdef CACHE_AWARE_MAP_DEBUG
++		add_page_allocation_result(CA_DEBUG_PINPOINT_IDX0);
++#endif
+ 		make_pages_present(addr, addr + len);
++	}
++	/* pagecolor modify end */
+ 	return addr;
+ 
+ unmap_and_free_vma:
+@@ -1519,8 +1534,8 @@
+ {
+ 	unsigned long (*get_area)(struct file *, unsigned long,
+ 				  unsigned long, unsigned long, unsigned long);
+-
+ 	unsigned long error = arch_mmap_check(addr, len, flags);
++
+ 	if (error)
+ 		return error;
+ 
+@@ -1536,11 +1551,13 @@
+ 	if (file && file->f_op && file->f_op->get_unmapped_area)
+ 		get_area = file->f_op->get_unmapped_area;
+ 	addr = get_area(file, addr, len, pgoff, flags);
++
+ 	if (IS_ERR_VALUE(addr))
+ 		return addr;
+ 
+ 	if (addr > TASK_SIZE - len)
+ 		return -ENOMEM;
++
+ 	if (addr & ~PAGE_MASK)
+ 		return -EINVAL;
+ 
+@@ -2082,6 +2099,15 @@
+ 	return __split_vma(mm, vma, addr, new_below);
+ }
+ 
++
++#if 0
++#define cache_aware_alloc(t) \
++(task_cache_spread_type(t) == L1_COLOR_SPREAD || \
++task_cache_spread_type(t) == L2_COLOR_SPREAD || \
++task_cache_spread_type(t) == L3_COLOR_SPREAD)
++#endif
++
++
+ /* Munmap is split into 2 main parts -- this part which finds
+  * what needs doing, and the areas themselves, which do the
+  * work.  This now handles partial unmappings.
+@@ -2092,6 +2118,13 @@
+ 	unsigned long end;
+ 	struct vm_area_struct *vma, *prev, *last;
+ 
++/*
++struct zone *zone;
++zone = &NODE_DATA(0)->node_zones[1];
++printk(KERN_ALERT "munmap start\n");
++print_pg_cnt(zone);
++*/
++
+ 	if ((start & ~PAGE_MASK) || start > TASK_SIZE || len > TASK_SIZE-start)
+ 		return -EINVAL;
+ 
+@@ -2165,6 +2198,10 @@
+ 	/* Fix up all other VM information */
+ 	remove_vma_list(mm, vma);
+ 
++/*
++printk(KERN_ALERT "munmap end\n");
++print_pg_cnt(zone);
++*/
+ 	return 0;
+ }
+ 
+@@ -2180,6 +2217,7 @@
+ 	down_write(&mm->mmap_sem);
+ 	ret = do_munmap(mm, addr, len);
+ 	up_write(&mm->mmap_sem);
++
+ 	return ret;
+ }
+ 
+Binary files linux-2.6.32-71.el6/mm/.mmap.c.swp and linux-2.6.32-71.el6.x86_64/mm/.mmap.c.swp differ
+diff -uNr linux-2.6.32-71.el6/mm/page_alloc.c linux-2.6.32-71.el6.x86_64/mm/page_alloc.c
+--- linux-2.6.32-71.el6/mm/page_alloc.c	2010-09-01 12:57:21.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/mm/page_alloc.c	2014-08-21 20:02:45.439993441 +0800
+@@ -16,15 +16,22 @@
+ 
+ #include <linux/stddef.h>
+ #include <linux/mm.h>
++#include <linux/hugetlb.h>
++#include <linux/mman.h>
++#include <linux/migrate.h>
+ #include <linux/swap.h>
++#include <linux/highmem.h>
+ #include <linux/interrupt.h>
+ #include <linux/pagemap.h>
++#include <linux/rmap.h>
+ #include <linux/jiffies.h>
+ #include <linux/bootmem.h>
+ #include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/kmemcheck.h>
+ #include <linux/module.h>
++#include <linux/fs.h>
++#include <linux/string.h>
+ #include <linux/suspend.h>
+ #include <linux/pagevec.h>
+ #include <linux/blkdev.h>
+@@ -50,8 +57,17 @@
+ #include <linux/kmemleak.h>
+ #include <linux/compaction.h>
+ 
++#include <asm/pgalloc.h>
++#include <asm/unistd.h>
++#include <asm/uaccess.h>
++#include <asm/tlb.h>
+ #include <asm/tlbflush.h>
+ #include <asm/div64.h>
++#include <asm/pgtable.h>
++
++#include <linux/swapops.h>
++#include <linux/elf.h>
++
+ #include "internal.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -1119,9 +1135,108 @@
+ }
+ #endif /* CONFIG_PM */
+ 
++/* page color modification begin */
++static inline void
++show_page_flag(void)
++{
++	printk("flag list:\n");
++	printk("PG_locked %d\n", PG_locked);
++	printk("PG_error %d\n", PG_error);
++	printk("PG_referenced %d\n", PG_referenced);
++	printk("PG_uptodate %d\n", PG_uptodate);
++	printk("PG_dirty %d\n", PG_dirty);
++	printk("PG_lru %d\n", PG_lru);
++	printk("PG_active %d\n", PG_active);
++	printk("PG_slab %d\n", PG_slab);
++	printk("PG_owner_priv_1 %d\n", PG_owner_priv_1);
++	printk("PG_arch_1 %d\n", PG_arch_1);
++	printk("PG_reserved %d\n", PG_reserved);
++	printk("PG_private %d\n", PG_private);
++	printk("PG_private_2 %d\n", PG_private_2);
++	printk("PG_writeback %d\n", PG_writeback);
++#ifdef CONFIG_PAGEFLAGS_EXTENDED
++	printk("PG_head %d\n", PG_head);
++	printk("PG_tail %d\n", PG_tail);
++#else
++	printk("PG_compound %d\n", PG_compound);
++#endif
++	printk("PG_swapcache %d\n", PG_swapcache);
++	printk("PG_mappedtodisk %d\n", PG_mappedtodisk);
++	printk("PG_reclaim %d\n", PG_reclaim);
++	printk("PG_buddy %d\n", PG_buddy);
++	printk("PG_swapbacked %d\n", PG_swapbacked);
++	printk("PG_unevictable %d\n", PG_unevictable);
++#ifdef CONFIG_MMU
++	printk("PG_mlocked %d\n", PG_mlocked);
++#endif
++#ifdef CONFIG_ARCH_USES_PG_UNCACHED
++	printk("PG_uncached %d\n", PG_uncached);
++#endif
++#ifdef CONFIG_MEMORY_FAILURE
++	printk("PG_hwpoison %d\n", PG_hwpoison);
++#endif
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++	printk("PG_compound_lock %d\n", PG_compound_lock);
++#endif
++}
++
++static inline void
++show_page_info(struct page *page)
++{
++	printk("page info\n");
++	printk("flags 0x%lx\n", page->flags);
++	printk("page_count %d\n", page_count(page));
++	printk("page_mapcount %d\n", page_mapcount(page));
++	printk("mapping 0x%lx\n", (unsigned long)page->mapping);
++	printk("index 0x%lx\n", page->index);
++	printk("in_color %d\n", tst_in_color(page));
++	printk("lru next %p prev %p LIST_POISON1 %p LIST_POISON2 %p\n", 
++		page->lru.next, page->lru.prev, LIST_POISON1, LIST_POISON2);
++
++}
++
++static inline void free_page_to_color(struct page *page)
++{
++	struct zone *zone;
++	int color;
++	unsigned long flags;
++	int cpu;
++
++	color = (int)page_to_pfn(page) & MAX_COLOR_IDX;
++	zone = page_zone(page);
++
++	cpu  = get_cpu();
++	spin_lock_irqsave(&zone->lock, flags);
++
++	if (unlikely(page->lru.next != LIST_POISON1 || page->lru.prev != LIST_POISON2)
++			&& !(page->lru.next == &page->lru && page->lru.prev == &page->lru)) {
++		printk("err lru.next %p lru.prev %p\n", 
++			page->lru.next, page->lru.prev);
++		goto done;
++//		list_del(&page->lru);
++	}
++
++	atomic_set(&page->_count, 0);
++	atomic_set(&page->_mapcount, -1);
++	list_add(&page->lru, &zone_ca_free_area(zone)->page_in_color[color]);
++	zone_ca_free_area(zone)->free_page_count[color]++;
++
++done:
++	spin_unlock(&zone->lock);
++	local_irq_restore(flags);
++	put_cpu();
++
++
++#ifdef CACHE_AWARE_MAP_DEBUG
++	add_page_allocation_result(CA_DEBUG_FREE_IDX);
++#endif
++}
++/* page color modification end */
++
+ /*
+  * Free a 0-order page
+  */
++
+ static void free_hot_cold_page(struct page *page, int cold)
+ {
+ 	struct zone *zone = page_zone(page);
+@@ -1131,7 +1246,6 @@
+ 	int wasMlocked = __TestClearPageMlocked(page);
+ 
+ 	kmemcheck_free_shadow(page, 0);
+-
+ 	if (PageAnon(page))
+ 		page->mapping = NULL;
+ 	if (free_pages_check(page))
+@@ -1159,6 +1273,7 @@
+ 	 * areas back if necessary. Otherwise, we may have to free
+ 	 * excessively into the page allocator
+ 	 */
++
+ 	if (migratetype >= MIGRATE_PCPTYPES) {
+ 		if (unlikely(migratetype == MIGRATE_ISOLATE)) {
+ 			free_one_page(zone, page, 0, migratetype);
+@@ -1167,6 +1282,11 @@
+ 		migratetype = MIGRATE_MOVABLE;
+ 	}
+ 
++	if (tst_in_color(page)) {
++		free_page_to_color(page);
++		goto out;
++	}
++
+ 	if (cold)
+ 		list_add_tail(&page->lru, &pcp->lists[migratetype]);
+ 	else
+@@ -1261,6 +1381,777 @@
+ 	return 1 << order;
+ }
+ 
++
++/* page color modification begin */
++#define color_inc(color) \
++((color) = ((color) + 1) % NR_COLOR)
++
++#define color_add(s, a0, a1) \
++((s) = ((a0) + (a1)) % NR_COLOR)
++
++#define color_count(start, end) \
++((end) >= (start) ? (end) - (start) + 1 : (end) + NR_COLOR - (start) + 1)
++
++#if 0
++#define cache_aware_alloc(t) \
++(task_cache_spread_type(t) == L1_COLOR_SPREAD || \
++task_cache_spread_type(t) == L2_COLOR_SPREAD || \
++task_cache_spread_type(t) == L3_COLOR_SPREAD)
++
++
++#define zone_ca_free_area_alloc(zone) \
++(zone)->padding[0] = (unsigned long) \
++kmalloc(sizeof(struct cache_aware_free_area), GFP_KERNEL)
++#endif
++
++static struct cache_aware_free_area ca_free_area;
++
++void zone_ca_free_area_alloc(struct zone *zone) 
++{
++	zone->padding[0] = (unsigned long)&ca_free_area;
++}
++
++
++static inline 
++int color_cross(int start0, int end0, int start1, int end1)
++{
++	end0 = end0 >= start0 ? end0 : end0 + NR_COLOR;
++	end1 = end1 >= start1 ? end1 : end1 + NR_COLOR;
++	return end0 >= start1 && end1 >= start0 ? 1 : 0;
++}
++
++#define cache_aware_enable(zone) \
++((zone)->padding[0] != 0 && zone_ca_free_area(zone)->enable)
++
++#define cache_aware_disable(zone) \
++((zone)->padding[0] = 0)
++
++#define get_next_mapping_color(zone, type) \
++((type) == L2_COLOR_SPREAD \
++	? zone_ca_free_area(zone)->l2_spread_next_color \
++	: (type) == L3_COLOR_SPREAD \
++	? zone_ca_free_area(zone)->l3_spread_next_color \
++	: INVALID_COLOR)
++	
++static inline
++void update_cache_aware_alloc_state(struct zone *zone, int type)
++{
++	switch (type) {
++	case L2_COLOR_SPREAD:
++		if (zone_ca_free_area(zone)->l2_spread_next_color == 
++				zone_ca_free_area(zone)->l2_spread_end_color) {
++			zone_ca_free_area(zone)->l2_spread_next_color = 
++				zone_ca_free_area(zone)->l2_spread_start_color;
++		} else {
++			zone_ca_free_area(zone)->l2_spread_next_color =
++				(zone_ca_free_area(zone)->l2_spread_next_color + 1) % NR_COLOR;
++		}
++		break;
++	case L3_COLOR_SPREAD:
++		if (zone_ca_free_area(zone)->l3_spread_next_color == 
++				zone_ca_free_area(zone)->l3_spread_end_color) {
++			zone_ca_free_area(zone)->l3_spread_next_color = 
++				zone_ca_free_area(zone)->l3_spread_start_color;
++		} else {
++			zone_ca_free_area(zone)->l3_spread_next_color =
++				(zone_ca_free_area(zone)->l3_spread_next_color + 1) % NR_COLOR;
++		}
++		break;
++	default:
++		return;
++	}
++}
++
++static inline
++int page_in_color_exhausted(struct cache_aware_free_area *ca_free_area, 
++			int start_color, int end_color)
++{
++	unsigned long *free_page_count;
++	struct list_head *page_in_color;
++	int i;
++
++	if (end_color < start_color)
++		end_color += NR_COLOR; 
++	free_page_count = ca_free_area->free_page_count;
++	page_in_color = ca_free_area->page_in_color;
++	for (i = start_color; i <= end_color; i++) {
++		if (unlikely(list_empty(&page_in_color[i % NR_COLOR]))) {
++			free_page_count[i % NR_COLOR] = 0;
++			break;
++		}
++	}
++	return i <= end_color ? 1 : 0;
++}
++				
++/*
++static
++void print_page_in_color(struct zone *zone, int migratetype)
++{
++	int current_order;
++	struct free_area *free_area;
++	struct list_head *list;
++	struct page *page;
++	int color;
++	int i, sz;
++	unsigned long *count;
++
++	count = (unsigned long*)kmalloc(sizeof(unsigned long) * NR_COLOR, GFP_KERNEL);
++	for (i = 0; i < NR_COLOR; i++)
++		count[i] = 0;
++
++	for (current_order = 0; current_order < MAX_ORDER; current_order++) {
++		free_area = &zone->free_area[current_order];
++		list = &free_area->free_list[migratetype];
++		if (list_empty(list))
++			continue;
++
++		sz = 1 << current_order;
++		list_for_each_entry(page, list, lru) {
++			for (i = 0; i < sz; i++) {
++				color = page_to_pfn(page+i) & MAX_COLOR_IDX;
++				count[color]++;
++			}
++		}
++	}
++
++	for (i = 0; i < NR_COLOR; i++) {
++		printk("rest_page_count %d: %lu\n", i, count[i]);
++	}
++	for (i = 0; i < NR_COLOR; i++) {
++		printk("in_color_page_count %d: %lu\n", i,
++			zone_ca_free_area(zone)->free_page_count[i]);
++	}
++	
++	kfree(count);
++}
++*/
++
++static inline 
++int enable_cache_aware_done(unsigned long *count) 
++{
++	int i;
++
++	for(i = 0; i < NR_COLOR; i++) {
++		if (count[i] != 0)
++			break;
++	}
++	return i == NR_COLOR ? 1 : 0;
++}
++
++static struct cache_aware_free_area *glb_ca_free_area = NULL;
++
++void print_ca_free_area_info(void)
++{
++	unsigned long *free_page_count, *max_page_count;
++	int i;
++
++	if (glb_ca_free_area == NULL)
++		return;
++
++	free_page_count = glb_ca_free_area->free_page_count;
++	max_page_count = glb_ca_free_area->max_page_count;
++
++	for (i = 0; i < NR_COLOR; i++) {
++		printk("page_in_color %d: %lu-%lu\n", i, free_page_count[i], max_page_count[i]);
++	}
++}
++
++#define alloc_result_cnt 32
++static unsigned long page_allocation_result[alloc_result_cnt] = {0};
++
++void clr_page_allocation_result(void)
++{
++	int i;
++
++	for (i = 0; i < alloc_result_cnt; i++) {
++		page_allocation_result[i] = 0;
++	}
++}
++
++void print_page_allocation_result(void)
++{
++	int i;
++
++	for (i = 0; i < alloc_result_cnt; i++) {
++		printk(KERN_ALERT "alloc_result %d : %lu\n", i, page_allocation_result[i]);	
++	}
++}
++
++void add_page_allocation_result(int idx)
++{
++	if (idx < 0 || idx >= alloc_result_cnt)
++		return;
++	page_allocation_result[idx]++;
++}
++
++static
++void do_enable_cache_aware_zone(struct zone *zone, 
++			int migratetype, unsigned long *count)
++{
++	struct cache_aware_free_area *ca_free_area;
++	struct list_head *page_in_color;
++	unsigned long *free_page_count, *max_page_count;
++
++	int current_order;
++	struct free_area *free_area;
++	struct list_head *list;
++	struct page *page, *p;
++	int start, color;
++	int i, sz;
++	
++	ca_free_area = zone_ca_free_area(zone);
++	page_in_color = ca_free_area->page_in_color;
++	free_page_count = ca_free_area->free_page_count;
++	max_page_count = ca_free_area->max_page_count;
++	glb_ca_free_area = ca_free_area;
++
++	for (current_order = 0; current_order < MAX_ORDER; current_order++) {
++		free_area = &zone->free_area[current_order];
++		list = &free_area->free_list[migratetype];
++		sz = 1 << current_order;
++
++		while (!list_empty(list)) {
++			if (enable_cache_aware_done(count))
++				goto done;
++			page = list_entry(list->next, struct page, lru);
++			list_del(&page->lru);
++			rmv_page_order(page);
++			free_area->nr_free--;
++			start = (int)page_to_pfn(page) & MAX_COLOR_IDX;
++			p = page;
++
++			for(i = 0; i < sz; i++) {
++				color = (start + i) % NR_COLOR;
++				list_add(&p->lru, &page_in_color[color]);
++				free_page_count[color]++;
++				max_page_count[color]++;
++				if (likely(count[color] > 0))
++					count[color]--;
++				set_page_order(p, 0);
++				set_in_color(p);
++				//p->in_color = 1;
++				p++;
++			}
++		}
++	}
++
++done:
++	for (i = 0; i < NR_COLOR; i++) {
++		printk("collect_page_count %d: %lu\n", i, free_page_count[i]);
++	}
++}
++
++static
++void count_page_in_color(struct zone *zone, int migratetype, 
++			unsigned long *count)
++{
++	int current_order;
++	struct free_area *free_area;
++	struct list_head *list;
++	struct page *page;
++	int color, start;
++	int i, sz;
++
++	for (i = 0; i < NR_COLOR; i++) {
++		count[i] = 0;
++	}	
++	for (current_order = 0; current_order < MAX_ORDER; current_order++) {
++		free_area = &zone->free_area[current_order];
++
++		list = &free_area->free_list[migratetype];
++		if (list_empty(list))
++			continue;
++
++		sz = 1 << current_order;
++		list_for_each_entry(page, list, lru) {
++			start = (int)page_to_pfn(page) & MAX_COLOR_IDX;
++			for (i = 0; i < sz; i++) {
++				color = (i + start) % NR_COLOR;
++				count[color]++; 
++			}
++		}
++	}
++
++	for (i = 0; i < NR_COLOR; i++) {
++		printk("free_page_count_in_color %d: %lu\n", i, count[i]);
++	}
++}
++
++static inline
++void get_collect_count(struct zone *zone, unsigned long *count)
++{
++	unsigned long reserve;
++	int i;
++
++	for (i = 0; i < NR_COLOR; i++) {
++		reserve = count[i] - (count[i] >> 2);
++		count[i] = reserve;
++	}	
++}
++
++static inline 
++void zone_cache_aware_free_area_init(struct zone *zone)
++{
++	struct cache_aware_free_area *free_area;
++	int i;
++
++	zone_ca_free_area_alloc(zone);
++
++	free_area = zone_ca_free_area(zone);
++	free_area->enable = 0;
++
++	free_area->l2_spread_start_color = 0;
++	free_area->l2_spread_end_color = NR_L2_COLOR - 1;
++	free_area->l2_spread_next_color = 0;
++	free_area->l3_spread_start_color = 0;
++	free_area->l3_spread_end_color = NR_L3_COLOR - 1;
++	free_area->l3_spread_next_color = 0;
++
++	for (i = 0; i < NR_COLOR; i++) {
++		INIT_LIST_HEAD(&free_area->page_in_color[i]);
++		free_area->free_page_count[i] = 0;
++		free_area->max_page_count[i] = 0;
++	}
++}
++
++static unsigned long count[NR_COLOR];
++
++int page_color_page_map_init()
++{
++	struct zone *zone;
++	int i;
++	pg_data_t *pgdat;
++	int migratetype;
++
++	for_each_online_node(i) {
++		printk("on-line node %d\n", i);	
++	}
++
++	pgdat = NODE_DATA(0);
++	i = 0;
++	while (1) {
++		if (strstr(zone_names[i], "Normal")) {
++			zone = pgdat->node_zones + i;
++			break;
++		}
++		i++;
++	}
++	migratetype = MIGRATE_MOVABLE;
++
++	zone_cache_aware_free_area_init(zone);
++
++	count_page_in_color(zone, migratetype, count);
++
++	get_collect_count(zone, count);
++
++	do_enable_cache_aware_zone(zone, migratetype, count);
++
++	zone_ca_free_area(zone)->enable = 1;
++
++	return 0;
++}
++
++static inline
++int page_in_color_prepare(struct zone *zone, int migratetype, int type)
++{
++	struct cache_aware_free_area *ca_free_area;
++	int start_color, end_color, next_color;
++	int ret;
++	int color_test;
++
++	ca_free_area = zone_ca_free_area(zone);
++
++	if (type == L2_COLOR_SPREAD) {
++		color_test = 0;
++		start_color = ca_free_area->l2_spread_start_color;
++		end_color = ca_free_area->l2_spread_end_color;
++		while(1) {
++			start_color = (end_color + 1) % NR_COLOR;
++			end_color = start_color + NR_L2_COLOR - 1;
++	
++			if (!page_in_color_exhausted(ca_free_area, start_color, end_color)) {
++				break;
++			}
++			color_test += NR_L2_COLOR;
++	
++			if (color_test > NR_COLOR) {
++				ret = -ENOMEM; 
++			}
++		}
++	
++		ca_free_area->l2_spread_start_color = start_color;
++		ca_free_area->l2_spread_end_color = end_color;
++		ca_free_area->l2_spread_next_color = start_color;
++	} else if (type == L3_COLOR_SPREAD) {
++		color_test = 0;
++		next_color = ca_free_area->l3_spread_next_color;
++		while(1) {
++			next_color = (next_color + 1) % NR_COLOR;;
++			if (!page_in_color_exhausted(ca_free_area, next_color, next_color)) {
++				break;
++			}
++
++			if (++color_test > NR_COLOR) {
++				ret = -ENOMEM; 
++			}
++		}
++		ca_free_area->l3_spread_next_color = next_color;
++	}
++	
++	return 0;
++}
++
++
++static inline
++int get_next_color(struct zone *zone, int migratetype, int type)
++{
++	int color;
++	struct list_head *list;
++
++	color = get_next_mapping_color(zone, type);
++	if (unlikely(color == INVALID_COLOR))
++		return INVALID_COLOR;
++
++	list = &zone_ca_free_area(zone)->page_in_color[color];
++	if (unlikely(list_empty(list))) {
++		page_in_color_prepare(zone, migratetype, type);
++	}
++
++	color = get_next_mapping_color(zone, type);
++	if (unlikely(color == INVALID_COLOR))
++		return INVALID_COLOR;
++	list = &zone_ca_free_area(zone)->page_in_color[color];
++	if (unlikely(list_empty(list))) {
++		return INVALID_COLOR;
++	}
++
++	return color;
++}
++
++
++static inline
++struct page* get_page_in_color(struct zone *zone, int type, 
++			int migratetype)
++{
++	int color;
++	struct list_head *list;
++	struct page *page;
++
++	color = get_next_color(zone, migratetype, type);
++	if (unlikely(color == INVALID_COLOR))
++		return NULL;
++
++	list = &zone_ca_free_area(zone)->page_in_color[color];
++	page = list_entry(list->next, struct page, lru);
++
++	list_del(&page->lru);
++	rmv_page_order(page);
++	zone_ca_free_area(zone)->free_page_count[color]--;
++	
++	update_cache_aware_alloc_state(zone, type);
++
++	return page;
++}
++
++static inline
++struct page *cache_aware_rmqueue(struct zone *preferred_zone,
++			struct zone *zone, int order, gfp_t gfp_flags,
++			int migratetype)
++{
++	struct page *page;
++	int type;	
++	unsigned long flags;
++
++	/* we currently support one page allocation only */
++	if (unlikely(order != 0))
++		return NULL;
++
++	type = task_cache_spread_type(current);
++
++	get_cpu();
++	spin_lock_irqsave(&zone->lock, flags);
++
++	page = get_page_in_color(zone, type, migratetype);
++
++	spin_unlock(&zone->lock);
++	local_irq_restore(flags);
++	put_cpu();
++
++	VM_BUG_ON(bad_range(zone, page));
++	if (prep_new_page(page, order, gfp_flags))
++		return NULL;
++	
++	return page;
++}
++
++static inline 
++void page_in_color_fixup(struct page *page)
++{
++	atomic_set(&page->_count, 1);
++	atomic_set(&page->_mapcount, 0);
++}
++
++static inline
++void move_to_lru(struct page *page, struct vm_area_struct *vma)
++{
++	if (page_evictable(page, vma))
++		lru_cache_add_lru(page, LRU_ACTIVE_ANON);
++	else
++		add_page_to_unevictable_list(page);
++}
++
++static inline
++void migrate_page_copy(struct page *newpage, struct page *page)
++{
++	newpage->mapping = page->mapping;
++	newpage->index = page->index;
++
++	BUG_ON(PageWriteback(page));
++
++	copy_highpage(newpage, page);
++
++	if (PageError(page))
++		SetPageError(newpage);
++	if (PageReferenced(page))
++		SetPageReferenced(newpage);
++	if (PageUptodate(page))
++		SetPageUptodate(newpage);
++	if (PageActive(page))
++		SetPageActive(newpage);
++	if (PageChecked(page))
++		SetPageChecked(newpage);
++	if (PageMappedToDisk(page))
++		SetPageMappedToDisk(newpage);
++
++	if (PageDirty(page)) {
++		clear_page_dirty_for_io(page);
++		__set_page_dirty_nobuffers(newpage);
++ 	}
++
++	ClearPageSwapCache(page);
++	ClearPageActive(page);
++	ClearPagePrivate(page);
++	set_page_private(page, 0);
++	page->mapping = NULL;
++
++	if (PageWriteback(newpage))
++		end_page_writeback(newpage);
++}
++
++#define not_recolor_target(page) \
++(!PageAnon(page) || PageWriteback(page) /*|| !tst_in_color(page)*/ || \
++page_count(page) != 1 || page_mapcount(page) != 1)
++
++static inline
++int do_recolor(pte_t *pte, pmd_t *pmd, unsigned long addr, unsigned long end,
++			struct mm_struct *mm)
++{
++	struct anon_vma *anon_vma;
++	struct page *old_page, *new_page;
++	pte_t pteval, entry;
++	spinlock_t *ptl;
++	int ret;
++	struct vm_area_struct *vma;
++	unsigned long flags;
++
++	ret = 0;
++	local_irq_save(flags);
++
++	vma = find_extend_vma(mm, addr);
++
++	pte_unmap(pte);
++	
++	old_page = vm_normal_page(vma, addr, *pte);
++	if (unlikely(old_page == NULL))
++		goto exit;
++
++	if (unlikely(TestSetPageLocked(old_page)))
++		goto exit;
++
++	if (unlikely(not_recolor_target(old_page)))
++		goto recover_old;
++
++	new_page = alloc_page(GFP_HIGHUSER);
++	if (unlikely(new_page == NULL)) {
++		ret = -ENOMEM;
++		goto recover_old;
++	}
++
++	anon_vma = page_lock_anon_vma(old_page);
++	if (unlikely(anon_vma == NULL)) {
++		goto free_new;
++	}
++	pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
++
++	flush_cache_page(vma, addr, page_to_pfn(old_page));
++	pteval = ptep_clear_flush(vma, addr, pte);
++	if (pte_dirty(pteval))
++		set_page_dirty(old_page);
++
++	page_remove_rmap(old_page);
++	pte_unmap_unlock(pte, ptl);
++	spin_unlock(&anon_vma->lock);
++
++	if (unlikely(page_mapped(old_page)))
++		goto free_new;
++
++	if (unlikely(TestSetPageLocked(new_page)))
++		BUG();
++
++	migrate_page_copy(new_page, old_page);
++
++	spin_lock(&anon_vma->lock);
++	pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
++
++	get_page(new_page);
++
++	entry = pte_mkold(mk_pte(new_page, vma->vm_page_prot));
++	if (pte_write(pteval))
++		entry = pte_mkwrite(entry);
++	set_pte_at(mm, addr, pte, entry);
++	flush_tlb_page(vma, addr);
++
++	page_add_anon_rmap(new_page, vma, addr);
++
++	pte_unmap_unlock(pte, ptl);
++	spin_unlock(&anon_vma->lock);
++	unlock_page(new_page);
++	unlock_page(old_page);
++
++	page_cache_release(old_page);
++
++	move_to_lru(new_page, vma);
++	put_page(new_page);
++
++	local_irq_restore(flags);
++
++	return 0;
++
++free_new:
++	free_page_to_color(new_page);
++recover_old:
++	unlock_page(old_page);
++exit:
++	local_irq_restore(flags);
++	return ret;
++}
++
++static inline 
++int recolor_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
++			  struct mm_struct *mm)
++{
++	pte_t *pte;
++	int err = 0;
++//	struct vm_area_struct *vma;
++
++//	vma = find_extend_vma(mm, addr);
++//	vma = find_vma(mm, addr);
++
++	pte = pte_offset_map(pmd, addr);
++	for (;;) {
++		if (likely(!pte_none(*pte) && pte_present(*pte))) {
++			err = do_recolor(pte, pmd, addr, addr + PAGE_SIZE, mm);
++			if (err) break;
++		}
++		addr += PAGE_SIZE;
++		if (addr == end)
++			break;
++		pte++;
++	}
++
++	pte_unmap(pte);
++	return err;
++}
++
++static inline 
++int recolor_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
++			  struct mm_struct *mm)
++{
++	pmd_t *pmd;
++	unsigned long next;
++	int err = 0;
++
++	pmd = pmd_offset(pud, addr);
++	do {
++		next = pmd_addr_end(addr, end);
++		split_huge_page_pmd(mm, pmd);
++		if (pmd_none_or_clear_bad(pmd)) {
++			continue;
++		}
++		err = recolor_pte_range(pmd, addr, next, mm);
++		if (err)
++			break;
++	} while (pmd++, addr = next, addr != end);
++
++	return err;
++}
++
++static inline 
++int recolor_pud_range(pgd_t *pgd, unsigned long addr, unsigned long end,
++			  struct mm_struct *mm)
++{
++	pud_t *pud;
++	unsigned long next;
++	int err = 0;
++
++	pud = pud_offset(pgd, addr);
++	do {
++		next = pud_addr_end(addr, end);
++		if (pud_none_or_clear_bad(pud)) {
++			continue;
++		}
++		err = recolor_pmd_range(pud, addr, next, mm);
++		if (err)
++			break;
++	} while (pud++, addr = next, addr != end);
++
++	return err;
++}
++
++int recolor_page_range(unsigned long addr, unsigned long end,
++		    struct mm_struct *mm)
++{
++	pgd_t *pgd;
++	unsigned long next;
++	int err = 0;
++	struct vm_area_struct *vma;
++
++	if (addr >= end)
++		return err;
++	if (!mm)
++		return -EINVAL;
++
++	get_cpu();
++
++	pgd = pgd_offset(mm, addr);
++	do {
++		next = pgd_addr_end(addr, end);
++
++		/* skip hugetlb vma to avoid hugepage PMD being cleared
++		 * in pmd_none_or_clear_bad(). */
++		vma = find_vma(mm, addr);
++		if (vma && is_vm_hugetlb_page(vma)) {
++			if (vma->vm_end < next)
++				next = vma->vm_end;
++			continue;
++		}
++
++		if (pgd_none_or_clear_bad(pgd)) {
++			pgd++;
++			continue;
++		}
++		err = recolor_pud_range(pgd, addr, next, mm);
++		if (err)
++			break;
++		pgd++;
++	} while (addr = next, addr != end);
++
++	put_cpu();
++
++	return err;
++}
++/* page color modification end */
++
+ /*
+  * Really, prep_compound_page() should be called from __rmqueue_bulk().  But
+  * we cheat by calling it from here, in the order > 0 path.  Saves a branch
+@@ -1660,8 +2551,20 @@
+ 		}
+ 
+ try_this_zone:
+-		page = buffered_rmqueue(preferred_zone, zone, order,
++		/* page color modification begin */
++		if (cache_aware_alloc(current)) {
++			page = cache_aware_rmqueue(preferred_zone, zone,
++						order, gfp_mask, MIGRATE_MOVABLE);
++
++			if (unlikely(page == NULL)) {
++				page = buffered_rmqueue(preferred_zone, zone, order,
++						gfp_mask, migratetype);
++			}
++		} else {
++			page = buffered_rmqueue(preferred_zone, zone, order,
+ 						gfp_mask, migratetype);
++		}
++		/* page color modification end */
+ 		if (page)
+ 			break;
+ this_zone_full:
+@@ -2135,12 +3038,21 @@
+ 	page = get_page_from_freelist(gfp_mask|__GFP_HARDWALL, nodemask, order,
+ 			zonelist, high_zoneidx, ALLOC_WMARK_LOW|ALLOC_CPUSET,
+ 			preferred_zone, migratetype);
+-	if (unlikely(!page))
++	/* page color modification begin */
++	if (unlikely(!page && !cache_aware_alloc(current))) {
++		printk(KERN_ALERT "__alloc_pages_slowpath\n");
+ 		page = __alloc_pages_slowpath(gfp_mask, order,
+ 				zonelist, high_zoneidx, nodemask,
+ 				preferred_zone, migratetype);
++	}
++	/* page color modification end */
+ 
+ 	trace_mm_page_alloc(page, order, gfp_mask, migratetype);
++
++	if (cache_aware_alloc(current)) {
++		set_pageblock_migratetype(page, MIGRATE_UNMOVABLE);
++	}
++	
+ 	return page;
+ }
+ EXPORT_SYMBOL(__alloc_pages_nodemask);
+@@ -2967,7 +3879,7 @@
+ 		   of zonelist */
+ 		stop_machine(__build_all_zonelists, data, NULL);
+ 		/* cpuset refresh routine should be here */
+-	}
++		}
+ 	vm_total_pages = nr_free_pagecache_pages();
+ 	/*
+ 	 * Disable grouping by mobility if the number of pages in the
+@@ -4046,12 +4958,12 @@
+ 			realsize -= memmap_pages;
+ 			if (memmap_pages)
+ 				printk(KERN_DEBUG
+-				       "  %s zone: %lu pages used for memmap\n",
+-				       zone_names[j], memmap_pages);
++				       "  %s %d zone: %lu pages used for memmap\n",
++				       zone_names[j], j, memmap_pages);
+ 		} else
+ 			printk(KERN_WARNING
+-				"  %s zone: %lu pages exceeds realsize %lu\n",
+-				zone_names[j], memmap_pages, realsize);
++				"  %s %d zone: %lu pages exceeds realsize %lu\n",
++				zone_names[j], j, memmap_pages, realsize);
+ 
+ 		/* Account for reserved pages */
+ 		if (j == 0 && realsize > dma_reserve) {
+@@ -4063,6 +4975,10 @@
+ 		if (!is_highmem_idx(j))
+ 			nr_kernel_pages += realsize;
+ 		nr_all_pages += realsize;
++		
++		/* page color modification begin */
++		cache_aware_disable(zone); 
++		/* page color modification end */
+ 
+ 		zone->spanned_pages = size;
+ 		zone->present_pages = realsize;
+@@ -4072,6 +4988,7 @@
+ 						/ 100;
+ 		zone->min_slab_pages = (realsize * sysctl_min_slab_ratio) / 100;
+ #endif
++
+ 		zone->name = zone_names[j];
+ 		spin_lock_init(&zone->lock);
+ 		spin_lock_init(&zone->lru_lock);
+Binary files linux-2.6.32-71.el6/mm/.page_alloc.c.swp and linux-2.6.32-71.el6.x86_64/mm/.page_alloc.c.swp differ
+diff -uNr linux-2.6.32-71.el6/mm/util.c linux-2.6.32-71.el6.x86_64/mm/util.c
+--- linux-2.6.32-71.el6/mm/util.c	2010-09-01 12:57:04.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/mm/util.c	2014-08-21 20:02:45.439993441 +0800
+@@ -269,16 +269,56 @@
+ }
+ EXPORT_SYMBOL_GPL(get_user_pages_fast);
+ 
++#define invalid_color_type(type) \
++((type) != L3_COLOR_SPREAD && (type) != L2_COLOR_SPREAD)
++
+ SYSCALL_DEFINE6(mmap_pgoff, unsigned long, addr, unsigned long, len,
+ 		unsigned long, prot, unsigned long, flags,
+ 		unsigned long, fd, unsigned long, pgoff)
+ {
+ 	struct file * file = NULL;
+ 	unsigned long retval = -EBADF;
++	
++	/* page color modify begin */
++	if (flags & MAP_CACHE_AWARE_STATE) {
++		if (invalid_color_type(pgoff))
++			return -EINVAL;	
++
++#ifdef CACHE_AWARE_MAP_DEBUG
++		printk(KERN_ALERT "ca_mmap start len: %lu type: %lu\n", len, pgoff);
++		clr_page_allocation_result();
++#endif
++
++		set_cache_aware_map(current);
++		set_cache_spread_type(current, pgoff);
++
++		pgoff = 0;
++		flags &= ~MAP_CACHE_AWARE_STATE;
++	}
++	
++	if (flags & REMAP_CACHE_AWARE_STATE) {
++		if (invalid_color_type(pgoff))
++			return -EINVAL;
+ 
++		set_cache_aware_remap(current);
++		set_cache_spread_type(current, pgoff);
++		pgoff = 0;
++		flags &= ~REMAP_CACHE_AWARE_STATE;
++		down_write(&current->mm->mmap_sem);
++		retval = recolor_page_range(addr, addr + len, current->mm);
++		up_write(&current->mm->mmap_sem);
++		goto out;
++	}
++	/* page color modification end */
++	
+ 	if (!(flags & MAP_ANONYMOUS)) {
+-		if (unlikely(flags & MAP_HUGETLB))
++		if (unlikely(flags & MAP_HUGETLB)) {
++			if (MAP_CACHE_AWARE | REMAP_CACHE_AWARE) {
++				clr_cache_aware_state(current);
++				clr_cache_spread_type(current);
++			}
+ 			return -EINVAL;
++		}
+ 		file = fget(fd);
+ 		if (!file)
+ 			goto out;
+@@ -293,8 +333,13 @@
+ 		len = ALIGN(len, huge_page_size(&default_hstate));
+ 		file = hugetlb_file_setup(HUGETLB_ANON_FILE, len, VM_NORESERVE,
+ 						&user, HUGETLB_ANONHUGE_INODE);
+-		if (IS_ERR(file))
++		if (IS_ERR(file)) {
++			if (MAP_CACHE_AWARE | REMAP_CACHE_AWARE) {
++				clr_cache_aware_state(current);
++				clr_cache_spread_type(current);
++			}
+ 			return PTR_ERR(file);
++		}
+ 	}
+ 
+ 	flags &= ~(MAP_EXECUTABLE | MAP_DENYWRITE);
+@@ -305,7 +350,20 @@
+ 
+ 	if (file)
+ 		fput(file);
++
+ out:
++	/* page color modify begin */
++	if (MAP_CACHE_AWARE | REMAP_CACHE_AWARE) {
++		clr_cache_spread_type(current);
++		clr_cache_aware_state(current);
++
++#ifdef CACHE_AWARE_MAP_DEBUG
++		printk(KERN_ALERT "mmap end len: %lu type: %lu\n", len, pgoff);
++		print_page_allocation_result();
++#endif
++	}
++	/* page color modification end */
++	
+ 	return retval;
+ }
+ 
+diff -uNr linux-2.6.32-71.el6/mm/vmscan.c linux-2.6.32-71.el6.x86_64/mm/vmscan.c
+--- linux-2.6.32-71.el6/mm/vmscan.c	2010-09-01 12:57:21.000000000 +0800
++++ linux-2.6.32-71.el6.x86_64/mm/vmscan.c	2014-08-21 20:02:45.439993441 +0800
+@@ -1364,6 +1364,7 @@
+ 	while (!list_empty(&l_hold)) {
+ 		cond_resched();
+ 		page = lru_to_page(&l_hold);
++
+ 		list_del(&page->lru);
+ 
+ 		if (unlikely(!page_evictable(page, NULL))) {
+diff -uNr linux-2.6.32-71.el6/perf linux-2.6.32-71.el6.x86_64/perf
+--- linux-2.6.32-71.el6/perf	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/perf	2014-08-21 20:02:45.779993442 +0800
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++# In pathological situations, this will print some error about uname.
++kverrel="`uname -r`" || exit
++
++exec "/usr/libexec/perf.$kverrel" ${1+"$@"}
++rc=$?
++
++# We're still here, so the exec failed.
++echo >&2 "Sorry, your kernel ($kverrel) doesn't support perf."
++
++exit $rc
+Binary files linux-2.6.32-71.el6/random_seed and linux-2.6.32-71.el6.x86_64/random_seed differ
+diff -uNr linux-2.6.32-71.el6/security/selinux/av_permissions.h linux-2.6.32-71.el6.x86_64/security/selinux/av_permissions.h
+--- linux-2.6.32-71.el6/security/selinux/av_permissions.h	1970-01-01 08:30:00.000000000 +0830
++++ linux-2.6.32-71.el6.x86_64/security/selinux/av_permissions.h	2014-08-21 20:02:45.439993441 +0800
+@@ -0,0 +1,827 @@
++/* This file is automatically generated.  Do not edit. */
++#ifndef _SELINUX_AV_PERMISSIONS_H_
++#define _SELINUX_AV_PERMISSIONS_H_
++
++#define SECURITY__COMPUTE_AV                      0x00000001UL
++#define SECURITY__COMPUTE_CREATE                  0x00000002UL
++#define SECURITY__COMPUTE_MEMBER                  0x00000004UL
++#define SECURITY__CHECK_CONTEXT                   0x00000008UL
++#define SECURITY__LOAD_POLICY                     0x00000010UL
++#define SECURITY__COMPUTE_RELABEL                 0x00000020UL
++#define SECURITY__COMPUTE_USER                    0x00000040UL
++#define SECURITY__SETENFORCE                      0x00000080UL
++#define SECURITY__SETBOOL                         0x00000100UL
++#define SECURITY__SETSECPARAM                     0x00000200UL
++#define SECURITY__SETCHECKREQPROT                 0x00000400UL
++#define PROCESS__FORK                             0x00000001UL
++#define PROCESS__TRANSITION                       0x00000002UL
++#define PROCESS__SIGCHLD                          0x00000004UL
++#define PROCESS__SIGKILL                          0x00000008UL
++#define PROCESS__SIGSTOP                          0x00000010UL
++#define PROCESS__SIGNULL                          0x00000020UL
++#define PROCESS__SIGNAL                           0x00000040UL
++#define PROCESS__PTRACE                           0x00000080UL
++#define PROCESS__GETSCHED                         0x00000100UL
++#define PROCESS__SETSCHED                         0x00000200UL
++#define PROCESS__GETSESSION                       0x00000400UL
++#define PROCESS__GETPGID                          0x00000800UL
++#define PROCESS__SETPGID                          0x00001000UL
++#define PROCESS__GETCAP                           0x00002000UL
++#define PROCESS__SETCAP                           0x00004000UL
++#define PROCESS__SHARE                            0x00008000UL
++#define PROCESS__GETATTR                          0x00010000UL
++#define PROCESS__SETEXEC                          0x00020000UL
++#define PROCESS__SETFSCREATE                      0x00040000UL
++#define PROCESS__NOATSECURE                       0x00080000UL
++#define PROCESS__SIGINH                           0x00100000UL
++#define PROCESS__SETRLIMIT                        0x00200000UL
++#define PROCESS__RLIMITINH                        0x00400000UL
++#define PROCESS__DYNTRANSITION                    0x00800000UL
++#define PROCESS__SETCURRENT                       0x01000000UL
++#define PROCESS__EXECMEM                          0x02000000UL
++#define PROCESS__EXECSTACK                        0x04000000UL
++#define PROCESS__EXECHEAP                         0x08000000UL
++#define PROCESS__SETKEYCREATE                     0x10000000UL
++#define PROCESS__SETSOCKCREATE                    0x20000000UL
++#define SYSTEM__IPC_INFO                          0x00000001UL
++#define SYSTEM__SYSLOG_READ                       0x00000002UL
++#define SYSTEM__SYSLOG_MOD                        0x00000004UL
++#define SYSTEM__SYSLOG_CONSOLE                    0x00000008UL
++#define SYSTEM__MODULE_REQUEST                    0x00000010UL
++#define CAPABILITY__CHOWN                         0x00000001UL
++#define CAPABILITY__DAC_OVERRIDE                  0x00000002UL
++#define CAPABILITY__DAC_READ_SEARCH               0x00000004UL
++#define CAPABILITY__FOWNER                        0x00000008UL
++#define CAPABILITY__FSETID                        0x00000010UL
++#define CAPABILITY__KILL                          0x00000020UL
++#define CAPABILITY__SETGID                        0x00000040UL
++#define CAPABILITY__SETUID                        0x00000080UL
++#define CAPABILITY__SETPCAP                       0x00000100UL
++#define CAPABILITY__LINUX_IMMUTABLE               0x00000200UL
++#define CAPABILITY__NET_BIND_SERVICE              0x00000400UL
++#define CAPABILITY__NET_BROADCAST                 0x00000800UL
++#define CAPABILITY__NET_ADMIN                     0x00001000UL
++#define CAPABILITY__NET_RAW                       0x00002000UL
++#define CAPABILITY__IPC_LOCK                      0x00004000UL
++#define CAPABILITY__IPC_OWNER                     0x00008000UL
++#define CAPABILITY__SYS_MODULE                    0x00010000UL
++#define CAPABILITY__SYS_RAWIO                     0x00020000UL
++#define CAPABILITY__SYS_CHROOT                    0x00040000UL
++#define CAPABILITY__SYS_PTRACE                    0x00080000UL
++#define CAPABILITY__SYS_PACCT                     0x00100000UL
++#define CAPABILITY__SYS_ADMIN                     0x00200000UL
++#define CAPABILITY__SYS_BOOT                      0x00400000UL
++#define CAPABILITY__SYS_NICE                      0x00800000UL
++#define CAPABILITY__SYS_RESOURCE                  0x01000000UL
++#define CAPABILITY__SYS_TIME                      0x02000000UL
++#define CAPABILITY__SYS_TTY_CONFIG                0x04000000UL
++#define CAPABILITY__MKNOD                         0x08000000UL
++#define CAPABILITY__LEASE                         0x10000000UL
++#define CAPABILITY__AUDIT_WRITE                   0x20000000UL
++#define CAPABILITY__AUDIT_CONTROL                 0x40000000UL
++#define CAPABILITY__SETFCAP                       0x80000000UL
++#define FILESYSTEM__MOUNT                         0x00000001UL
++#define FILESYSTEM__REMOUNT                       0x00000002UL
++#define FILESYSTEM__UNMOUNT                       0x00000004UL
++#define FILESYSTEM__GETATTR                       0x00000008UL
++#define FILESYSTEM__RELABELFROM                   0x00000010UL
++#define FILESYSTEM__RELABELTO                     0x00000020UL
++#define FILESYSTEM__TRANSITION                    0x00000040UL
++#define FILESYSTEM__ASSOCIATE                     0x00000080UL
++#define FILESYSTEM__QUOTAMOD                      0x00000100UL
++#define FILESYSTEM__QUOTAGET                      0x00000200UL
++#define FILE__IOCTL                               0x00000001UL
++#define FILE__READ                                0x00000002UL
++#define FILE__WRITE                               0x00000004UL
++#define FILE__CREATE                              0x00000008UL
++#define FILE__GETATTR                             0x00000010UL
++#define FILE__SETATTR                             0x00000020UL
++#define FILE__LOCK                                0x00000040UL
++#define FILE__RELABELFROM                         0x00000080UL
++#define FILE__RELABELTO                           0x00000100UL
++#define FILE__APPEND                              0x00000200UL
++#define FILE__UNLINK                              0x00000400UL
++#define FILE__LINK                                0x00000800UL
++#define FILE__RENAME                              0x00001000UL
++#define FILE__EXECUTE                             0x00002000UL
++#define FILE__SWAPON                              0x00004000UL
++#define FILE__QUOTAON                             0x00008000UL
++#define FILE__MOUNTON                             0x00010000UL
++#define FILE__EXECUTE_NO_TRANS                    0x00020000UL
++#define FILE__ENTRYPOINT                          0x00040000UL
++#define FILE__EXECMOD                             0x00080000UL
++#define FILE__OPEN                                0x00100000UL
++#define DIR__IOCTL                                0x00000001UL
++#define DIR__READ                                 0x00000002UL
++#define DIR__WRITE                                0x00000004UL
++#define DIR__CREATE                               0x00000008UL
++#define DIR__GETATTR                              0x00000010UL
++#define DIR__SETATTR                              0x00000020UL
++#define DIR__LOCK                                 0x00000040UL
++#define DIR__RELABELFROM                          0x00000080UL
++#define DIR__RELABELTO                            0x00000100UL
++#define DIR__APPEND                               0x00000200UL
++#define DIR__UNLINK                               0x00000400UL
++#define DIR__LINK                                 0x00000800UL
++#define DIR__RENAME                               0x00001000UL
++#define DIR__EXECUTE                              0x00002000UL
++#define DIR__SWAPON                               0x00004000UL
++#define DIR__QUOTAON                              0x00008000UL
++#define DIR__MOUNTON                              0x00010000UL
++#define DIR__ADD_NAME                             0x00020000UL
++#define DIR__REMOVE_NAME                          0x00040000UL
++#define DIR__REPARENT                             0x00080000UL
++#define DIR__SEARCH                               0x00100000UL
++#define DIR__RMDIR                                0x00200000UL
++#define DIR__OPEN                                 0x00400000UL
++#define FD__USE                                   0x00000001UL
++#define LNK_FILE__IOCTL                           0x00000001UL
++#define LNK_FILE__READ                            0x00000002UL
++#define LNK_FILE__WRITE                           0x00000004UL
++#define LNK_FILE__CREATE                          0x00000008UL
++#define LNK_FILE__GETATTR                         0x00000010UL
++#define LNK_FILE__SETATTR                         0x00000020UL
++#define LNK_FILE__LOCK                            0x00000040UL
++#define LNK_FILE__RELABELFROM                     0x00000080UL
++#define LNK_FILE__RELABELTO                       0x00000100UL
++#define LNK_FILE__APPEND                          0x00000200UL
++#define LNK_FILE__UNLINK                          0x00000400UL
++#define LNK_FILE__LINK                            0x00000800UL
++#define LNK_FILE__RENAME                          0x00001000UL
++#define LNK_FILE__EXECUTE                         0x00002000UL
++#define LNK_FILE__SWAPON                          0x00004000UL
++#define LNK_FILE__QUOTAON                         0x00008000UL
++#define LNK_FILE__MOUNTON                         0x00010000UL
++#define CHR_FILE__IOCTL                           0x00000001UL
++#define CHR_FILE__READ                            0x00000002UL
++#define CHR_FILE__WRITE                           0x00000004UL
++#define CHR_FILE__CREATE                          0x00000008UL
++#define CHR_FILE__GETATTR                         0x00000010UL
++#define CHR_FILE__SETATTR                         0x00000020UL
++#define CHR_FILE__LOCK                            0x00000040UL
++#define CHR_FILE__RELABELFROM                     0x00000080UL
++#define CHR_FILE__RELABELTO                       0x00000100UL
++#define CHR_FILE__APPEND                          0x00000200UL
++#define CHR_FILE__UNLINK                          0x00000400UL
++#define CHR_FILE__LINK                            0x00000800UL
++#define CHR_FILE__RENAME                          0x00001000UL
++#define CHR_FILE__EXECUTE                         0x00002000UL
++#define CHR_FILE__SWAPON                          0x00004000UL
++#define CHR_FILE__QUOTAON                         0x00008000UL
++#define CHR_FILE__MOUNTON                         0x00010000UL
++#define CHR_FILE__EXECUTE_NO_TRANS                0x00020000UL
++#define CHR_FILE__ENTRYPOINT                      0x00040000UL
++#define CHR_FILE__EXECMOD                         0x00080000UL
++#define CHR_FILE__OPEN                            0x00100000UL
++#define BLK_FILE__IOCTL                           0x00000001UL
++#define BLK_FILE__READ                            0x00000002UL
++#define BLK_FILE__WRITE                           0x00000004UL
++#define BLK_FILE__CREATE                          0x00000008UL
++#define BLK_FILE__GETATTR                         0x00000010UL
++#define BLK_FILE__SETATTR                         0x00000020UL
++#define BLK_FILE__LOCK                            0x00000040UL
++#define BLK_FILE__RELABELFROM                     0x00000080UL
++#define BLK_FILE__RELABELTO                       0x00000100UL
++#define BLK_FILE__APPEND                          0x00000200UL
++#define BLK_FILE__UNLINK                          0x00000400UL
++#define BLK_FILE__LINK                            0x00000800UL
++#define BLK_FILE__RENAME                          0x00001000UL
++#define BLK_FILE__EXECUTE                         0x00002000UL
++#define BLK_FILE__SWAPON                          0x00004000UL
++#define BLK_FILE__QUOTAON                         0x00008000UL
++#define BLK_FILE__MOUNTON                         0x00010000UL
++#define BLK_FILE__OPEN                            0x00020000UL
++#define SOCK_FILE__IOCTL                          0x00000001UL
++#define SOCK_FILE__READ                           0x00000002UL
++#define SOCK_FILE__WRITE                          0x00000004UL
++#define SOCK_FILE__CREATE                         0x00000008UL
++#define SOCK_FILE__GETATTR                        0x00000010UL
++#define SOCK_FILE__SETATTR                        0x00000020UL
++#define SOCK_FILE__LOCK                           0x00000040UL
++#define SOCK_FILE__RELABELFROM                    0x00000080UL
++#define SOCK_FILE__RELABELTO                      0x00000100UL
++#define SOCK_FILE__APPEND                         0x00000200UL
++#define SOCK_FILE__UNLINK                         0x00000400UL
++#define SOCK_FILE__LINK                           0x00000800UL
++#define SOCK_FILE__RENAME                         0x00001000UL
++#define SOCK_FILE__EXECUTE                        0x00002000UL
++#define SOCK_FILE__SWAPON                         0x00004000UL
++#define SOCK_FILE__QUOTAON                        0x00008000UL
++#define SOCK_FILE__MOUNTON                        0x00010000UL
++#define SOCK_FILE__OPEN                           0x00020000UL
++#define FIFO_FILE__IOCTL                          0x00000001UL
++#define FIFO_FILE__READ                           0x00000002UL
++#define FIFO_FILE__WRITE                          0x00000004UL
++#define FIFO_FILE__CREATE                         0x00000008UL
++#define FIFO_FILE__GETATTR                        0x00000010UL
++#define FIFO_FILE__SETATTR                        0x00000020UL
++#define FIFO_FILE__LOCK                           0x00000040UL
++#define FIFO_FILE__RELABELFROM                    0x00000080UL
++#define FIFO_FILE__RELABELTO                      0x00000100UL
++#define FIFO_FILE__APPEND                         0x00000200UL
++#define FIFO_FILE__UNLINK                         0x00000400UL
++#define FIFO_FILE__LINK                           0x00000800UL
++#define FIFO_FILE__RENAME                         0x00001000UL
++#define FIFO_FILE__EXECUTE                        0x00002000UL
++#define FIFO_FILE__SWAPON                         0x00004000UL
++#define FIFO_FILE__QUOTAON                        0x00008000UL
++#define FIFO_FILE__MOUNTON                        0x00010000UL
++#define FIFO_FILE__OPEN                           0x00020000UL
++#define SOCKET__IOCTL                             0x00000001UL
++#define SOCKET__READ                              0x00000002UL
++#define SOCKET__WRITE                             0x00000004UL
++#define SOCKET__CREATE                            0x00000008UL
++#define SOCKET__GETATTR                           0x00000010UL
++#define SOCKET__SETATTR                           0x00000020UL
++#define SOCKET__LOCK                              0x00000040UL
++#define SOCKET__RELABELFROM                       0x00000080UL
++#define SOCKET__RELABELTO                         0x00000100UL
++#define SOCKET__APPEND                            0x00000200UL
++#define SOCKET__BIND                              0x00000400UL
++#define SOCKET__CONNECT                           0x00000800UL
++#define SOCKET__LISTEN                            0x00001000UL
++#define SOCKET__ACCEPT                            0x00002000UL
++#define SOCKET__GETOPT                            0x00004000UL
++#define SOCKET__SETOPT                            0x00008000UL
++#define SOCKET__SHUTDOWN                          0x00010000UL
++#define SOCKET__RECVFROM                          0x00020000UL
++#define SOCKET__SENDTO                            0x00040000UL
++#define SOCKET__RECV_MSG                          0x00080000UL
++#define SOCKET__SEND_MSG                          0x00100000UL
++#define SOCKET__NAME_BIND                         0x00200000UL
++#define TCP_SOCKET__IOCTL                         0x00000001UL
++#define TCP_SOCKET__READ                          0x00000002UL
++#define TCP_SOCKET__WRITE                         0x00000004UL
++#define TCP_SOCKET__CREATE                        0x00000008UL
++#define TCP_SOCKET__GETATTR                       0x00000010UL
++#define TCP_SOCKET__SETATTR                       0x00000020UL
++#define TCP_SOCKET__LOCK                          0x00000040UL
++#define TCP_SOCKET__RELABELFROM                   0x00000080UL
++#define TCP_SOCKET__RELABELTO                     0x00000100UL
++#define TCP_SOCKET__APPEND                        0x00000200UL
++#define TCP_SOCKET__BIND                          0x00000400UL
++#define TCP_SOCKET__CONNECT                       0x00000800UL
++#define TCP_SOCKET__LISTEN                        0x00001000UL
++#define TCP_SOCKET__ACCEPT                        0x00002000UL
++#define TCP_SOCKET__GETOPT                        0x00004000UL
++#define TCP_SOCKET__SETOPT                        0x00008000UL
++#define TCP_SOCKET__SHUTDOWN                      0x00010000UL
++#define TCP_SOCKET__RECVFROM                      0x00020000UL
++#define TCP_SOCKET__SENDTO                        0x00040000UL
++#define TCP_SOCKET__RECV_MSG                      0x00080000UL
++#define TCP_SOCKET__SEND_MSG                      0x00100000UL
++#define TCP_SOCKET__NAME_BIND                     0x00200000UL
++#define TCP_SOCKET__CONNECTTO                     0x00400000UL
++#define TCP_SOCKET__NEWCONN                       0x00800000UL
++#define TCP_SOCKET__ACCEPTFROM                    0x01000000UL
++#define TCP_SOCKET__NODE_BIND                     0x02000000UL
++#define TCP_SOCKET__NAME_CONNECT                  0x04000000UL
++#define UDP_SOCKET__IOCTL                         0x00000001UL
++#define UDP_SOCKET__READ                          0x00000002UL
++#define UDP_SOCKET__WRITE                         0x00000004UL
++#define UDP_SOCKET__CREATE                        0x00000008UL
++#define UDP_SOCKET__GETATTR                       0x00000010UL
++#define UDP_SOCKET__SETATTR                       0x00000020UL
++#define UDP_SOCKET__LOCK                          0x00000040UL
++#define UDP_SOCKET__RELABELFROM                   0x00000080UL
++#define UDP_SOCKET__RELABELTO                     0x00000100UL
++#define UDP_SOCKET__APPEND                        0x00000200UL
++#define UDP_SOCKET__BIND                          0x00000400UL
++#define UDP_SOCKET__CONNECT                       0x00000800UL
++#define UDP_SOCKET__LISTEN                        0x00001000UL
++#define UDP_SOCKET__ACCEPT                        0x00002000UL
++#define UDP_SOCKET__GETOPT                        0x00004000UL
++#define UDP_SOCKET__SETOPT                        0x00008000UL
++#define UDP_SOCKET__SHUTDOWN                      0x00010000UL
++#define UDP_SOCKET__RECVFROM                      0x00020000UL
++#define UDP_SOCKET__SENDTO                        0x00040000UL
++#define UDP_SOCKET__RECV_MSG                      0x00080000UL
++#define UDP_SOCKET__SEND_MSG                      0x00100000UL
++#define UDP_SOCKET__NAME_BIND                     0x00200000UL
++#define UDP_SOCKET__NODE_BIND                     0x00400000UL
++#define RAWIP_SOCKET__IOCTL                       0x00000001UL
++#define RAWIP_SOCKET__READ                        0x00000002UL
++#define RAWIP_SOCKET__WRITE                       0x00000004UL
++#define RAWIP_SOCKET__CREATE                      0x00000008UL
++#define RAWIP_SOCKET__GETATTR                     0x00000010UL
++#define RAWIP_SOCKET__SETATTR                     0x00000020UL
++#define RAWIP_SOCKET__LOCK                        0x00000040UL
++#define RAWIP_SOCKET__RELABELFROM                 0x00000080UL
++#define RAWIP_SOCKET__RELABELTO                   0x00000100UL
++#define RAWIP_SOCKET__APPEND                      0x00000200UL
++#define RAWIP_SOCKET__BIND                        0x00000400UL
++#define RAWIP_SOCKET__CONNECT                     0x00000800UL
++#define RAWIP_SOCKET__LISTEN                      0x00001000UL
++#define RAWIP_SOCKET__ACCEPT                      0x00002000UL
++#define RAWIP_SOCKET__GETOPT                      0x00004000UL
++#define RAWIP_SOCKET__SETOPT                      0x00008000UL
++#define RAWIP_SOCKET__SHUTDOWN                    0x00010000UL
++#define RAWIP_SOCKET__RECVFROM                    0x00020000UL
++#define RAWIP_SOCKET__SENDTO                      0x00040000UL
++#define RAWIP_SOCKET__RECV_MSG                    0x00080000UL
++#define RAWIP_SOCKET__SEND_MSG                    0x00100000UL
++#define RAWIP_SOCKET__NAME_BIND                   0x00200000UL
++#define RAWIP_SOCKET__NODE_BIND                   0x00400000UL
++#define NODE__TCP_RECV                            0x00000001UL
++#define NODE__TCP_SEND                            0x00000002UL
++#define NODE__UDP_RECV                            0x00000004UL
++#define NODE__UDP_SEND                            0x00000008UL
++#define NODE__RAWIP_RECV                          0x00000010UL
++#define NODE__RAWIP_SEND                          0x00000020UL
++#define NODE__ENFORCE_DEST                        0x00000040UL
++#define NODE__DCCP_RECV                           0x00000080UL
++#define NODE__DCCP_SEND                           0x00000100UL
++#define NODE__RECVFROM                            0x00000200UL
++#define NODE__SENDTO                              0x00000400UL
++#define NETIF__TCP_RECV                           0x00000001UL
++#define NETIF__TCP_SEND                           0x00000002UL
++#define NETIF__UDP_RECV                           0x00000004UL
++#define NETIF__UDP_SEND                           0x00000008UL
++#define NETIF__RAWIP_RECV                         0x00000010UL
++#define NETIF__RAWIP_SEND                         0x00000020UL
++#define NETIF__DCCP_RECV                          0x00000040UL
++#define NETIF__DCCP_SEND                          0x00000080UL
++#define NETIF__INGRESS                            0x00000100UL
++#define NETIF__EGRESS                             0x00000200UL
++#define NETLINK_SOCKET__IOCTL                     0x00000001UL
++#define NETLINK_SOCKET__READ                      0x00000002UL
++#define NETLINK_SOCKET__WRITE                     0x00000004UL
++#define NETLINK_SOCKET__CREATE                    0x00000008UL
++#define NETLINK_SOCKET__GETATTR                   0x00000010UL
++#define NETLINK_SOCKET__SETATTR                   0x00000020UL
++#define NETLINK_SOCKET__LOCK                      0x00000040UL
++#define NETLINK_SOCKET__RELABELFROM               0x00000080UL
++#define NETLINK_SOCKET__RELABELTO                 0x00000100UL
++#define NETLINK_SOCKET__APPEND                    0x00000200UL
++#define NETLINK_SOCKET__BIND                      0x00000400UL
++#define NETLINK_SOCKET__CONNECT                   0x00000800UL
++#define NETLINK_SOCKET__LISTEN                    0x00001000UL
++#define NETLINK_SOCKET__ACCEPT                    0x00002000UL
++#define NETLINK_SOCKET__GETOPT                    0x00004000UL
++#define NETLINK_SOCKET__SETOPT                    0x00008000UL
++#define NETLINK_SOCKET__SHUTDOWN                  0x00010000UL
++#define NETLINK_SOCKET__RECVFROM                  0x00020000UL
++#define NETLINK_SOCKET__SENDTO                    0x00040000UL
++#define NETLINK_SOCKET__RECV_MSG                  0x00080000UL
++#define NETLINK_SOCKET__SEND_MSG                  0x00100000UL
++#define NETLINK_SOCKET__NAME_BIND                 0x00200000UL
++#define PACKET_SOCKET__IOCTL                      0x00000001UL
++#define PACKET_SOCKET__READ                       0x00000002UL
++#define PACKET_SOCKET__WRITE                      0x00000004UL
++#define PACKET_SOCKET__CREATE                     0x00000008UL
++#define PACKET_SOCKET__GETATTR                    0x00000010UL
++#define PACKET_SOCKET__SETATTR                    0x00000020UL
++#define PACKET_SOCKET__LOCK                       0x00000040UL
++#define PACKET_SOCKET__RELABELFROM                0x00000080UL
++#define PACKET_SOCKET__RELABELTO                  0x00000100UL
++#define PACKET_SOCKET__APPEND                     0x00000200UL
++#define PACKET_SOCKET__BIND                       0x00000400UL
++#define PACKET_SOCKET__CONNECT                    0x00000800UL
++#define PACKET_SOCKET__LISTEN                     0x00001000UL
++#define PACKET_SOCKET__ACCEPT                     0x00002000UL
++#define PACKET_SOCKET__GETOPT                     0x00004000UL
++#define PACKET_SOCKET__SETOPT                     0x00008000UL
++#define PACKET_SOCKET__SHUTDOWN                   0x00010000UL
++#define PACKET_SOCKET__RECVFROM                   0x00020000UL
++#define PACKET_SOCKET__SENDTO                     0x00040000UL
++#define PACKET_SOCKET__RECV_MSG                   0x00080000UL
++#define PACKET_SOCKET__SEND_MSG                   0x00100000UL
++#define PACKET_SOCKET__NAME_BIND                  0x00200000UL
++#define KEY_SOCKET__IOCTL                         0x00000001UL
++#define KEY_SOCKET__READ                          0x00000002UL
++#define KEY_SOCKET__WRITE                         0x00000004UL
++#define KEY_SOCKET__CREATE                        0x00000008UL
++#define KEY_SOCKET__GETATTR                       0x00000010UL
++#define KEY_SOCKET__SETATTR                       0x00000020UL
++#define KEY_SOCKET__LOCK                          0x00000040UL
++#define KEY_SOCKET__RELABELFROM                   0x00000080UL
++#define KEY_SOCKET__RELABELTO                     0x00000100UL
++#define KEY_SOCKET__APPEND                        0x00000200UL
++#define KEY_SOCKET__BIND                          0x00000400UL
++#define KEY_SOCKET__CONNECT                       0x00000800UL
++#define KEY_SOCKET__LISTEN                        0x00001000UL
++#define KEY_SOCKET__ACCEPT                        0x00002000UL
++#define KEY_SOCKET__GETOPT                        0x00004000UL
++#define KEY_SOCKET__SETOPT                        0x00008000UL
++#define KEY_SOCKET__SHUTDOWN                      0x00010000UL
++#define KEY_SOCKET__RECVFROM                      0x00020000UL
++#define KEY_SOCKET__SENDTO                        0x00040000UL
++#define KEY_SOCKET__RECV_MSG                      0x00080000UL
++#define KEY_SOCKET__SEND_MSG                      0x00100000UL
++#define KEY_SOCKET__NAME_BIND                     0x00200000UL
++#define UNIX_STREAM_SOCKET__IOCTL                 0x00000001UL
++#define UNIX_STREAM_SOCKET__READ                  0x00000002UL
++#define UNIX_STREAM_SOCKET__WRITE                 0x00000004UL
++#define UNIX_STREAM_SOCKET__CREATE                0x00000008UL
++#define UNIX_STREAM_SOCKET__GETATTR               0x00000010UL
++#define UNIX_STREAM_SOCKET__SETATTR               0x00000020UL
++#define UNIX_STREAM_SOCKET__LOCK                  0x00000040UL
++#define UNIX_STREAM_SOCKET__RELABELFROM           0x00000080UL
++#define UNIX_STREAM_SOCKET__RELABELTO             0x00000100UL
++#define UNIX_STREAM_SOCKET__APPEND                0x00000200UL
++#define UNIX_STREAM_SOCKET__BIND                  0x00000400UL
++#define UNIX_STREAM_SOCKET__CONNECT               0x00000800UL
++#define UNIX_STREAM_SOCKET__LISTEN                0x00001000UL
++#define UNIX_STREAM_SOCKET__ACCEPT                0x00002000UL
++#define UNIX_STREAM_SOCKET__GETOPT                0x00004000UL
++#define UNIX_STREAM_SOCKET__SETOPT                0x00008000UL
++#define UNIX_STREAM_SOCKET__SHUTDOWN              0x00010000UL
++#define UNIX_STREAM_SOCKET__RECVFROM              0x00020000UL
++#define UNIX_STREAM_SOCKET__SENDTO                0x00040000UL
++#define UNIX_STREAM_SOCKET__RECV_MSG              0x00080000UL
++#define UNIX_STREAM_SOCKET__SEND_MSG              0x00100000UL
++#define UNIX_STREAM_SOCKET__NAME_BIND             0x00200000UL
++#define UNIX_STREAM_SOCKET__CONNECTTO             0x00400000UL
++#define UNIX_STREAM_SOCKET__NEWCONN               0x00800000UL
++#define UNIX_STREAM_SOCKET__ACCEPTFROM            0x01000000UL
++#define UNIX_DGRAM_SOCKET__IOCTL                  0x00000001UL
++#define UNIX_DGRAM_SOCKET__READ                   0x00000002UL
++#define UNIX_DGRAM_SOCKET__WRITE                  0x00000004UL
++#define UNIX_DGRAM_SOCKET__CREATE                 0x00000008UL
++#define UNIX_DGRAM_SOCKET__GETATTR                0x00000010UL
++#define UNIX_DGRAM_SOCKET__SETATTR                0x00000020UL
++#define UNIX_DGRAM_SOCKET__LOCK                   0x00000040UL
++#define UNIX_DGRAM_SOCKET__RELABELFROM            0x00000080UL
++#define UNIX_DGRAM_SOCKET__RELABELTO              0x00000100UL
++#define UNIX_DGRAM_SOCKET__APPEND                 0x00000200UL
++#define UNIX_DGRAM_SOCKET__BIND                   0x00000400UL
++#define UNIX_DGRAM_SOCKET__CONNECT                0x00000800UL
++#define UNIX_DGRAM_SOCKET__LISTEN                 0x00001000UL
++#define UNIX_DGRAM_SOCKET__ACCEPT                 0x00002000UL
++#define UNIX_DGRAM_SOCKET__GETOPT                 0x00004000UL
++#define UNIX_DGRAM_SOCKET__SETOPT                 0x00008000UL
++#define UNIX_DGRAM_SOCKET__SHUTDOWN               0x00010000UL
++#define UNIX_DGRAM_SOCKET__RECVFROM               0x00020000UL
++#define UNIX_DGRAM_SOCKET__SENDTO                 0x00040000UL
++#define UNIX_DGRAM_SOCKET__RECV_MSG               0x00080000UL
++#define UNIX_DGRAM_SOCKET__SEND_MSG               0x00100000UL
++#define UNIX_DGRAM_SOCKET__NAME_BIND              0x00200000UL
++#define SEM__CREATE                               0x00000001UL
++#define SEM__DESTROY                              0x00000002UL
++#define SEM__GETATTR                              0x00000004UL
++#define SEM__SETATTR                              0x00000008UL
++#define SEM__READ                                 0x00000010UL
++#define SEM__WRITE                                0x00000020UL
++#define SEM__ASSOCIATE                            0x00000040UL
++#define SEM__UNIX_READ                            0x00000080UL
++#define SEM__UNIX_WRITE                           0x00000100UL
++#define MSG__SEND                                 0x00000001UL
++#define MSG__RECEIVE                              0x00000002UL
++#define MSGQ__CREATE                              0x00000001UL
++#define MSGQ__DESTROY                             0x00000002UL
++#define MSGQ__GETATTR                             0x00000004UL
++#define MSGQ__SETATTR                             0x00000008UL
++#define MSGQ__READ                                0x00000010UL
++#define MSGQ__WRITE                               0x00000020UL
++#define MSGQ__ASSOCIATE                           0x00000040UL
++#define MSGQ__UNIX_READ                           0x00000080UL
++#define MSGQ__UNIX_WRITE                          0x00000100UL
++#define MSGQ__ENQUEUE                             0x00000200UL
++#define SHM__CREATE                               0x00000001UL
++#define SHM__DESTROY                              0x00000002UL
++#define SHM__GETATTR                              0x00000004UL
++#define SHM__SETATTR                              0x00000008UL
++#define SHM__READ                                 0x00000010UL
++#define SHM__WRITE                                0x00000020UL
++#define SHM__ASSOCIATE                            0x00000040UL
++#define SHM__UNIX_READ                            0x00000080UL
++#define SHM__UNIX_WRITE                           0x00000100UL
++#define SHM__LOCK                                 0x00000200UL
++#define IPC__CREATE                               0x00000001UL
++#define IPC__DESTROY                              0x00000002UL
++#define IPC__GETATTR                              0x00000004UL
++#define IPC__SETATTR                              0x00000008UL
++#define IPC__READ                                 0x00000010UL
++#define IPC__WRITE                                0x00000020UL
++#define IPC__ASSOCIATE                            0x00000040UL
++#define IPC__UNIX_READ                            0x00000080UL
++#define IPC__UNIX_WRITE                           0x00000100UL
++#define NETLINK_ROUTE_SOCKET__IOCTL               0x00000001UL
++#define NETLINK_ROUTE_SOCKET__READ                0x00000002UL
++#define NETLINK_ROUTE_SOCKET__WRITE               0x00000004UL
++#define NETLINK_ROUTE_SOCKET__CREATE              0x00000008UL
++#define NETLINK_ROUTE_SOCKET__GETATTR             0x00000010UL
++#define NETLINK_ROUTE_SOCKET__SETATTR             0x00000020UL
++#define NETLINK_ROUTE_SOCKET__LOCK                0x00000040UL
++#define NETLINK_ROUTE_SOCKET__RELABELFROM         0x00000080UL
++#define NETLINK_ROUTE_SOCKET__RELABELTO           0x00000100UL
++#define NETLINK_ROUTE_SOCKET__APPEND              0x00000200UL
++#define NETLINK_ROUTE_SOCKET__BIND                0x00000400UL
++#define NETLINK_ROUTE_SOCKET__CONNECT             0x00000800UL
++#define NETLINK_ROUTE_SOCKET__LISTEN              0x00001000UL
++#define NETLINK_ROUTE_SOCKET__ACCEPT              0x00002000UL
++#define NETLINK_ROUTE_SOCKET__GETOPT              0x00004000UL
++#define NETLINK_ROUTE_SOCKET__SETOPT              0x00008000UL
++#define NETLINK_ROUTE_SOCKET__SHUTDOWN            0x00010000UL
++#define NETLINK_ROUTE_SOCKET__RECVFROM            0x00020000UL
++#define NETLINK_ROUTE_SOCKET__SENDTO              0x00040000UL
++#define NETLINK_ROUTE_SOCKET__RECV_MSG            0x00080000UL
++#define NETLINK_ROUTE_SOCKET__SEND_MSG            0x00100000UL
++#define NETLINK_ROUTE_SOCKET__NAME_BIND           0x00200000UL
++#define NETLINK_ROUTE_SOCKET__NLMSG_READ          0x00400000UL
++#define NETLINK_ROUTE_SOCKET__NLMSG_WRITE         0x00800000UL
++#define NETLINK_FIREWALL_SOCKET__IOCTL            0x00000001UL
++#define NETLINK_FIREWALL_SOCKET__READ             0x00000002UL
++#define NETLINK_FIREWALL_SOCKET__WRITE            0x00000004UL
++#define NETLINK_FIREWALL_SOCKET__CREATE           0x00000008UL
++#define NETLINK_FIREWALL_SOCKET__GETATTR          0x00000010UL
++#define NETLINK_FIREWALL_SOCKET__SETATTR          0x00000020UL
++#define NETLINK_FIREWALL_SOCKET__LOCK             0x00000040UL
++#define NETLINK_FIREWALL_SOCKET__RELABELFROM      0x00000080UL
++#define NETLINK_FIREWALL_SOCKET__RELABELTO        0x00000100UL
++#define NETLINK_FIREWALL_SOCKET__APPEND           0x00000200UL
++#define NETLINK_FIREWALL_SOCKET__BIND             0x00000400UL
++#define NETLINK_FIREWALL_SOCKET__CONNECT          0x00000800UL
++#define NETLINK_FIREWALL_SOCKET__LISTEN           0x00001000UL
++#define NETLINK_FIREWALL_SOCKET__ACCEPT           0x00002000UL
++#define NETLINK_FIREWALL_SOCKET__GETOPT           0x00004000UL
++#define NETLINK_FIREWALL_SOCKET__SETOPT           0x00008000UL
++#define NETLINK_FIREWALL_SOCKET__SHUTDOWN         0x00010000UL
++#define NETLINK_FIREWALL_SOCKET__RECVFROM         0x00020000UL
++#define NETLINK_FIREWALL_SOCKET__SENDTO           0x00040000UL
++#define NETLINK_FIREWALL_SOCKET__RECV_MSG         0x00080000UL
++#define NETLINK_FIREWALL_SOCKET__SEND_MSG         0x00100000UL
++#define NETLINK_FIREWALL_SOCKET__NAME_BIND        0x00200000UL
++#define NETLINK_FIREWALL_SOCKET__NLMSG_READ       0x00400000UL
++#define NETLINK_FIREWALL_SOCKET__NLMSG_WRITE      0x00800000UL
++#define NETLINK_TCPDIAG_SOCKET__IOCTL             0x00000001UL
++#define NETLINK_TCPDIAG_SOCKET__READ              0x00000002UL
++#define NETLINK_TCPDIAG_SOCKET__WRITE             0x00000004UL
++#define NETLINK_TCPDIAG_SOCKET__CREATE            0x00000008UL
++#define NETLINK_TCPDIAG_SOCKET__GETATTR           0x00000010UL
++#define NETLINK_TCPDIAG_SOCKET__SETATTR           0x00000020UL
++#define NETLINK_TCPDIAG_SOCKET__LOCK              0x00000040UL
++#define NETLINK_TCPDIAG_SOCKET__RELABELFROM       0x00000080UL
++#define NETLINK_TCPDIAG_SOCKET__RELABELTO         0x00000100UL
++#define NETLINK_TCPDIAG_SOCKET__APPEND            0x00000200UL
++#define NETLINK_TCPDIAG_SOCKET__BIND              0x00000400UL
++#define NETLINK_TCPDIAG_SOCKET__CONNECT           0x00000800UL
++#define NETLINK_TCPDIAG_SOCKET__LISTEN            0x00001000UL
++#define NETLINK_TCPDIAG_SOCKET__ACCEPT            0x00002000UL
++#define NETLINK_TCPDIAG_SOCKET__GETOPT            0x00004000UL
++#define NETLINK_TCPDIAG_SOCKET__SETOPT            0x00008000UL
++#define NETLINK_TCPDIAG_SOCKET__SHUTDOWN          0x00010000UL
++#define NETLINK_TCPDIAG_SOCKET__RECVFROM          0x00020000UL
++#define NETLINK_TCPDIAG_SOCKET__SENDTO            0x00040000UL
++#define NETLINK_TCPDIAG_SOCKET__RECV_MSG          0x00080000UL
++#define NETLINK_TCPDIAG_SOCKET__SEND_MSG          0x00100000UL
++#define NETLINK_TCPDIAG_SOCKET__NAME_BIND         0x00200000UL
++#define NETLINK_TCPDIAG_SOCKET__NLMSG_READ        0x00400000UL
++#define NETLINK_TCPDIAG_SOCKET__NLMSG_WRITE       0x00800000UL
++#define NETLINK_NFLOG_SOCKET__IOCTL               0x00000001UL
++#define NETLINK_NFLOG_SOCKET__READ                0x00000002UL
++#define NETLINK_NFLOG_SOCKET__WRITE               0x00000004UL
++#define NETLINK_NFLOG_SOCKET__CREATE              0x00000008UL
++#define NETLINK_NFLOG_SOCKET__GETATTR             0x00000010UL
++#define NETLINK_NFLOG_SOCKET__SETATTR             0x00000020UL
++#define NETLINK_NFLOG_SOCKET__LOCK                0x00000040UL
++#define NETLINK_NFLOG_SOCKET__RELABELFROM         0x00000080UL
++#define NETLINK_NFLOG_SOCKET__RELABELTO           0x00000100UL
++#define NETLINK_NFLOG_SOCKET__APPEND              0x00000200UL
++#define NETLINK_NFLOG_SOCKET__BIND                0x00000400UL
++#define NETLINK_NFLOG_SOCKET__CONNECT             0x00000800UL
++#define NETLINK_NFLOG_SOCKET__LISTEN              0x00001000UL
++#define NETLINK_NFLOG_SOCKET__ACCEPT              0x00002000UL
++#define NETLINK_NFLOG_SOCKET__GETOPT              0x00004000UL
++#define NETLINK_NFLOG_SOCKET__SETOPT              0x00008000UL
++#define NETLINK_NFLOG_SOCKET__SHUTDOWN            0x00010000UL
++#define NETLINK_NFLOG_SOCKET__RECVFROM            0x00020000UL
++#define NETLINK_NFLOG_SOCKET__SENDTO              0x00040000UL
++#define NETLINK_NFLOG_SOCKET__RECV_MSG            0x00080000UL
++#define NETLINK_NFLOG_SOCKET__SEND_MSG            0x00100000UL
++#define NETLINK_NFLOG_SOCKET__NAME_BIND           0x00200000UL
++#define NETLINK_XFRM_SOCKET__IOCTL                0x00000001UL
++#define NETLINK_XFRM_SOCKET__READ                 0x00000002UL
++#define NETLINK_XFRM_SOCKET__WRITE                0x00000004UL
++#define NETLINK_XFRM_SOCKET__CREATE               0x00000008UL
++#define NETLINK_XFRM_SOCKET__GETATTR              0x00000010UL
++#define NETLINK_XFRM_SOCKET__SETATTR              0x00000020UL
++#define NETLINK_XFRM_SOCKET__LOCK                 0x00000040UL
++#define NETLINK_XFRM_SOCKET__RELABELFROM          0x00000080UL
++#define NETLINK_XFRM_SOCKET__RELABELTO            0x00000100UL
++#define NETLINK_XFRM_SOCKET__APPEND               0x00000200UL
++#define NETLINK_XFRM_SOCKET__BIND                 0x00000400UL
++#define NETLINK_XFRM_SOCKET__CONNECT              0x00000800UL
++#define NETLINK_XFRM_SOCKET__LISTEN               0x00001000UL
++#define NETLINK_XFRM_SOCKET__ACCEPT               0x00002000UL
++#define NETLINK_XFRM_SOCKET__GETOPT               0x00004000UL
++#define NETLINK_XFRM_SOCKET__SETOPT               0x00008000UL
++#define NETLINK_XFRM_SOCKET__SHUTDOWN             0x00010000UL
++#define NETLINK_XFRM_SOCKET__RECVFROM             0x00020000UL
++#define NETLINK_XFRM_SOCKET__SENDTO               0x00040000UL
++#define NETLINK_XFRM_SOCKET__RECV_MSG             0x00080000UL
++#define NETLINK_XFRM_SOCKET__SEND_MSG             0x00100000UL
++#define NETLINK_XFRM_SOCKET__NAME_BIND            0x00200000UL
++#define NETLINK_XFRM_SOCKET__NLMSG_READ           0x00400000UL
++#define NETLINK_XFRM_SOCKET__NLMSG_WRITE          0x00800000UL
++#define NETLINK_SELINUX_SOCKET__IOCTL             0x00000001UL
++#define NETLINK_SELINUX_SOCKET__READ              0x00000002UL
++#define NETLINK_SELINUX_SOCKET__WRITE             0x00000004UL
++#define NETLINK_SELINUX_SOCKET__CREATE            0x00000008UL
++#define NETLINK_SELINUX_SOCKET__GETATTR           0x00000010UL
++#define NETLINK_SELINUX_SOCKET__SETATTR           0x00000020UL
++#define NETLINK_SELINUX_SOCKET__LOCK              0x00000040UL
++#define NETLINK_SELINUX_SOCKET__RELABELFROM       0x00000080UL
++#define NETLINK_SELINUX_SOCKET__RELABELTO         0x00000100UL
++#define NETLINK_SELINUX_SOCKET__APPEND            0x00000200UL
++#define NETLINK_SELINUX_SOCKET__BIND              0x00000400UL
++#define NETLINK_SELINUX_SOCKET__CONNECT           0x00000800UL
++#define NETLINK_SELINUX_SOCKET__LISTEN            0x00001000UL
++#define NETLINK_SELINUX_SOCKET__ACCEPT            0x00002000UL
++#define NETLINK_SELINUX_SOCKET__GETOPT            0x00004000UL
++#define NETLINK_SELINUX_SOCKET__SETOPT            0x00008000UL
++#define NETLINK_SELINUX_SOCKET__SHUTDOWN          0x00010000UL
++#define NETLINK_SELINUX_SOCKET__RECVFROM          0x00020000UL
++#define NETLINK_SELINUX_SOCKET__SENDTO            0x00040000UL
++#define NETLINK_SELINUX_SOCKET__RECV_MSG          0x00080000UL
++#define NETLINK_SELINUX_SOCKET__SEND_MSG          0x00100000UL
++#define NETLINK_SELINUX_SOCKET__NAME_BIND         0x00200000UL
++#define NETLINK_AUDIT_SOCKET__IOCTL               0x00000001UL
++#define NETLINK_AUDIT_SOCKET__READ                0x00000002UL
++#define NETLINK_AUDIT_SOCKET__WRITE               0x00000004UL
++#define NETLINK_AUDIT_SOCKET__CREATE              0x00000008UL
++#define NETLINK_AUDIT_SOCKET__GETATTR             0x00000010UL
++#define NETLINK_AUDIT_SOCKET__SETATTR             0x00000020UL
++#define NETLINK_AUDIT_SOCKET__LOCK                0x00000040UL
++#define NETLINK_AUDIT_SOCKET__RELABELFROM         0x00000080UL
++#define NETLINK_AUDIT_SOCKET__RELABELTO           0x00000100UL
++#define NETLINK_AUDIT_SOCKET__APPEND              0x00000200UL
++#define NETLINK_AUDIT_SOCKET__BIND                0x00000400UL
++#define NETLINK_AUDIT_SOCKET__CONNECT             0x00000800UL
++#define NETLINK_AUDIT_SOCKET__LISTEN              0x00001000UL
++#define NETLINK_AUDIT_SOCKET__ACCEPT              0x00002000UL
++#define NETLINK_AUDIT_SOCKET__GETOPT              0x00004000UL
++#define NETLINK_AUDIT_SOCKET__SETOPT              0x00008000UL
++#define NETLINK_AUDIT_SOCKET__SHUTDOWN            0x00010000UL
++#define NETLINK_AUDIT_SOCKET__RECVFROM            0x00020000UL
++#define NETLINK_AUDIT_SOCKET__SENDTO              0x00040000UL
++#define NETLINK_AUDIT_SOCKET__RECV_MSG            0x00080000UL
++#define NETLINK_AUDIT_SOCKET__SEND_MSG            0x00100000UL
++#define NETLINK_AUDIT_SOCKET__NAME_BIND           0x00200000UL
++#define NETLINK_AUDIT_SOCKET__NLMSG_READ          0x00400000UL
++#define NETLINK_AUDIT_SOCKET__NLMSG_WRITE         0x00800000UL
++#define NETLINK_AUDIT_SOCKET__NLMSG_RELAY         0x01000000UL
++#define NETLINK_AUDIT_SOCKET__NLMSG_READPRIV      0x02000000UL
++#define NETLINK_AUDIT_SOCKET__NLMSG_TTY_AUDIT     0x04000000UL
++#define NETLINK_IP6FW_SOCKET__IOCTL               0x00000001UL
++#define NETLINK_IP6FW_SOCKET__READ                0x00000002UL
++#define NETLINK_IP6FW_SOCKET__WRITE               0x00000004UL
++#define NETLINK_IP6FW_SOCKET__CREATE              0x00000008UL
++#define NETLINK_IP6FW_SOCKET__GETATTR             0x00000010UL
++#define NETLINK_IP6FW_SOCKET__SETATTR             0x00000020UL
++#define NETLINK_IP6FW_SOCKET__LOCK                0x00000040UL
++#define NETLINK_IP6FW_SOCKET__RELABELFROM         0x00000080UL
++#define NETLINK_IP6FW_SOCKET__RELABELTO           0x00000100UL
++#define NETLINK_IP6FW_SOCKET__APPEND              0x00000200UL
++#define NETLINK_IP6FW_SOCKET__BIND                0x00000400UL
++#define NETLINK_IP6FW_SOCKET__CONNECT             0x00000800UL
++#define NETLINK_IP6FW_SOCKET__LISTEN              0x00001000UL
++#define NETLINK_IP6FW_SOCKET__ACCEPT              0x00002000UL
++#define NETLINK_IP6FW_SOCKET__GETOPT              0x00004000UL
++#define NETLINK_IP6FW_SOCKET__SETOPT              0x00008000UL
++#define NETLINK_IP6FW_SOCKET__SHUTDOWN            0x00010000UL
++#define NETLINK_IP6FW_SOCKET__RECVFROM            0x00020000UL
++#define NETLINK_IP6FW_SOCKET__SENDTO              0x00040000UL
++#define NETLINK_IP6FW_SOCKET__RECV_MSG            0x00080000UL
++#define NETLINK_IP6FW_SOCKET__SEND_MSG            0x00100000UL
++#define NETLINK_IP6FW_SOCKET__NAME_BIND           0x00200000UL
++#define NETLINK_IP6FW_SOCKET__NLMSG_READ          0x00400000UL
++#define NETLINK_IP6FW_SOCKET__NLMSG_WRITE         0x00800000UL
++#define NETLINK_DNRT_SOCKET__IOCTL                0x00000001UL
++#define NETLINK_DNRT_SOCKET__READ                 0x00000002UL
++#define NETLINK_DNRT_SOCKET__WRITE                0x00000004UL
++#define NETLINK_DNRT_SOCKET__CREATE               0x00000008UL
++#define NETLINK_DNRT_SOCKET__GETATTR              0x00000010UL
++#define NETLINK_DNRT_SOCKET__SETATTR              0x00000020UL
++#define NETLINK_DNRT_SOCKET__LOCK                 0x00000040UL
++#define NETLINK_DNRT_SOCKET__RELABELFROM          0x00000080UL
++#define NETLINK_DNRT_SOCKET__RELABELTO            0x00000100UL
++#define NETLINK_DNRT_SOCKET__APPEND               0x00000200UL
++#define NETLINK_DNRT_SOCKET__BIND                 0x00000400UL
++#define NETLINK_DNRT_SOCKET__CONNECT              0x00000800UL
++#define NETLINK_DNRT_SOCKET__LISTEN               0x00001000UL
++#define NETLINK_DNRT_SOCKET__ACCEPT               0x00002000UL
++#define NETLINK_DNRT_SOCKET__GETOPT               0x00004000UL
++#define NETLINK_DNRT_SOCKET__SETOPT               0x00008000UL
++#define NETLINK_DNRT_SOCKET__SHUTDOWN             0x00010000UL
++#define NETLINK_DNRT_SOCKET__RECVFROM             0x00020000UL
++#define NETLINK_DNRT_SOCKET__SENDTO               0x00040000UL
++#define NETLINK_DNRT_SOCKET__RECV_MSG             0x00080000UL
++#define NETLINK_DNRT_SOCKET__SEND_MSG             0x00100000UL
++#define NETLINK_DNRT_SOCKET__NAME_BIND            0x00200000UL
++#define ASSOCIATION__SENDTO                       0x00000001UL
++#define ASSOCIATION__RECVFROM                     0x00000002UL
++#define ASSOCIATION__SETCONTEXT                   0x00000004UL
++#define ASSOCIATION__POLMATCH                     0x00000008UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__IOCTL      0x00000001UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__READ       0x00000002UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__WRITE      0x00000004UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__CREATE     0x00000008UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__GETATTR    0x00000010UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__SETATTR    0x00000020UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__LOCK       0x00000040UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__RELABELFROM 0x00000080UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__RELABELTO  0x00000100UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__APPEND     0x00000200UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__BIND       0x00000400UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__CONNECT    0x00000800UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__LISTEN     0x00001000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__ACCEPT     0x00002000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__GETOPT     0x00004000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__SETOPT     0x00008000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__SHUTDOWN   0x00010000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__RECVFROM   0x00020000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__SENDTO     0x00040000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__RECV_MSG   0x00080000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__SEND_MSG   0x00100000UL
++#define NETLINK_KOBJECT_UEVENT_SOCKET__NAME_BIND  0x00200000UL
++#define APPLETALK_SOCKET__IOCTL                   0x00000001UL
++#define APPLETALK_SOCKET__READ                    0x00000002UL
++#define APPLETALK_SOCKET__WRITE                   0x00000004UL
++#define APPLETALK_SOCKET__CREATE                  0x00000008UL
++#define APPLETALK_SOCKET__GETATTR                 0x00000010UL
++#define APPLETALK_SOCKET__SETATTR                 0x00000020UL
++#define APPLETALK_SOCKET__LOCK                    0x00000040UL
++#define APPLETALK_SOCKET__RELABELFROM             0x00000080UL
++#define APPLETALK_SOCKET__RELABELTO               0x00000100UL
++#define APPLETALK_SOCKET__APPEND                  0x00000200UL
++#define APPLETALK_SOCKET__BIND                    0x00000400UL
++#define APPLETALK_SOCKET__CONNECT                 0x00000800UL
++#define APPLETALK_SOCKET__LISTEN                  0x00001000UL
++#define APPLETALK_SOCKET__ACCEPT                  0x00002000UL
++#define APPLETALK_SOCKET__GETOPT                  0x00004000UL
++#define APPLETALK_SOCKET__SETOPT                  0x00008000UL
++#define APPLETALK_SOCKET__SHUTDOWN                0x00010000UL
++#define APPLETALK_SOCKET__RECVFROM                0x00020000UL
++#define APPLETALK_SOCKET__SENDTO                  0x00040000UL
++#define APPLETALK_SOCKET__RECV_MSG                0x00080000UL
++#define APPLETALK_SOCKET__SEND_MSG                0x00100000UL
++#define APPLETALK_SOCKET__NAME_BIND               0x00200000UL
++#define PACKET__SEND                              0x00000001UL
++#define PACKET__RECV                              0x00000002UL
++#define PACKET__RELABELTO                         0x00000004UL
++#define PACKET__FLOW_IN                           0x00000008UL
++#define PACKET__FLOW_OUT                          0x00000010UL
++#define PACKET__FORWARD_IN                        0x00000020UL
++#define PACKET__FORWARD_OUT                       0x00000040UL
++#define KEY__VIEW                                 0x00000001UL
++#define KEY__READ                                 0x00000002UL
++#define KEY__WRITE                                0x00000004UL
++#define KEY__SEARCH                               0x00000008UL
++#define KEY__LINK                                 0x00000010UL
++#define KEY__SETATTR                              0x00000020UL
++#define KEY__CREATE                               0x00000040UL
++#define DCCP_SOCKET__IOCTL                        0x00000001UL
++#define DCCP_SOCKET__READ                         0x00000002UL
++#define DCCP_SOCKET__WRITE                        0x00000004UL
++#define DCCP_SOCKET__CREATE                       0x00000008UL
++#define DCCP_SOCKET__GETATTR                      0x00000010UL
++#define DCCP_SOCKET__SETATTR                      0x00000020UL
++#define DCCP_SOCKET__LOCK                         0x00000040UL
++#define DCCP_SOCKET__RELABELFROM                  0x00000080UL
++#define DCCP_SOCKET__RELABELTO                    0x00000100UL
++#define DCCP_SOCKET__APPEND                       0x00000200UL
++#define DCCP_SOCKET__BIND                         0x00000400UL
++#define DCCP_SOCKET__CONNECT                      0x00000800UL
++#define DCCP_SOCKET__LISTEN                       0x00001000UL
++#define DCCP_SOCKET__ACCEPT                       0x00002000UL
++#define DCCP_SOCKET__GETOPT                       0x00004000UL
++#define DCCP_SOCKET__SETOPT                       0x00008000UL
++#define DCCP_SOCKET__SHUTDOWN                     0x00010000UL
++#define DCCP_SOCKET__RECVFROM                     0x00020000UL
++#define DCCP_SOCKET__SENDTO                       0x00040000UL
++#define DCCP_SOCKET__RECV_MSG                     0x00080000UL
++#define DCCP_SOCKET__SEND_MSG                     0x00100000UL
++#define DCCP_SOCKET__NAME_BIND                    0x00200000UL
++#define DCCP_SOCKET__NODE_BIND                    0x00400000UL
++#define DCCP_SOCKET__NAME_CONNECT                 0x00800000UL
++#define MEMPROTECT__MMAP_ZERO                     0x00000001UL
++#define PEER__RECV                                0x00000001UL
++#define CAPABILITY2__MAC_OVERRIDE                 0x00000001UL
++#define CAPABILITY2__MAC_ADMIN                    0x00000002UL
++#define KERNEL_SERVICE__USE_AS_OVERRIDE           0x00000001UL
++#define KERNEL_SERVICE__CREATE_FILES_AS           0x00000002UL
++#define TUN_SOCKET__IOCTL                         0x00000001UL
++#define TUN_SOCKET__READ                          0x00000002UL
++#define TUN_SOCKET__WRITE                         0x00000004UL
++#define TUN_SOCKET__CREATE                        0x00000008UL
++#define TUN_SOCKET__GETATTR                       0x00000010UL
++#define TUN_SOCKET__SETATTR                       0x00000020UL
++#define TUN_SOCKET__LOCK                          0x00000040UL
++#define TUN_SOCKET__RELABELFROM                   0x00000080UL
++#define TUN_SOCKET__RELABELTO                     0x00000100UL
++#define TUN_SOCKET__APPEND                        0x00000200UL
++#define TUN_SOCKET__BIND                          0x00000400UL
++#define TUN_SOCKET__CONNECT                       0x00000800UL
++#define TUN_SOCKET__LISTEN                        0x00001000UL
++#define TUN_SOCKET__ACCEPT                        0x00002000UL
++#define TUN_SOCKET__GETOPT                        0x00004000UL
++#define TUN_SOCKET__SETOPT                        0x00008000UL
++#define TUN_SOCKET__SHUTDOWN                      0x00010000UL
++#define TUN_SOCKET__RECVFROM                      0x00020000UL
++#define TUN_SOCKET__SENDTO                        0x00040000UL
++#define TUN_SOCKET__RECV_MSG                      0x00080000UL
++#define TUN_SOCKET__SEND_MSG                      0x00100000UL
++#define TUN_SOCKET__NAME_BIND                     0x00200000UL
++
++#endif
