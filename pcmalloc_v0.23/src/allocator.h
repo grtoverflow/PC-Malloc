@@ -10,9 +10,12 @@
 /* type of pc_malloc */
 #ifndef PC_MALLOC_TYPE
 #define UNKNOWN_MAPPING			0
-#define RESTRICT_MAPPING		1
-#define OPEN_MAPPING			2
+#define RESTRICT_MAPPING		2
+#define OPEN_MAPPING			3
 #endif /* PC_MALLOC_TYPE */
+
+#define MAP_CACHE_AWARE_STATE           0x40UL
+#define REMAP_CACHE_AWARE_STATE         0x80UL
 
 
 int pc_malloc_init();

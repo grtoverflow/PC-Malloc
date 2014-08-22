@@ -65,7 +65,10 @@ expand_pool(unsigned int size, int type)
 	alisz = ALIGNSIZE(sz);
 
 	void *expand_chunk =
-			mmap(NULL, alisz, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+			mmap(NULL, alisz, PROT_READ|PROT_WRITE, 
+				MAP_PRIVATE|MAP_ANONYMOUS|MAP_CACHE_AWARE_STATE, 
+				-1, type);
+
 	if (__builtin_expect((expand_chunk == (void *)-1), 0))
 		return NULL;
 	p = (memchunk *)expand_chunk;
@@ -374,7 +377,9 @@ pc_malloc(int type, size_t bytes)
 		int fuckindex	= 0;
 
 		for ( ; p!=q; ) {
+		//printf("in for,out fit_size\n");
 			if (fit_size(p, sz)) {
+			//printf("in fit_size\n");
 				p->next->pre = p->pre;
 				p->pre->next = p->next;
 				s = p;

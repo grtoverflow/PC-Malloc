@@ -6,8 +6,8 @@
 #include "chunk_monitor.h"
 
 #ifndef PC_MALLOC_TYPE
-#define RESTRICT_MAPPING		1
-#define OPEN_MAPPING			2
+#define RESTRICT_MAPPING		2
+#define OPEN_MAPPING			3
 #endif /* PC_MALLOC_TYPE */
 
 #define CALL_STACK_DEPTH	16
