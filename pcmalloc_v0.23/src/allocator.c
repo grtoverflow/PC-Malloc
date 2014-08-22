@@ -374,9 +374,7 @@ pc_malloc(int type, size_t bytes)
 		int fuckindex	= 0;
 
 		for ( ; p!=q; ) {
-		//printf("in for,out fit_size\n");
 			if (fit_size(p, sz)) {
-			//printf("in fit_size\n");
 				p->next->pre = p->pre;
 				p->pre->next = p->next;
 				s = p;
