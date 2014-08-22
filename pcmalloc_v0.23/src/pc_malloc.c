@@ -34,6 +34,12 @@
 #define STANDALONE_CHUNK_SAMPLE	2
 
 
+#define ACT_MALLOC	1
+#define ACT_CALLOC	2
+#define ACT_REALLOC	3
+#define ACT_FREE	4
+
+
 static int pc_malloc_state = PC_MALLOC_UNINIT;
 static int malloc_depth = 0;
 
@@ -303,8 +309,8 @@ get_predict_mr(struct alloc_context *context)
 		? context->predict_mr[0] : context->predict_mr[1];
 }
 
-static inline void
-attach_chunk_to_context(void *p, size_t size, 
+static inline void*
+attach_chunk_to_context(void *p, size_t size, int type, int action,
 		struct alloc_context *context) 
 {
 	struct memory_chunk *chunk;
@@ -319,7 +325,6 @@ attach_chunk_to_context(void *p, size_t size,
 
 	context->nr_chunks++;
 
-	set_chunk_private(p, chunk);
 
 	if (likely(cache_control_enabled())) {
 		chunk->mapping_type = get_mapping_type(context);
@@ -342,7 +347,6 @@ attach_chunk_to_context(void *p, size_t size,
 #endif
 		if (context->sample_skip == 0
 				|| context->last_chunk_sz != size) {
-			monit_chunk(chunk);
 			context->sample_skip = context->skip_interval;
 			chunk->under_sampling |= CHUNK_UNDER_SAMPLE;
 			if (context->last_chunk_sz != size) {
@@ -351,6 +355,30 @@ attach_chunk_to_context(void *p, size_t size,
 				context->predict_mr[0] = -1;
 				chunk->under_sampling |= STANDALONE_CHUNK_SAMPLE;
 			}
+			if (size < SMALL_MEMORY_CHUNK) {
+				switch (action) {
+				case ACT_MALLOC:
+					pc_free(p);
+					p = pc_malloc(type, SMALL_MEMORY_CHUNK);
+					break;
+				case ACT_CALLOC:
+					pc_free(p);
+					p = pc_calloc(type, SMALL_MEMORY_CHUNK, 1);
+					break;
+				case ACT_REALLOC:
+					p = pc_realloc(type, p, SMALL_MEMORY_CHUNK);
+					break;
+				default:
+#ifdef USE_ASSERT
+					assert(0);
+#endif /* USE_ASSERT */
+					break;
+				}
+					
+				chunk->addr = (unsigned long)p;
+				chunk->size = SMALL_MEMORY_CHUNK;
+			}
+			monit_chunk(chunk);
 		} else {
 			context->sample_skip--;
 			chunk->under_sampling = 0;
@@ -358,6 +386,9 @@ attach_chunk_to_context(void *p, size_t size,
 	}
 
 	context->last_chunk_sz = size;
+	set_chunk_private(p, chunk);
+
+	return p;
 }
 
 static unsigned long n_detach = 0;
@@ -496,29 +527,12 @@ out:
 void
 malloc_destroy()
 {
-#ifdef PCMALLOC_DEBUG
-	FILE *f;
-	unsigned long usec;
-#endif /* PCMALLOC_DEBUG */
-
 	if (pc_malloc_state == PC_MALLOC_UNINIT)
 		return;
 
 	inc_malloc_depth();
 
 	gettimeofday(&end, NULL);
-
-#ifdef PCMALLOC_DEBUG
-#if 0
-	usec = (end.tv_sec - start.tv_sec) * 1000000
-		+ end.tv_usec - start.tv_usec;
-	f = fopen(get_out_path(), "a+");
-	fprintf(f, "\n\n");
-	fprintf(f, "execution time:\n");
-	fprintf(f, "%lu.%lu\n", usec / 1000000, usec % 1000000);
-	fclose(f);
-#endif
-#endif /* PCMALLOC_DEBUG */
 
 	hash_map_64_destroy();
 
@@ -527,7 +541,6 @@ malloc_destroy()
 	chunk_monitor_destroy();
 //	pc_malloc_destroy();
 
-	printf("n_detach %lu\n", n_detach);
 	pc_malloc_state = PC_MALLOC_UNINIT;
 
 	dec_malloc_depth();
@@ -564,8 +577,7 @@ malloc(size_t size)
 	if (unlikely(!pc_malloc_active()))
 		malloc_init();
 
-	if (likely(size < SMALL_MEMORY_CHUNK
-			|| inner_malloc())) {
+	if (inner_malloc()) {
 		p = pc_malloc(OPEN_MAPPING, size);	
 		goto done;
 	}
@@ -577,7 +589,7 @@ malloc(size_t size)
 
 	p = pc_malloc(type, size);	
 
-	attach_chunk_to_context(p, size, context);
+	p = attach_chunk_to_context(p, size, type, ACT_MALLOC, context);
 
 	dec_malloc_depth();
 
@@ -595,12 +607,11 @@ calloc(size_t nmemb, size_t size)
 	if (unlikely(!pc_malloc_active()))
 		malloc_init();
 
-	if (likely(nmemb * size < SMALL_MEMORY_CHUNK
-			|| inner_malloc())) {
+	if (inner_malloc()) {
 		p = pc_calloc(OPEN_MAPPING, nmemb, size);	
 		goto done;
 	}
-	
+
 	inc_malloc_depth();
 
 	context = get_alloc_context();
@@ -608,7 +619,7 @@ calloc(size_t nmemb, size_t size)
 
 	p = pc_calloc(type, nmemb, size);	
 
-	attach_chunk_to_context(p, nmemb * size, context);
+	p = attach_chunk_to_context(p, nmemb * size, type, ACT_CALLOC, context);
 
 	dec_malloc_depth();
 
@@ -654,13 +665,13 @@ realloc(void *old, size_t size)
 	}
 #endif
 
-	if (likely(size < SMALL_MEMORY_CHUNK 
-			|| inner_malloc())) {
+	if (inner_malloc()) {
 		if (old == NULL)
 			p = pc_malloc(OPEN_MAPPING, size);	
 		else
 			p = pc_realloc(OPEN_MAPPING, old, size);	
 		goto done;
+
 	}
 
 	inc_malloc_depth();
@@ -675,7 +686,7 @@ realloc(void *old, size_t size)
 		p = pc_realloc(type, old, size);	
 	}
 
-	attach_chunk_to_context(p, size, context);
+	p = attach_chunk_to_context(p, size, type, ACT_REALLOC, context);
 
 	dec_malloc_depth();
 
