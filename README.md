@@ -8,7 +8,7 @@ The traditional design objectives of dynamic memory allocators are about the top
 
 From this point of view, it is necessary to integrate cache resource management into dynamic memory allocator. In other words, the dynamic memory allocator should be extended to perform as a dual-memory-layer-manager, which handles main memory allocations, as well as cache memory allocations.
 
-PC-Malloc is a novel allocator that targeting on this goal. Compared with traditional memory allocator, its major difference lies on the management of cache resources: Once an allocation request arrives, PC-Malloc quantifies the demand on both main memory resources and CPU cache resources, and makes the resource allocation on the two memory layers simultaneously to complete the single allocation request.
+PC-Malloc is a novel allocator that targeting on this goal. Compared with traditional memory allocator, its major difference lies on the management of cache resources: once an allocation request arrives, PC-Malloc quantifies the demand on both main memory resources and CPU cache resources, and makes the resource allocation on the two memory layers simultaneously to complete the single allocation request.
 
 Library Interfaces
 ---------
