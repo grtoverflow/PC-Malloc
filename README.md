@@ -38,7 +38,7 @@ Setup
 ---------
 In order to use PC-Malloc, there needs to make two efforts.
 
-1.	OS kernel modification. PC-Malloc relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the linux kernel "kernel-2.6.32-71". Please see /kernel\_patch/readme.txt for more details.
+1.	OS kernel modification. PC-Malloc relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the linux kernel "kernel-2.6.32-71.el6". Please see /kernel\_patch/readme.txt for more details.
 
 2.	Install PC-Malloc library. The source code of PC-Malloc library is under /pcmalloc\_v0.23. Please see /pcmalloc\_v0.23/readme.txt for more details.
 
