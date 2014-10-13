@@ -8,13 +8,12 @@
 #include <assert.h>
 
 #include "config.h"
-#include "sys_descript.h"
 #include "build_in.h"
 #include "pc_malloc.h"
 #include "llc_event_cntr.h"
 
-#ifdef USE_PERF_EVENT
 
+#ifdef USE_PERF_EVENT
 
 #include "perf_event.h"
 
@@ -87,7 +86,6 @@ llc_event_cntr_destroy()
 int 
 llc_event_cntr_read(uint64_t *cntr_buf, int size)
 {
-	int ret;
 	int group_fd;
 
 	group_fd = event_fd[0];
@@ -95,7 +93,7 @@ llc_event_cntr_read(uint64_t *cntr_buf, int size)
 	assert(group_fd != 0);
 #endif //USE_ASSERT
 
-	ret = read(group_fd, perf_cntr_buf, cntr_buf_size);
+	read(group_fd, perf_cntr_buf, cntr_buf_size);
 
 #ifdef USE_ASSERT
 	assert(perf_cntr_buf[0] == NR_LLC_PERFEVENT);
@@ -162,9 +160,9 @@ llc_event_cntr_stop()
 
 static int event_set = PAPI_NULL;
 
-char *l2_lines_in_name = "L2_LINES_IN";
-char *llc_miss_event_name = "ix86arch::LLC_MISSES";
-char *llc_access_event_name = "ix86arch::LLC_REFERENCES";
+char *l2_lines_in_name = L2_MISS_EVENT_NAME;
+char *llc_miss_event_name = L3_MISS_EVENT_NAME;
+char *llc_access_event_name = L3_ACCESS_EVENT_NAME;
 #if 0
 char *llc_miss_event_name = "L2_LINES_IN";
 char *llc_access_event_name = "ix86arch::LLC_REFERENCES";

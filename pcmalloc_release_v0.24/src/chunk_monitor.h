@@ -19,7 +19,13 @@
 #define MIN_SAMPLE_CYCLE		2
 #define MAX_SAMPLE_CYCLE		8
 
-#define MONIT_CONV_ERR			0.05
+
+/* sample state */
+#define START_SAMPLE	0
+#define FIRST_ROUND 	1
+#define SECOND_ROUND 	2
+#define LAST_ROUND 	3
+
 
 struct page_sample {
 	unsigned long addr;

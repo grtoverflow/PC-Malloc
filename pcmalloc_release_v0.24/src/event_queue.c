@@ -8,10 +8,10 @@
 #include <sys/time.h>
 #include <assert.h>
 
-#include "time_event_queue.h"
 #include "list.h"
 #include "hash_map_64.h"
 #include "pc_malloc.h"
+#include "event_queue.h"
 
 
 /* timer config */

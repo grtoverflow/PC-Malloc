@@ -8,7 +8,7 @@
 #include "hash_map_64.h"
 #include "pc_malloc.h"
 #include "chunk_monitor.h"
-#include "time_event_queue.h"
+#include "event_queue.h"
 #include "page_sample_map.h"
 
 
@@ -182,7 +182,6 @@ page_sample_map_destroy()
 	struct page_block *block;
 	struct page_sample *page_sample;
 
-printf("page_sample_map_destroy\n");
 	hash_map_64_delete(page_map.page_block_map);
 
 	while (!list_empty(&page_map.page_block_list)) {

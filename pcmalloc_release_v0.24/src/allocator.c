@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "sys_descript.h"
 #include "config.h"
 #include "build_in.h"
 #include "allocator.h"
@@ -650,6 +649,35 @@ pc_realloc(int type, void *p, size_t newsize)
 			return NULL;
 		}
 	}
+}
+
+
+void 
+switch_mapping(void *p, int target_mapping)
+{
+	if (unlikely(p == NULL)) {
+		return;
+	}
+
+	memchunk *s;
+	
+	if (((unsigned *)p)[-2] != boot_alloc_mark) {
+		return;
+	}
+
+	unsigned int offset = ((unsigned *)p)[-1];
+	p = (char *)p - offset;
+	s = (memchunk *)((char *)p - head_reserve);
+
+	if ((s->used) != 1 || s->type == target_mapping) {
+		return;
+	}
+
+	s->type = target_mapping;
+	
+	mmap(NULL, s->size, PROT_READ|PROT_WRITE, 
+				MAP_PRIVATE|MAP_ANONYMOUS|REMAP_CACHE_AWARE_STATE, 
+				-1, target_mapping);
 }
 
 size_t

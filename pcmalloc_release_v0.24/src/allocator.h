@@ -4,27 +4,17 @@
 #include <stdlib.h>
 
 #include "config.h"
-#include "sys_descript.h"
 
 
-/* type of pc_malloc */
-#ifndef PC_MALLOC_TYPE
-#define UNKNOWN_MAPPING			0
-#define RESTRICT_MAPPING		2
-#define OPEN_MAPPING			3
-#endif /* PC_MALLOC_TYPE */
-
-#define MAP_CACHE_AWARE_STATE           0x40UL
-#define REMAP_CACHE_AWARE_STATE         0x80UL
 
 
 int pc_malloc_init();
-int pc_malloc_destroy();
 
 void* pc_malloc(int type, size_t sz);
 void* pc_realloc(int type, void *p, size_t newsize);
 void* pc_calloc(int type, size_t nmemb, size_t sz);
 void pc_free(void *p);
+void switch_mapping(void *p, int target_mapping);
 
 void set_chunk_private(void *p, void *private);
 void* get_chunk_private(void *p);

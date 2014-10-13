@@ -13,11 +13,14 @@
 #include "config.h"
 #include "build_in.h"
 #include "chunk_monitor.h"
+#include "chunk_predictor.h"
+#include "locality_profile.h"
 #include "pc_malloc.h"
-#include "time_event_queue.h"
+#include "event_queue.h"
 #include "page_sample_map.h"
 #include "llc_event_cntr.h"
-#include "spec_conf.h"
+#include "pc_malloc.h"
+#include "allocator.h"
 
 
 /* monitor state */
@@ -120,8 +123,8 @@ burst_skip_update(uint64_t *llc_event_cntr)
 
 /* page sample operations */
 static inline void
-init_page_sample(struct page_sample *sample, 
-		struct memory_chunk *chunk, unsigned long addr)
+init_page_sample(struct page_sample *sample, struct memory_chunk *chunk,
+                 unsigned long addr)
 {
 	int i;
 
@@ -133,7 +136,6 @@ init_page_sample(struct page_sample *sample,
 	sample->total_ref = 0;
 
 	sample->addr = addr & PAGE_MASK;
-	list_add(&sample->sibling, &chunk->sample);
 	sample->chunk = chunk;
 	sample->state = WAIT_FIRST_ACCESS;
 
@@ -204,12 +206,36 @@ copy_llc_event_cntr(uint64_t *cntr_buf0, uint64_t *cntr_buf1)
 #define SAMPLE_COMPLETE		1
 #define WAIT_NEXT_SAMPLE	2
 
+
+static inline void
+adjust_mapping(int target_mapping, struct memory_chunk *chunk)
+{
+	if (chunk->mapping_type == target_mapping)
+		return;
+
+#ifdef MONITOR_INFO
+	printf("mapping switch, %s->%s chunk=%lu context=%lu\n",
+	       chunk->mapping_type == OPEN_MAPPING ? "OPEN_MAPPING" : "RESTRICT_MAPPING",
+	       target_mapping == OPEN_MAPPING ? "OPEN_MAPPING" : "RESTRICT_MAPPING",
+	       chunk->idx, chunk->context->idx);
+#endif /* MONITOR_INFO */
+
+	switch_mapping((void*)chunk->addr, target_mapping);
+	chunk->mapping_type = target_mapping;
+}
+
+static void
+revive_sample_handler(void *private, struct timeval *tv);
+
+
 static int 
 page_sample_complete(struct page_sample *sample)
 {
 	struct memory_chunk *chunk;
 	float mr0, mr1, eps;
 	int ret;
+	int target_mapping;
+	struct timeval tv;
 
 	chunk = sample->chunk;
 	if (chunk->state == CHUNK_MONIT_FINISH) {
@@ -218,20 +244,10 @@ page_sample_complete(struct page_sample *sample)
 	
 	ret = 0;
 
-	#if 0
-	printf("chunk %lu cycle %d %d i_total_ref %d nr_sample %d\n",
-		chunk->idx, chunk->base_sample_cycle, chunk->sample_cycle,
-		chunk->i_total_ref, chunk->nr_sample);
-	#endif
 	if (chunk->i_total_ref == chunk->nr_sample) {
 		if (chunk->sample_cycle < chunk->base_sample_cycle - 1) {
 			ret = 0;	
 		} else {
-		#if 0
-		printf("chunk %lu llc_pollutor_ref %d total_ref %d i_pollutor_ref %d i_total_ref %d\n",
-				chunk->idx, chunk->llc_pollutor_ref, chunk->total_ref,
-				chunk->i_pollutor_ref, chunk->i_total_ref);
-		#endif
 			mr0 = chunk->total_ref == 0 ? 0.0 
 				: (float)chunk->llc_pollutor_ref / (float)chunk->total_ref;
 			mr1 = (float)(chunk->llc_pollutor_ref + chunk->i_pollutor_ref)
@@ -251,14 +267,28 @@ page_sample_complete(struct page_sample *sample)
 		chunk->i_pollutor_ref = 0;
 		chunk->i_total_ref = 0;
 		chunk->sample_cycle++;
-		#if 0
-		printf("chunk %lu eps %.4f iter %d\n", 
-			chunk->idx, eps, chunk->sample_cycle);
-		#endif
 	}
 
 	if (chunk->state == CHUNK_MONIT_FINISH) {
-		update_context_mapping_type(chunk);
+		if (chunk->sample_state == START_SAMPLE) {
+			chunk->sample_state = FIRST_ROUND;
+		} else if (chunk->sample_state == FIRST_ROUND) {
+			chunk->sample_state = SECOND_ROUND;
+		}
+		target_mapping = update_context_mapping_type(chunk);
+#ifdef MONITOR_INFO
+		printf("monitoring round finished, round=%s, chunk=%lu context=%lu\n",
+		       chunk->sample_state == FIRST_ROUND ? "first_round"
+		       : "following_round", chunk->idx, chunk->context->idx);
+#endif /* MONITOR_INFO */
+		if (chunk->sample_state == SECOND_ROUND) {
+			adjust_mapping(target_mapping, chunk);
+		}
+		
+		if (target_mapping == RESTRICT_MAPPING) {
+			usec2tv(&tv, SAMPLE_INTERVAL);
+			add_time_event(&tv, revive_sample_handler, (void*)chunk);
+		}
 	}
 
 	return ret;
@@ -274,18 +304,15 @@ update_chunk_sample(struct page_sample *sample, uint64_t *cntr)
 	delta_n = cntr[LLC_ACCESS_CNTR_IDX] 
 			- sample->llc_event_cntr[LLC_ACCESS_CNTR_IDX];
 	if (is_burst_access_sample(delta_n)) {
-	//	printf("is_burst_access_sample delta_n %lu\n", delta_n);
 		return 1;
 	}
 
 	delta_m = cntr[LLC_MISS_CNTR_IDX] 
 			- sample->llc_event_cntr[LLC_MISS_CNTR_IDX];
 	if (is_victim_sample(delta_m)) {
-	//	printf("is_victim_sample delta_n %lu delta_m %lu\n", delta_n, delta_m);
 		sample->llc_victim_ref++;
 		chunk->i_victim_ref++;	
 	} else {
-	//	printf("is_pollutor_sample delta_n %lu delta_m %lu\n", delta_n, delta_m);
 		sample->llc_pollutor_ref++;
 		chunk->i_pollutor_ref++;	
 	}
@@ -330,10 +357,7 @@ static void
 collect_page_sample(struct page_sample *sample, unsigned long addr)
 {
 	struct timeval tv;
-	struct memory_chunk *chunk;
 	int ret;
-
-	chunk = sample->chunk;
 
 	llc_event_cntr_read(llc_event_cntr, cntr_buf_size);
 	burst_skip_update(llc_event_cntr);
@@ -366,13 +390,6 @@ collect_page_sample(struct page_sample *sample, unsigned long addr)
 		add_time_event(&tv, burst_skip_handler, (void*)sample);
 		sample->wait_timer = 1;
 	}
-
-#if 0
-	if (chunk->nr_sample_complete == chunk->nr_sample * (SAMPLE_TIMES >> 1))
-	printf("idx %lu size %u victim %u pollutor %u total %u\n",
-			chunk->idx, (unsigned)chunk->size, 
-			chunk->llc_victim_ref, chunk->llc_pollutor_ref, chunk->total_ref);
-#endif
 }
 
 
@@ -417,19 +434,6 @@ burst_skip_handler(void *private, struct timeval *tv)
 #endif /* USE_ASSERT */
 
 	sample->wait_page_fault = 1;
-
-	#if 0
-	if (likely(enable_page_sample(sample) == 0)) {
-		sample->wait_page_fault = 1;
-	} else {
-		printf("enable_page_sample failed\n");
-		sample->wait_page_fault = 0;
-		sample->state = SAMPLE_UNINIT;
-		if (!page_sample_complete(sample)) {
-			sample->chunk->nr_sample_complete++;
-		}
-	}
-	#endif
 }
 
 static void
@@ -442,11 +446,11 @@ page_fault_handler(int sig, siginfo_t *si, void *context)
 
 	sample = get_page_sample(addr); 
 
-	if (sample == NULL || sample->chunk == NULL)
-		while(1);
-#ifdef USE_ASSERT
+	if (sample == NULL || sample->chunk == NULL) {
+		printf("Segmentation fault\n");
+		exit(1);
+	}
 	assert(sample != NULL && sample->chunk != NULL);
-#endif /* USE_ASSERT */
 
 	sample->wait_page_fault = 0;
 	if (page_sample_complete(sample) 
@@ -471,6 +475,36 @@ page_fault_handler(int sig, siginfo_t *si, void *context)
 	collect_page_sample(sample, addr);
 }
 
+static void
+revive_sample_handler(void *private, struct timeval *tv)
+{
+	struct page_sample *sample;	
+	struct memory_chunk *chunk;
+
+	chunk = (struct memory_chunk *)private;
+	chunk->llc_victim_ref = 0;
+	chunk->llc_pollutor_ref = 0;
+	chunk->total_ref = 0;
+	chunk->i_victim_ref = 0;
+	chunk->i_pollutor_ref = 0;
+	chunk->i_total_ref = 0;
+	chunk->sample_cycle = 0;
+
+	list_for_each_entry (sample, &chunk->sample, sibling) {
+		if (sample->state == SAMPLE_UNINIT) {
+			init_page_sample(sample, chunk, sample->addr);
+#ifdef USE_ASSERT
+			assert(enable_page_sample(sample) == 0);
+#else
+			enable_page_sample(sample);
+#endif /* USE_ASSERT */
+			sample->wait_page_fault = 1;
+		}
+	}	
+
+	chunk->state = CHUNK_UNDER_MONIT;
+}
+
 static inline int
 regist_page_fault_handler()
 {
@@ -492,7 +526,7 @@ get_nr_sample(unsigned long range)
 {
 	int n;
 	
-	n = (int)sqrt(range >> PAGE_SHIFT);
+	n = (int)pow((double)(range >> PAGE_SHIFT), SAMPLE_DENSITY);
 	n = n < (range >> PAGE_SHIFT) ? n + 1 : n;
 
 	return n;
@@ -553,12 +587,13 @@ monit_chunk(struct memory_chunk *chunk)
 
 	/* init monit info */
 	start = chunk->addr;
-	size = chunk->size;
+	size = chunk->size > SMALL_MEMORY_CHUNK ? chunk->size : SMALL_MEMORY_CHUNK;
 	start_align = UPPER_PAGE_ALIGN(start);
 	end_align = LOWER_PAGE_ALIGN(start + size);
 	total_range = end_align - start_align;
 	nr_sample = get_nr_sample(total_range);
 	chunk->nr_sample = nr_sample;
+	chunk->sample_state = START_SAMPLE;
 	chunk->base_sample_cycle = get_base_sample_cycle(total_range);
 	list_init(&chunk->sample);
 
@@ -568,24 +603,13 @@ monit_chunk(struct memory_chunk *chunk)
 		addr = get_sample_addr(start_align, end_align, total_range, i, nr_sample);	
 		sample = attach_page_sample(addr);
 		init_page_sample(sample, chunk, addr);
+		list_add(&sample->sibling, &chunk->sample);
 #ifdef USE_ASSERT
 		assert(enable_page_sample(sample) == 0);
 #else
 		enable_page_sample(sample);
 #endif /* USE_ASSERT */
 		sample->wait_page_fault = 1;
-		#if 0
-		if (likely(enable_page_sample(sample) == 0)) {
-			sample->wait_page_fault = 1;
-		} else {
-			printf("enable_page_sample failed\n");
-			sample->wait_page_fault = 0;
-			sample->state = SAMPLE_UNINIT;
-			if (!page_sample_complete(sample)) {
-				chunk->nr_sample_complete++;
-			}
-		}
-		#endif
 		addr += PAGE_SIZE;
 	}
 
@@ -599,13 +623,18 @@ monit_chunk(struct memory_chunk *chunk)
 int
 stop_monit_chunk(struct memory_chunk *chunk)
 {
-
 	pend_time_event_queue();
 
 	if (chunk->state != CHUNK_MONIT_FINISH) {
 		llc_event_cntr_read(llc_event_cntr, cntr_buf_size);
 		last_chunk_sample_update(chunk, llc_event_cntr);
+		chunk->sample_state = LAST_ROUND;
 		update_context_mapping_type(chunk);
+		remove_time_event(chunk); 
+#ifdef MONITOR_INFO
+		printf("monitoring finished, chunk=%lu context=%lu\n",
+		       chunk->idx, chunk->context->idx);
+#endif /* MONITOR_INFO */
 	}
 
 	chunk->state = CHUNK_MONIT_FINISH;

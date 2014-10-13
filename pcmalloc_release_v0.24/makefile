@@ -10,8 +10,9 @@ clean:
 
 
 install:
-	mkdir /usr/local/pcmalloc
 	cp obj/libpcmalloc.so /usr/local/pcmalloc/libpcmalloc.so
+#	mkdir /usr/local/pcmalloc
+#	cp obj/libpcmalloc.so /usr/local/pcmalloc/libpcmalloc.so
 
 .PHONY: pcmalloc clean install
 

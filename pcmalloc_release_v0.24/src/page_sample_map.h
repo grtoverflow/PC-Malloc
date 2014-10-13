@@ -2,7 +2,8 @@
 #define PAGE_SAMPLE_MAP_H_
 
 
-#include "sys_descript.h"
+#include "config.h"
+
 
 #define BLOCK_SEG_LEN		12
 /* # of pages per page block */
