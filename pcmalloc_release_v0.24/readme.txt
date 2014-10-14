@@ -1,4 +1,5 @@
 Usage:
+
 1.install papi
  1) get papi at http://icl.cs.utk.edu/papi/software/index.html, and install.
  2) find the native events of l2 cache miss, l3 cache miss, and l3 cache access.
@@ -15,8 +16,10 @@ Usage:
     L2_SZ_IN_LINE
     L3_SZ_IN_LINE
     note that all the cache sizes are in cache line granularity.
+
 3.install pcmalloc
  $ make
  $ make install
+
 4.before running your program, please run set_preload.sh to complete the environment configuration.
  $ ${pcmalloc_dir}/util/set_preload.sh 1
