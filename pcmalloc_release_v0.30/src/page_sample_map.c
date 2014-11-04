@@ -3,9 +3,9 @@
 #include <assert.h>
 
 #include "config.h"
-#include "build_in.h"
-#include "list.h"
-#include "hash_map_64.h"
+#include "utl_builtin.h"
+#include "utl_list.h"
+#include "utl_hash_map.h"
 #include "pc_malloc.h"
 #include "chunk_monitor.h"
 #include "event_queue.h"
@@ -21,7 +21,7 @@ struct page_block {
 struct page_map {
 	struct list_head page_block_list;
 	struct page_block *hot_page_block;
-	struct hash_map_64 *page_block_map;
+	struct hash_map *page_block_map;
 } page_map;
 
 static struct list_head free_page_sample;
@@ -40,7 +40,7 @@ get_page_block(unsigned long addr_blk_align)
 	}
 
 	block = (struct page_block *)
-		hash_map_64_find_member(page_map.page_block_map, addr_blk_align);
+		hash_map_find_member(page_map.page_block_map, addr_blk_align);
 
 	page_map.hot_page_block = block;
 
@@ -61,7 +61,7 @@ init_page_block(unsigned long addr)
 	memset(block, 0, sizeof(struct page_block));
 	block->addr = addr_blk_align;
 
-	hash_map_64_add_member(page_map.page_block_map, addr_blk_align, block);
+	hash_map_add_member(page_map.page_block_map, addr_blk_align, block);
 	list_add(&block->p, &page_map.page_block_list);
 	page_map.hot_page_block = block;
 
@@ -171,7 +171,7 @@ page_sample_map_init()
 
 	list_init(&page_map.page_block_list);
 	page_map.hot_page_block = NULL;
-	page_map.page_block_map = new_hash_map_64();
+	page_map.page_block_map = new_hash_map();
 
 	return 0;
 }
@@ -182,7 +182,7 @@ page_sample_map_destroy()
 	struct page_block *block;
 	struct page_sample *page_sample;
 
-	hash_map_64_delete(page_map.page_block_map);
+	delete_hash_map(page_map.page_block_map);
 
 	while (!list_empty(&page_map.page_block_list)) {
 		block = next_entry(&page_map.page_block_list, struct page_block, p);

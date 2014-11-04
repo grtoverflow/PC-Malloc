@@ -8,7 +8,7 @@
 #include <assert.h>
 
 #include "config.h"
-#include "build_in.h"
+#include "utl_builtin.h"
 #include "pc_malloc.h"
 #include "llc_event_cntr.h"
 

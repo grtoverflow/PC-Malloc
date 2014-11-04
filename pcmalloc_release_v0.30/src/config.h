@@ -20,6 +20,11 @@
 
 
 
+/* architecture */
+#define X86_64
+
+
+
 /* processor */
 #define CACHE_LINE_SZ		64
 #define CACHE_LINE_SHIFT	6
@@ -46,7 +51,7 @@
 #define PAGE_MASK	(~((1UL << PAGE_SHIFT) - 1))
 
 #define UPPER_PAGE_ALIGN(addr)\
-	((addr) & ~PAGE_MASK ? ((addr) & PAGE_MASK) + PAGE_SIZE : (addr))
+	(((addr) + PAGE_SIZE - 1) & PAGE_MASK)
 
 #define LOWER_PAGE_ALIGN(addr)\
 	((addr) & PAGE_MASK)
@@ -55,8 +60,14 @@
 #define UNKNOWN_MAPPING			0
 #define RESTRICT_MAPPING		2
 #define OPEN_MAPPING			3
+#define RESTRICT_MAPPING_IDX		0
+#define OPEN_MAPPING_IDX		1
+#define NR_MAPPING			2
 #endif /* PC_MALLOC_TYPE */
 
+#define get_mapping_idx(type) ((type) - 2)
+#define valid_mapping_type(type) \
+((type) == RESTRICT_MAPPING || (type) == OPEN_MAPPING)
 
 
 /* call stack */

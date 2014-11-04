@@ -9,8 +9,8 @@
 #include <sched.h>
 #include <ctype.h>
 
-#include "config.h"
-#include "build_in.h"
+#include "utl_cpuaffi.h"
+#include "utl_builtin.h"
 
 
 int 

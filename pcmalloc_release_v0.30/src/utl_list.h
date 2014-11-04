@@ -43,6 +43,9 @@ list_del(struct list_head *entry)
 #define list_entry(ptr, type, member) \
 ((type*)((char*)(ptr) - offsetof(type, member)))
 
+#define prev_entry(ptr, type, member) \
+((type*)((char*)((ptr)->prev) - offsetof(type, member)))
+
 #define next_entry(ptr, type, member) \
 ((type*)((char*)((ptr)->next) - offsetof(type, member)))
 

@@ -5,11 +5,10 @@
 #include <string.h>
 #include <assert.h>
 
-#include "config.h"
-#include "build_in.h"
-#include "list.h"
-#include "hash_map_64.h"
-#include "pc_malloc.h"
+#include "utl_builtin.h"
+#include "utl_list.h"
+#include "utl_hash_map.h"
+#include "utl_wrapper.h"
 
 
 struct map_member {
@@ -24,7 +23,7 @@ struct hmap_entry {
 	struct list_head entry;
 };
 
-struct hash_map_64 {
+struct hash_map {
 	struct hmap_entry *map;
 	int size;
 	int fill;
@@ -61,7 +60,7 @@ map_member_alloc()
 
 	if (unlikely(list_empty(&free_member))) {
 		member = (struct map_member*)
-			pc_malloc(OPEN_MAPPING, sizeof(struct map_member));	
+			wrap_malloc(sizeof(struct map_member));	
 #ifdef USE_ASSERT
 		assert(member);
 #endif /* USE_ASSERT */
@@ -80,21 +79,19 @@ map_member_free(struct map_member *member)
 	list_add(&member->p, &free_member);
 }
 
-struct hash_map_64*
-new_hash_map_64()
+struct hash_map*
+new_hash_map()
 {
-	struct hash_map_64 *hmap;
+	struct hash_map *hmap;
 	int i, size;
 
-	hmap = (struct hash_map_64*)
-			pc_malloc(OPEN_MAPPING, sizeof(struct hash_map_64));	
+	hmap = (struct hash_map*)wrap_malloc(sizeof(struct hash_map));	
 #ifdef USE_ASSERT
 	assert(!!hmap);
 #endif /* USE_ASSERT */
 	
 	size = HT_INIT_SIZE * sizeof(struct hmap_entry);
-	hmap->map = (struct hmap_entry*)
-		pc_malloc(RESTRICT_MAPPING, size);
+	hmap->map = (struct hmap_entry*)wrap_malloc(size);
 #ifdef USE_ASSERT
 	assert(!!hmap->map);
 #endif /* USE_ASSERT */
@@ -114,7 +111,7 @@ new_hash_map_64()
 }
 
 void
-hash_map_64_delete(struct hash_map_64* hmap)
+delete_hash_map(struct hash_map* hmap)
 {
 	struct map_member *member;
 
@@ -123,12 +120,12 @@ hash_map_64_delete(struct hash_map_64* hmap)
 		map_member_free(member);
 	}
 
-	pc_free(hmap->map);
-	pc_free(hmap);
+	wrap_free(hmap->map);
+	wrap_free(hmap);
 }
 
 static inline struct hmap_entry*
-get_map_entry(struct hash_map_64 *hmap, uint64_t key)
+get_map_entry(struct hash_map *hmap, uint64_t key)
 {
 	unsigned long slot;
 
@@ -172,13 +169,13 @@ get_map_member(struct hmap_entry *map_entry, uint64_t key)
 }
 
 static inline int
-hash_map_64_full(struct hash_map_64 *hmap)
+hash_map_full(struct hash_map *hmap)
 {
 	return (hmap->size >> 1) < hmap->fill;
 }
 
 static int 
-hash_map_64_rebuild(struct hash_map_64 *hmap)
+hash_map_rebuild(struct hash_map *hmap)
 {
 	struct hmap_entry *map, *map_entry;
 	struct list_head *members;
@@ -192,8 +189,7 @@ hash_map_64_rebuild(struct hash_map_64 *hmap)
 	
 	hmap->size <<= 1;
 	size = hmap->size * sizeof(struct hmap_entry);
-	hmap->map = (struct hmap_entry*)
-		pc_malloc(RESTRICT_MAPPING, size);
+	hmap->map = (struct hmap_entry*)wrap_malloc(size);
 	assert(!!hmap->map);
 	memset(hmap->map, 0, size);
 
@@ -212,13 +208,13 @@ hash_map_64_rebuild(struct hash_map_64 *hmap)
 		list_add(&member_iter->crash, &map_entry->entry);
 	}
 
-	pc_free(map);
+	wrap_free(map);
 
 	return 0;
 }
 
 int 
-hash_map_64_add_member(struct hash_map_64 *hmap, uint64_t key, void *val)
+hash_map_add_member(struct hash_map *hmap, uint64_t key, void *val)
 {
 	struct hmap_entry *map_entry;
 	struct map_member *member;
@@ -226,8 +222,8 @@ hash_map_64_add_member(struct hash_map_64 *hmap, uint64_t key, void *val)
 
 	ret = 0;
 
-	if (unlikely(hash_map_64_full(hmap))) {
-		ret = hash_map_64_rebuild(hmap);
+	if (unlikely(hash_map_full(hmap))) {
+		ret = hash_map_rebuild(hmap);
 #ifdef USE_ASSERT
 		assert(ret == 0);
 #endif /* USE_ASSERT */
@@ -251,7 +247,7 @@ hash_map_64_add_member(struct hash_map_64 *hmap, uint64_t key, void *val)
 }
 
 void
-hash_map_64_delete_member(struct hash_map_64 *hmap, uint64_t key)
+hash_map_delete_member(struct hash_map *hmap, uint64_t key)
 {
 	struct hmap_entry *map_entry;
 	struct map_member *member;
@@ -259,7 +255,7 @@ hash_map_64_delete_member(struct hash_map_64 *hmap, uint64_t key)
 	map_entry = get_map_entry(hmap, key);
 	member = get_map_member(map_entry, key);
 	if (member == NULL) {
-		printf("hash_map_64_delete_member abnormal\n");
+		printf("hash_map_delete_member abnormal\n");
 		return;
 	}
 #if 0
@@ -276,7 +272,7 @@ hash_map_64_delete_member(struct hash_map_64 *hmap, uint64_t key)
 }
 
 void*
-hash_map_64_find_member(struct hash_map_64 *hmap, uint64_t key)
+hash_map_find_member(struct hash_map *hmap, uint64_t key)
 {
 	struct hmap_entry *map_entry;
 	struct map_member *member;
@@ -290,7 +286,7 @@ hash_map_64_find_member(struct hash_map_64 *hmap, uint64_t key)
 }
 
 int 
-key_crash_in_hash_map(struct hash_map_64 *hmap, uint64_t key)
+key_crash_in_hash_map(struct hash_map *hmap, uint64_t key)
 {
 	struct hmap_entry *map_entry;
 
@@ -299,7 +295,7 @@ key_crash_in_hash_map(struct hash_map_64 *hmap, uint64_t key)
 }
 
 int 
-hash_map_64_init()
+hash_map_init()
 {
 	list_init(&free_member);
 
@@ -307,14 +303,14 @@ hash_map_64_init()
 }
 
 void
-hash_map_64_destroy()
+hash_map_destroy()
 {
 	struct map_member *member;
 
 	while (!list_empty(&free_member)) {
 		member = next_entry(&free_member, struct map_member, p);
 		list_del(&member->p);
-		pc_free(member);
+		wrap_free(member);
 	}
 }
 

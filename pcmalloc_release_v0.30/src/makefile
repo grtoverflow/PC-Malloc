@@ -7,7 +7,8 @@ PAPI_PATH = /usr/local/papi/include
 
 OBJS = ${patsubst %.c,${OBJ_DIR}/%.o,${wildcard *.c}}
 LIBS =
-CFLAGS = -Wall -lm -g -fPIC -Wformat -lpapi -O2
+#CFLAGS = -Wall -lm -g -fPIC -Wformat -lpapi -O2
+CFLAGS = -Wall -lm -g -fPIC -Wformat -lpapi
 CC = gcc
 
 all : ${TARGET}

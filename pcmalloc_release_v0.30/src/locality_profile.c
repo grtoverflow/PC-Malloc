@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "config.h"
-#include "build_in.h"
-#include "list.h"
-#include "hash_map_64.h"
+#include "utl_builtin.h"
+#include "utl_list.h"
+#include "utl_hash_map.h"
 #include "context_key.h"
 #include "allocator.h"
 #include "chunk_monitor.h"
@@ -24,7 +25,7 @@ struct size2context_entry {
 struct locality_profile {
 	unsigned long chunk_idx;
 
-	struct hash_map_64 *context_hash_map;
+	struct hash_map *context_hash_map;
 	struct size2context_entry *s2c_map;
 	
 	struct list_head context;
@@ -146,7 +147,7 @@ locality_profile_init()
 	int i;
 
 	locality_profile.context_hash_map
-		=  new_hash_map_64();
+		=  new_hash_map();
 	locality_profile.s2c_map = (struct size2context_entry *)
 		pc_calloc(RESTRICT_MAPPING, S2C_MAP_SIZE + 1, 
 			sizeof(struct size2context_entry));
@@ -183,7 +184,7 @@ locality_profile_destroy()
 		}
 	}
 
-	hash_map_64_delete(locality_profile.context_hash_map);
+	delete_hash_map(locality_profile.context_hash_map);
 	pc_free(locality_profile.s2c_map);
 }
 
@@ -280,7 +281,7 @@ init_context(uint64_t key, struct alloc_context *context)
 	context->sample_skip = 0;
 	context->skip_interval = 0;
 	context->idx = locality_profile.context_idx++;
-	hash_map_64_add_member(locality_profile.context_hash_map, key, context);
+	hash_map_add_member(locality_profile.context_hash_map, key, context);
 	list_add(&context->sibling, &locality_profile.context);
 }
 
@@ -316,7 +317,7 @@ general_path:
 	key = get_context_key();
 
 	context = (struct alloc_context *) 
-			hash_map_64_find_member(locality_profile.context_hash_map, key);
+		hash_map_find_member(locality_profile.context_hash_map, key);
 	if (likely(context != NULL))
 		goto done;
 	

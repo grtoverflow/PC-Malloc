@@ -8,8 +8,8 @@
 #include <sys/time.h>
 #include <assert.h>
 
-#include "list.h"
-#include "hash_map_64.h"
+#include "utl_list.h"
+#include "utl_hash_map.h"
 #include "pc_malloc.h"
 #include "event_queue.h"
 
@@ -45,7 +45,7 @@ static struct list_head free_event;
 static struct itimerval itv;
 static struct timeval timer_resolution;
 
-static struct hash_map_64 *private2event_map;
+static struct hash_map *private2event_map;
 
 
 static inline struct event*
@@ -100,7 +100,7 @@ do_trigger_time_event(struct timeval now)
 	while (!list_empty(events)){
 		triggered = next_entry(events, struct event, p);
 		if (tv_cmp(&now, &triggered->trigger_time) != -1) {
-			hash_map_64_delete_member(private2event_map, 
+			hash_map_delete_member(private2event_map, 
 					(uint64_t)triggered->private);
 			time_event_del(triggered);
 			if (likely(triggered->handler != NULL))
@@ -190,8 +190,8 @@ add_time_event(struct timeval *tv, time_event_handler handler,
 			break;
 	}
 
-	hash_map_64_add_member(private2event_map, (uint64_t)private, event);
-	//printf("hash_map_64_add_member %p\n", private);
+	hash_map_add_member(private2event_map, (uint64_t)private, event);
+	//printf("hash_map_add_member %p\n", private);
 	list_add(&event->p, event_iter->p.prev);
 
 	do_trigger_time_event(now);
@@ -212,14 +212,14 @@ remove_time_event(void *private)
 	do_pend_event_queue();
 
 	event = (struct event *)
-		hash_map_64_find_member(private2event_map, (uint64_t)private);
+		hash_map_find_member(private2event_map, (uint64_t)private);
 
 	if (unlikely(event == NULL))
 		return;
 	
 	time_event_free(event);
-	hash_map_64_delete_member(private2event_map, (uint64_t)private);
-	//printf("hash_map_64_delete_member B %p\n", private);
+	hash_map_delete_member(private2event_map, (uint64_t)private);
+	//printf("hash_map_delete_member B %p\n", private);
 
 	if (list_empty(&event_queue.events)) {
 		event_queue.state = EVENT_QUEUE_EMPTY;
@@ -276,7 +276,7 @@ time_event_queue_init()
 	sa.sa_handler = trigger_time_event;
 	ret = sigaction(TIMER_SIG_TYPE, &sa, NULL);
 
-	private2event_map =  new_hash_map_64();
+	private2event_map =  new_hash_map();
 
 	return ret;
 }
@@ -303,7 +303,7 @@ time_event_queue_destroy()
 		pc_free(event);
 	}
 
-	hash_map_64_delete(private2event_map);
+	delete_hash_map(private2event_map);
 }
 
 void

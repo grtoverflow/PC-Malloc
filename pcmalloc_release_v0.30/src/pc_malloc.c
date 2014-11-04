@@ -1,13 +1,14 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <dlfcn.h>
 #include <string.h>
 
 #include "config.h"
-#include "build_in.h"
-#include "list.h"
-#include "hash_map_64.h"
+#include "utl_builtin.h"
+#include "utl_list.h"
+#include "utl_hash_map.h"
 #include "allocator.h"
 #include "pc_malloc.h"
 #include "locality_profile.h"
@@ -80,10 +81,10 @@ malloc_init()
 		goto out;
 	set_pc_malloc_active();
 
-	ret = pc_malloc_init();
+	ret = allocator_init();
 	if (!!ret) goto out;
 
-	ret = hash_map_64_init();
+	ret = hash_map_init();
 	if (!!ret) goto out;
 
 	ret = install_stdlibapi_hook();
@@ -112,7 +113,7 @@ malloc_destroy()
 
 	chunk_monitor_destroy();
 
-	hash_map_64_destroy();
+	hash_map_destroy();
 
 	pc_malloc_state = PC_MALLOC_DESTROYED;
 
@@ -242,7 +243,7 @@ realloc(void *old, size_t size)
 
 	if (unlikely(!pc_malloc_active()))
 		malloc_init();
-	
+
 	if (unlikely(size == 0)) {
 		if (old != NULL)
 			free(old);
