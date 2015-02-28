@@ -4,11 +4,11 @@ Description
 ---------
 NightWatch is an externsion designed for memory allocator, which is targeting on the resource management of CPU cache.
 
-The traditional design objectives of dynamic memory allocators are about the topics of main memory resource management, for example, improving the efficiency of memory allocation, reducing the memory fragment, etc. However, for most commodity platforms, both CPU cache sets and physical pages are physically indexed. This implies, data’s mapping to the main memory and CPU cache is closely coupled: once the main memory assignment for a piece of data is finished, the data’s mapping to the cache is automatically settled. With this coupling, it is possible that low locality and high-locality data are mapped to the same cache sets, causing cache performance degradation.
+The traditional memory allocators are designed focusing on main memory resource management, for example, improving the efficiency of memory allocation, reducing the memory fragment, etc. However, for most commodity platforms, both CPU cache sets and physical pages are physically indexed. This implies, data’s mapping to the main memory and CPU cache is closely coupled: once the main memory assignment for a piece of data is finished, the data’s mapping to the cache is automatically settled. With this coupling, it is possible that low locality and high-locality data are mapped to the same cache sets, causing cache performance degradation.
 
-From this point of view, it is necessary to integrate cache resource management into dynamic memory allocator. In other words, the dynamic memory allocator should be extended to perform as a dual-memory-layer-manager, which handles main memory allocations, as well as cache memory allocations.
+From this point of view, it is necessary to integrate cache resource management into dynamic memory allocator. In other words, the dynamic memory allocator should be extended to perform as a dual-memory-layer-manager, which handles main memory allocations, as well as cache memory management.
 
-NightWatch is designed targeting on this goal. When integreted with NightWatch, a traditional memory allocator can handle the resource management of cache: once an allocation request arrives, NightWatch quantifies the cache demand, and notifies the memory allocator to allocate memory with proper data-to-cache mapping.
+NightWatch is designed for this goal. When integreted with NightWatch, a traditional memory allocator can handle the resource management of cache: once an allocation request arrives, NightWatch quantifies the cache demand, and notifies the memory allocator to allocate memory with proper data-to-cache mapping.
 
 
 Library Interfaces
@@ -18,9 +18,11 @@ The service of NightWatch is transparent to user's application. When integreted 
 
 Setup
 ---------
-1.	OS kernel update. NightWatch relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the linux kernel "kernel-2.6.32-71.el6". Please see /kernel\_patch/readme.txt for more details.
+1.	OS kernel update. NightWatch relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the linux kernel "kernel-2.6.32-71.el6". See /kernel\_patch/readme.txt for more details.
 
 2.	Install NightWatch library. The source code of NightWatch library is under /nightwatch\_v1.0.
+
+3.	Modify memory allocator. If you are an allocator developer, and you may want to integrate NightWatch into your own memory allocator. Then you need to implement the interfaces defined in /nightwatch\_v1.0/allocator.h. In this project, we have integrated NightWatch into tcmalloc. You can take the modified allocator (under /gperftools-2.4\_NW_externed\_v1.0) as example. Or if you just want to try a cache-aware allocator, the modified tcmalloc can also be used. To use the allocator, you need to relink your application with -ltcmalloc. For more detailed information, see /gperftools-2.4\_NW_externed\_v1.0/readme.txt.
 
 Syetem Framework
 ---------
