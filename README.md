@@ -21,7 +21,6 @@ Setup
 1.	OS kernel update. NightWatch relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the linux kernel "kernel-2.6.32-71.el6". Please see /kernel\_patch/readme.txt for more details.
 
 2.	Install NightWatch library. The source code of NightWatch library is under /nightwatch\_v1.0.
-#make && make install
 
 Syetem Framework
 ---------
