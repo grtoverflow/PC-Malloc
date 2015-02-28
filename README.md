@@ -12,6 +12,7 @@ NightWatch is designed targeting on this goal. When integreted with NightWatch, 
 
 
 Library Interfaces
+---------
 The service of NightWatch is transparent to user's application. When integreted with NightWatch, a memory allocator does not need to modify the allocation interfaces. 
 
 
