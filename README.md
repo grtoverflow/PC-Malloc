@@ -20,6 +20,8 @@ Setup
 ---------
 1.	OS kernel update. NightWatch relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the linux kernel "kernel-2.6.32-71.el6". See /kernel\_patch/readme.txt for more details.
 
+2.	Install PAPI. You can find PAPI at http://icl.cs.utk.edu/papi/.
+
 2.	Install NightWatch library. The source code of NightWatch library is under /nightwatch\_v1.0.
 
 3.	Modify memory allocator. If you are an allocator developer, and you may want to integrate NightWatch into your own memory allocator. Then you need to implement the interfaces defined in /nightwatch\_v1.0/allocator.h. In this project, we have integrated NightWatch into tcmalloc. You can take the modified allocator (under /gperftools-2.4\_NW_externed\_v1.0) as example. Or if you just want to try a cache-aware allocator, then the allocator can also be used without further modification. To use the allocator, you need to relink your application with flag -ltcmalloc. For more detailed information, see /gperftools-2.4\_NW_externed\_v1.0/readme.txt.
