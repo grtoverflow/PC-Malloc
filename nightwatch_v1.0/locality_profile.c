@@ -57,7 +57,7 @@ context_alloc()
 
 	if (unlikely(list_empty(&free_context))) {
 		context = (struct alloc_context*)
-			pc_malloc(OPEN_MAPPING, sizeof(struct alloc_context));
+			internal_malloc(OPEN_MAPPING, sizeof(struct alloc_context));
 #ifdef USE_ASSERT
 		assert(!!context);
 #endif /* USE_ASSERT */
@@ -90,7 +90,7 @@ chunk_alloc()
 
 	if (unlikely(list_empty(&free_chunk))) {
 		chunk = (struct memory_chunk*)
-			pc_malloc(OPEN_MAPPING, sizeof(struct memory_chunk));
+			internal_malloc(OPEN_MAPPING, sizeof(struct memory_chunk));
 #ifdef USE_ASSERT
 		assert(!!chunk);
 #endif /* USE_ASSERT */
@@ -123,7 +123,7 @@ chunk_alloc()
 void
 print_chunk(struct memory_chunk *chunk)
 {
-	DEACT_CACHE_CONTROL();
+	disable_cache_management();
 	printf("\n");
 	printf("chunk info");
 	printf("idx:   %lu\n", chunk->idx);
@@ -136,7 +136,7 @@ print_chunk(struct memory_chunk *chunk)
 	printf("sample_page:     %d\n", chunk->nr_sample);
 	printf("sample_cycle:    %d\n", chunk->sample_cycle);
 	printf("\n");
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
 }
 #endif /* AT_HOME */
 
@@ -149,7 +149,7 @@ locality_profile_init()
 	locality_profile.context_hash_map
 		=  new_hash_map();
 	locality_profile.s2c_map = (struct size2context_entry *)
-		pc_calloc(RESTRICT_MAPPING, S2C_MAP_SIZE + 1, 
+		internal_calloc(RESTRICT_MAPPING, S2C_MAP_SIZE + 1, 
 			sizeof(struct size2context_entry));
 	for (i = 0; i < S2C_MAP_SIZE + 1; i++) {
 		list_init(&locality_profile.s2c_map[i].context_set);
@@ -185,7 +185,7 @@ locality_profile_destroy()
 	}
 
 	delete_hash_map(locality_profile.context_hash_map);
-	pc_free(locality_profile.s2c_map);
+	internal_free(locality_profile.s2c_map);
 }
 
 
@@ -286,13 +286,14 @@ init_context(uint64_t key, struct alloc_context *context)
 }
 
 
-struct alloc_context* 
-get_alloc_context(int size)
+void * 
+NightWatch_get_alloc_context(size_t size) 
 {
 	struct alloc_context *context;
 	uint64_t key;
 	struct size2context_entry *sz2ctx_entry;
 
+printf("NightWatch_get_alloc_context called\n");
 	/* quick path */
 	sz2ctx_entry = NULL;
 	if (unlikely(size > S2C_MAP_SIZE)) {

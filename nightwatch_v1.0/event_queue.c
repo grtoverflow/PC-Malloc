@@ -55,7 +55,7 @@ time_event_alloc()
 
 	if(list_empty(&free_event)) {
 		event = (struct event*)	
-			pc_malloc(OPEN_MAPPING, sizeof(struct event));
+			internal_malloc(OPEN_MAPPING, sizeof(struct event));
 #ifdef USE_ASSERT
 		assert(!!event);
 #endif /* USE_ASSERT */
@@ -293,14 +293,14 @@ time_event_queue_destroy()
 	while (!list_empty(event_list)) {
 		event = next_entry(event_list, struct event, p);
 		list_del(&event->p);
-		pc_free(event);
+		internal_free(event);
 	}
 
 	event_list = &free_event;
 	while (!list_empty(event_list)) {
 		event = next_entry(event_list, struct event, p);
 		list_del(&event->p);
-		pc_free(event);
+		internal_free(event);
 	}
 
 	delete_hash_map(private2event_map);

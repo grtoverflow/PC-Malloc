@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #include "config.h"
 #include "utl_builtin.h"
@@ -8,32 +9,6 @@
 #include "locality_profile.h"
 #include "chunk_monitor.h"
 
-
-
-static inline void *
-small_chunk_alignment(void *p, int action, int type)
-{
-	switch (action) {
-	case ACT_MALLOC:
-		pc_free(p);
-		p = pc_malloc(type, SMALL_MEMORY_CHUNK);
-		break;
-	case ACT_CALLOC:
-		pc_free(p);
-		p = pc_calloc(type, SMALL_MEMORY_CHUNK, 1);
-		break;
-	case ACT_REALLOC:
-		p = pc_realloc(type, p, SMALL_MEMORY_CHUNK);
-		break;
-	default:
-#ifdef USE_ASSERT
-		assert(0);
-#endif /* USE_ASSERT */
-		break;
-	}
-
-	return p;
-}
 
 
 static inline float
@@ -47,29 +22,47 @@ get_predict_mr(struct alloc_context *context)
 }
 
 
-void *
-chunk_level_sampling(void *p, const size_t size, const int type, 
-		const int action, struct alloc_context *context)
+size_t
+NightWatch_size_demand(size_t size, void *alloc_context)
 {
+	struct alloc_context *context;
+
+	if (unlikely(!alloc_context))
+		return size;
+
+	context = (struct alloc_context*)alloc_context;
+	/* page alignment for small sampled chunks */
+	if (unlikely(!(context->sample_skip > 0 
+			&& context->last_chunk_sz == size)
+			&& size < SMALL_MEMORY_CHUNK)) {
+		return SMALL_MEMORY_CHUNK;
+	} else {
+		return size;
+	}
+}
+
+void
+NightWatch_sampling(void *p, size_t size, int type, 
+                    void *alloc_context)
+{
+	struct alloc_context *context;
 	struct memory_chunk *chunk;
 
+	context = (struct alloc_context*)alloc_context;
 	/* chunk level skip */
 	if (likely(context->sample_skip > 0 
 			&& context->last_chunk_sz == size
 			&& size < LARGE_MEMORY_CHUNK)) {
 		context->sample_skip--;
-		set_chunk_private(p, NULL);
+		set_extend_info(p, NULL);
 #ifdef PREDICTOR_INFO
 		printf("skipping a chunk, size=%d context=%lu\n",
 		       (int)size, context->idx);
 #endif /* PREDICTOR_INFO */
-		return p;
+		return;
 	}
 
-	/* page alignment for small chunks */
-	if (size < SMALL_MEMORY_CHUNK) {
-		p = small_chunk_alignment(p, action, type);
-	}
+	assert(size >= SMALL_MEMORY_CHUNK);
 
 #ifdef PREDICTOR_INFO
 	printf("monitoring a chunk, size=%d context=%lu\n",
@@ -79,7 +72,7 @@ chunk_level_sampling(void *p, const size_t size, const int type,
 	chunk = attach_chunk_to_context(p, size, context);
 	chunk->mapping_type = type;
 	chunk->mr = get_predict_mr(context);
-	set_chunk_private(p, chunk);
+	set_extend_info(p, chunk);
 
 	if (context->last_chunk_sz != size) {
 		context->skip_interval = 0;
@@ -94,8 +87,6 @@ chunk_level_sampling(void *p, const size_t size, const int type,
 
 	context->last_chunk_sz = size;
 	monit_chunk(chunk);
-
-	return p;
 }
 
 
@@ -104,7 +95,7 @@ collect_chunk_level_sample(void *p)
 {
 	struct memory_chunk *chunk;
 
-	chunk = (struct memory_chunk *)get_chunk_private(p);
+	chunk = (struct memory_chunk *)get_extend_info(p);
 
 	if (chunk != NULL) {
 		if (chunk_under_monit(chunk)) {
@@ -116,10 +107,12 @@ collect_chunk_level_sample(void *p)
 
 
 int
-get_mapping_type(struct alloc_context *context)
+NightWatch_heap_type_hint(void *alloc_context)
 {
 	int mapping;
+	struct alloc_context *context;
 
+	context = (struct alloc_context*)alloc_context;
 	if (context->predict_type[0] != RESTRICT_MAPPING
 			|| context->predict_type[1] != RESTRICT_MAPPING) {
 		mapping = OPEN_MAPPING;

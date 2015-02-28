@@ -1,0 +1,1208 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ADVANCE_STACK_FRAME	context_key.h	47;"	d
+ALLOCATOR_H_	allocator.h	2;"	d
+BLOCK_SEG_LEN	page_sample_map.h	8;"	d
+BURST_ACCESS_SKIP	chunk_monitor.c	41;"	d	file:
+BURST_SKIP_UPDATE_INTERVAL	chunk_monitor.c	47;"	d	file:
+CACHE_LINE_MASK	config.h	32;"	d
+CACHE_LINE_SHIFT	config.h	31;"	d
+CACHE_LINE_SZ	config.h	30;"	d
+CACHE_REGION_SZ	config.h	42;"	d
+CACHE_REGION_SZ_IN_LINE	config.h	39;"	d
+CALL_STACK_DEPTH	config.h	74;"	d
+CC	makefile	/^CC = gcc$/;"	m
+CFLAGS	makefile	/^CFLAGS = -Wall -lm -g -fPIC -Wformat -lpapi -O2$/;"	m
+CHUNK_MONITOR_H_	chunk_monitor.h	2;"	d
+CHUNK_MONIT_FINISH	chunk_monitor.c	35;"	d	file:
+CHUNK_NO_MONIT	chunk_monitor.c	32;"	d	file:
+CHUNK_PENDING	chunk_monitor.c	33;"	d	file:
+CHUNK_PREDICTOR_H_	chunk_predictor.h	2;"	d
+CHUNK_UNDER_MONIT	chunk_monitor.c	34;"	d	file:
+CONFIG_H_	config.h	2;"	d
+CURRENT_STACK_FRAME	context_key.h	36;"	d
+CmpIdx	papi.h	/^     int CmpIdx;				\/**< Index into the vector array for this component; set at init time *\/$/;"	m	struct:_papi_component_option
+DEFAULT_BURST_LEN	chunk_monitor.c	45;"	d	file:
+DYNAMIC_LIB	makefile	/^DYNAMIC_LIB = ${OBJ_DIR}\/libpcmalloc.so$/;"	m
+EVENT_QUEUE_ACTIVE	event_queue.c	24;"	d	file:
+EVENT_QUEUE_EMPTY	event_queue.c	22;"	d	file:
+EVENT_QUEUE_PENDING	event_queue.c	23;"	d	file:
+FIRST_FRAME_POINTER	context_key.h	52;"	d
+FIRST_ROUND	chunk_monitor.h	25;"	d
+HASH_MAP_64_H_	utl_hash_map.h	2;"	d
+HT_INIT_KEY_LEN	utl_hash_map.c	38;"	d	file:
+HT_INIT_SIZE	utl_hash_map.c	37;"	d	file:
+INNER_CALL_STACK_DEPTH	config.h	75;"	d
+INNER_THAN	context_key.h	41;"	d
+IS_NATIVE	papi.h	226;"	d
+IS_PRESET	papi.h	227;"	d
+IS_USER_DEFINED	papi.h	228;"	d
+L1D_SZ_IN_LINE	config.h	35;"	d
+L2_MISS_EVENT_NAME	config.h	85;"	d
+L2_SZ_IN_LINE	config.h	36;"	d
+L3_ACCESS_EVENT_NAME	config.h	87;"	d
+L3_MISS_EVENT_NAME	config.h	86;"	d
+L3_SZ_IN_LINE	config.h	37;"	d
+LARGE_MEMORY_CHUNK	config.h	96;"	d
+LAST_ROUND	chunk_monitor.h	27;"	d
+LIBS	makefile	/^LIBS =$/;"	m
+LIST_H_	utl_list.h	2;"	d
+LLC_ACCESS_CNTR_IDX	llc_event_cntr.h	9;"	d
+LLC_CNTR_BUF_SIZE	llc_event_cntr.c	175;"	d	file:
+LLC_CNTR_BUF_SIZE	llc_event_cntr.c	23;"	d	file:
+LLC_EVENT_CNTR_H_	llc_event_cntr.h	3;"	d
+LLC_MISS_CNTR_IDX	llc_event_cntr.h	8;"	d
+LOCALITY_PROFILE_H_	locality_profile.h	2;"	d
+LOWER_PAGE_ALIGN	config.h	57;"	d
+MAP_BLK_MASK	utl_bitmap.c	11;"	d	file:
+MAP_BLK_RMASK	utl_bitmap.c	10;"	d	file:
+MAP_BLK_SZ	utl_bitmap.c	9;"	d	file:
+MAP_CACHE_AWARE_STATE	config.h	78;"	d
+MAX_BURST_LEN	chunk_monitor.c	46;"	d	file:
+MAX_SAMPLE_CYCLE	chunk_monitor.h	20;"	d
+MIN_SAMPLE_CYCLE	chunk_monitor.h	19;"	d
+MONITOR_ACTIVE	chunk_monitor.c	28;"	d	file:
+MONITOR_DESTROYED	chunk_monitor.c	29;"	d	file:
+MONITOR_INFO	config.h	10;"	d
+MONITOR_UNINIT	chunk_monitor.c	27;"	d	file:
+MONIT_CONV_ERR	config.h	101;"	d
+NIGHTWATCH_H_	pc_malloc.h	2;"	d
+NR_CACHE_LEVEL	config.h	34;"	d
+NR_LLC_PERFEVENT	llc_event_cntr.h	11;"	d
+NR_MAPPING	config.h	63;"	d
+NightWatch_ACTIVE	pc_malloc.c	22;"	d	file:
+NightWatch_DESTROYED	pc_malloc.c	23;"	d	file:
+NightWatch_UNINIT	pc_malloc.c	21;"	d	file:
+NightWatch_destroy	pc_malloc.c	/^NightWatch_destroy()$/;"	f
+NightWatch_get_alloc_context	locality_profile.c	/^NightWatch_get_alloc_context(size_t size) $/;"	f
+NightWatch_heap_type_hint	chunk_predictor.c	/^NightWatch_heap_type_hint(void *alloc_context)$/;"	f
+NightWatch_init	pc_malloc.c	/^NightWatch_init()$/;"	f
+NightWatch_sampling	chunk_predictor.c	/^NightWatch_sampling(void *p, size_t size, int type, $/;"	f
+NightWatch_size_demand	chunk_predictor.c	/^NightWatch_size_demand(size_t size, void *alloc_context)$/;"	f
+OBJS	makefile	/^OBJS = ${patsubst %.c,${OBJ_DIR}\/%.o,${wildcard *.c}}$/;"	m
+OBJ_DIR	makefile	/^OBJ_DIR = .\/obj$/;"	m
+OPEN_MAPPING_IDX	config.h	62;"	d
+OUTER_FRAME_POINTER	context_key.h	56;"	d
+PAGE_BLOCK_MASK	page_sample_map.h	12;"	d
+PAGE_BLOCK_SHIFT	page_sample_map.h	11;"	d
+PAGE_BLOCK_SIZE	page_sample_map.h	10;"	d
+PAGE_MASK	config.h	52;"	d
+PAGE_SAMPLE_MAP_H_	page_sample_map.h	2;"	d
+PAGE_SHIFT	config.h	51;"	d
+PAGE_SIZE	config.h	50;"	d
+PAPIF_DMEM_HEAP	papi.h	888;"	d
+PAPIF_DMEM_HIGH_WATER	papi.h	884;"	d
+PAPIF_DMEM_LIBRARY	papi.h	887;"	d
+PAPIF_DMEM_LOCKED	papi.h	889;"	d
+PAPIF_DMEM_MAXVAL	papi.h	893;"	d
+PAPIF_DMEM_PAGESIZE	papi.h	891;"	d
+PAPIF_DMEM_PTE	papi.h	892;"	d
+PAPIF_DMEM_RESIDENT	papi.h	883;"	d
+PAPIF_DMEM_SHARED	papi.h	885;"	d
+PAPIF_DMEM_STACK	papi.h	890;"	d
+PAPIF_DMEM_TEXT	papi.h	886;"	d
+PAPIF_DMEM_VMPEAK	papi.h	881;"	d
+PAPIF_DMEM_VMSIZE	papi.h	882;"	d
+PAPI_2MAX_STR_LEN	papi.h	462;"	d
+PAPI_ATTACH	papi.h	443;"	d
+PAPI_ATTACHED	papi.h	377;"	d
+PAPI_BRU_IDL	papiStdEventDefs.h	182;"	d
+PAPI_BRU_IDL_idx	papiStdEventDefs.h	/^	PAPI_BRU_IDL_idx,		 \/*Cycles branch units are idle *\/$/;"	e	enum:__anon6
+PAPI_BR_CN	papiStdEventDefs.h	209;"	d
+PAPI_BR_CN_idx	papiStdEventDefs.h	/^	PAPI_BR_CN_idx,			 \/*Conditional branch instructions executed *\/$/;"	e	enum:__anon6
+PAPI_BR_INS	papiStdEventDefs.h	221;"	d
+PAPI_BR_INS_idx	papiStdEventDefs.h	/^	PAPI_BR_INS_idx,		 \/*Total branch instructions executed *\/$/;"	e	enum:__anon6
+PAPI_BR_MSP	papiStdEventDefs.h	212;"	d
+PAPI_BR_MSP_idx	papiStdEventDefs.h	/^	PAPI_BR_MSP_idx,		 \/*Conditional branch instructions mispred *\/$/;"	e	enum:__anon6
+PAPI_BR_NTK	papiStdEventDefs.h	211;"	d
+PAPI_BR_NTK_idx	papiStdEventDefs.h	/^	PAPI_BR_NTK_idx,		 \/*Conditional branch instructions not taken *\/$/;"	e	enum:__anon6
+PAPI_BR_PRC	papiStdEventDefs.h	213;"	d
+PAPI_BR_PRC_idx	papiStdEventDefs.h	/^	PAPI_BR_PRC_idx,		 \/*Conditional branch instructions corr. pred *\/$/;"	e	enum:__anon6
+PAPI_BR_TKN	papiStdEventDefs.h	210;"	d
+PAPI_BR_TKN_idx	papiStdEventDefs.h	/^	PAPI_BR_TKN_idx,		 \/*Conditional branch instructions taken *\/$/;"	e	enum:__anon6
+PAPI_BR_UCN	papiStdEventDefs.h	208;"	d
+PAPI_BR_UCN_idx	papiStdEventDefs.h	/^	PAPI_BR_UCN_idx,		 \/*Unconditional branch instructions executed *\/$/;"	e	enum:__anon6
+PAPI_BTAC_M	papiStdEventDefs.h	193;"	d
+PAPI_BTAC_M_idx	papiStdEventDefs.h	/^	PAPI_BTAC_M_idx,		 \/*BTAC miss *\/$/;"	e	enum:__anon6
+PAPI_CA_CLN	papiStdEventDefs.h	177;"	d
+PAPI_CA_CLN_idx	papiStdEventDefs.h	/^	PAPI_CA_CLN_idx,		 \/*Request for clean cache line (SMP) *\/$/;"	e	enum:__anon6
+PAPI_CA_INV	papiStdEventDefs.h	178;"	d
+PAPI_CA_INV_idx	papiStdEventDefs.h	/^	PAPI_CA_INV_idx,		 \/*Request for cache line Invalidation (SMP) *\/$/;"	e	enum:__anon6
+PAPI_CA_ITV	papiStdEventDefs.h	179;"	d
+PAPI_CA_ITV_idx	papiStdEventDefs.h	/^	PAPI_CA_ITV_idx,		 \/*Request for cache line Intervention (SMP) *\/$/;"	e	enum:__anon6
+PAPI_CA_SHR	papiStdEventDefs.h	176;"	d
+PAPI_CA_SHR_idx	papiStdEventDefs.h	/^	PAPI_CA_SHR_idx,		 \/*Request for shared cache line (SMP) *\/$/;"	e	enum:__anon6
+PAPI_CA_SNP	papiStdEventDefs.h	175;"	d
+PAPI_CA_SNP_idx	papiStdEventDefs.h	/^	PAPI_CA_SNP_idx,		 \/*Snoops *\/$/;"	e	enum:__anon6
+PAPI_CLOCKRATE	papi.h	438;"	d
+PAPI_COMPONENTINFO	papi.h	446;"	d
+PAPI_COMPONENT_INDEX	papi.h	1126;"	d
+PAPI_CPU_ATTACH	papi.h	453;"	d
+PAPI_CPU_ATTACHED	papi.h	378;"	d
+PAPI_CSR_FAL	papiStdEventDefs.h	197;"	d
+PAPI_CSR_FAL_idx	papiStdEventDefs.h	/^	PAPI_CSR_FAL_idx,		 \/*Failed store conditional instructions *\/$/;"	e	enum:__anon6
+PAPI_CSR_SUC	papiStdEventDefs.h	198;"	d
+PAPI_CSR_SUC_idx	papiStdEventDefs.h	/^	PAPI_CSR_SUC_idx,		 \/*Successful store conditional instructions *\/$/;"	e	enum:__anon6
+PAPI_CSR_TOT	papiStdEventDefs.h	199;"	d
+PAPI_CSR_TOT_idx	papiStdEventDefs.h	/^	PAPI_CSR_TOT_idx,		 \/*Total store conditional instructions *\/$/;"	e	enum:__anon6
+PAPI_DATATYPE_BIT64	papi.h	/^   PAPI_DATATYPE_BIT64,				\/**< Data is 64-bit binary *\/$/;"	e	enum:__anon10
+PAPI_DATATYPE_FP64	papi.h	/^   PAPI_DATATYPE_FP64,				\/**< Data is 64-bit floating point *\/$/;"	e	enum:__anon10
+PAPI_DATATYPE_INT64	papi.h	/^   PAPI_DATATYPE_INT64 = 0,			\/**< Default: Data is a signed 64-bit int   *\/$/;"	e	enum:__anon10
+PAPI_DATATYPE_UINT64	papi.h	/^   PAPI_DATATYPE_UINT64,			\/**< Data is a unsigned 64-bit int *\/$/;"	e	enum:__anon10
+PAPI_DATA_ADDRESS	papi.h	448;"	d
+PAPI_DEBUG	papi.h	426;"	d
+PAPI_DEFDOM	papi.h	428;"	d
+PAPI_DEFGRN	papi.h	430;"	d
+PAPI_DEF_ITIMER	papi.h	450;"	d
+PAPI_DEF_ITIMER_NS	papi.h	451;"	d
+PAPI_DEF_MPX_NS	papi.h	432;"	d
+PAPI_DERIVED	papi.h	465;"	d
+PAPI_DETACH	papi.h	425;"	d
+PAPI_DOMAIN	papi.h	429;"	d
+PAPI_DOM_ALL	papi.h	301;"	d
+PAPI_DOM_HWSPEC	papi.h	304;"	d
+PAPI_DOM_KERNEL	papi.h	298;"	d
+PAPI_DOM_MAX	papi.h	303;"	d
+PAPI_DOM_MIN	papi.h	297;"	d
+PAPI_DOM_OTHER	papi.h	299;"	d
+PAPI_DOM_SUPERVISOR	papi.h	300;"	d
+PAPI_DOM_USER	papi.h	296;"	d
+PAPI_DP_OPS	papiStdEventDefs.h	270;"	d
+PAPI_DP_OPS_idx	papiStdEventDefs.h	/^	PAPI_DP_OPS_idx,		 \/* Floating point operations executed; optimized to count scaled double precision vector operations *\/$/;"	e	enum:__anon6
+PAPI_EATTR	papi.h	273;"	d
+PAPI_EBUF	papi.h	271;"	d
+PAPI_EBUG	papi.h	257;"	d
+PAPI_ECLOST	papi.h	256;"	d
+PAPI_ECMP	papi.h	254;"	d
+PAPI_ECNFLCT	papi.h	259;"	d
+PAPI_ECOMBO	papi.h	275;"	d
+PAPI_ECOUNT	papi.h	274;"	d
+PAPI_EINVAL	papi.h	251;"	d
+PAPI_EINVAL_DOM	papi.h	272;"	d
+PAPI_EISRUN	papi.h	261;"	d
+PAPI_EMISC	papi.h	265;"	d
+PAPI_END	papiStdEventDefs.h	275;"	d
+PAPI_END_idx	papiStdEventDefs.h	/^	PAPI_END_idx			 \/*This should always be last! *\/$/;"	e	enum:__anon6
+PAPI_ENOCMP	papi.h	268;"	d
+PAPI_ENOCNTR	papi.h	264;"	d
+PAPI_ENOEVNT	papi.h	258;"	d
+PAPI_ENOEVST	papi.h	262;"	d
+PAPI_ENOIMPL	papi.h	270;"	d
+PAPI_ENOINIT	papi.h	267;"	d
+PAPI_ENOMEM	papi.h	252;"	d
+PAPI_ENOSUPP	papi.h	269;"	d
+PAPI_ENOTPRESET	papi.h	263;"	d
+PAPI_ENOTRUN	papi.h	260;"	d
+PAPI_ENUM_ALL	papi.h	505;"	d
+PAPI_ENUM_EVENTS	papi.h	/^   PAPI_ENUM_EVENTS = 0,		\/**< Always enumerate all events *\/$/;"	e	enum:__anon7
+PAPI_ENUM_FIRST	papi.h	/^   PAPI_ENUM_FIRST,				\/**< Enumerate first event (preset or native) *\/$/;"	e	enum:__anon7
+PAPI_EPERM	papi.h	266;"	d
+PAPI_ESBSTR	papi.h	255;"	d
+PAPI_ESYS	papi.h	253;"	d
+PAPI_EXEINFO	papi.h	441;"	d
+PAPI_FAD_INS	papiStdEventDefs.h	264;"	d
+PAPI_FAD_INS_idx	papiStdEventDefs.h	/^	PAPI_FAD_INS_idx,		 \/*FA ins *\/$/;"	e	enum:__anon6
+PAPI_FDV_INS	papiStdEventDefs.h	265;"	d
+PAPI_FDV_INS_idx	papiStdEventDefs.h	/^	PAPI_FDV_INS_idx,		 \/*FD ins *\/$/;"	e	enum:__anon6
+PAPI_FMA_INS	papiStdEventDefs.h	214;"	d
+PAPI_FMA_INS_idx	papiStdEventDefs.h	/^	PAPI_FMA_INS_idx,		 \/*FMA instructions completed *\/$/;"	e	enum:__anon6
+PAPI_FML_INS	papiStdEventDefs.h	263;"	d
+PAPI_FML_INS_idx	papiStdEventDefs.h	/^	PAPI_FML_INS_idx,		 \/*FM ins *\/$/;"	e	enum:__anon6
+PAPI_FNV_INS	papiStdEventDefs.h	267;"	d
+PAPI_FNV_INS_idx	papiStdEventDefs.h	/^	PAPI_FNV_INS_idx,		 \/*Finv ins *\/$/;"	e	enum:__anon6
+PAPI_FPU_IDL	papiStdEventDefs.h	184;"	d
+PAPI_FPU_IDL_idx	papiStdEventDefs.h	/^	PAPI_FPU_IDL_idx,		 \/*Cycles floating point units are idle *\/$/;"	e	enum:__anon6
+PAPI_FP_INS	papiStdEventDefs.h	218;"	d
+PAPI_FP_INS_idx	papiStdEventDefs.h	/^	PAPI_FP_INS_idx,		 \/*Floating point instructions executed *\/$/;"	e	enum:__anon6
+PAPI_FP_OPS	papiStdEventDefs.h	268;"	d
+PAPI_FP_OPS_idx	papiStdEventDefs.h	/^	PAPI_FP_OPS_idx,		 \/*Floating point operations executed *\/$/;"	e	enum:__anon6
+PAPI_FP_STAL	papiStdEventDefs.h	224;"	d
+PAPI_FP_STAL_idx	papiStdEventDefs.h	/^	PAPI_FP_STAL_idx,		 \/*Cycles any FP units are stalled *\/$/;"	e	enum:__anon6
+PAPI_FSQ_INS	papiStdEventDefs.h	266;"	d
+PAPI_FSQ_INS_idx	papiStdEventDefs.h	/^	PAPI_FSQ_INS_idx,		 \/*FSq ins *\/$/;"	e	enum:__anon6
+PAPI_FUL_CCY	papiStdEventDefs.h	206;"	d
+PAPI_FUL_CCY_idx	papiStdEventDefs.h	/^	PAPI_FUL_CCY_idx,		 \/*Cycles with Maximum Instruction Completion *\/$/;"	e	enum:__anon6
+PAPI_FUL_ICY	papiStdEventDefs.h	204;"	d
+PAPI_FUL_ICY_idx	papiStdEventDefs.h	/^	PAPI_FUL_ICY_idx,		 \/*Cycles with Maximum Instruction Issue *\/$/;"	e	enum:__anon6
+PAPI_FXU_IDL	papiStdEventDefs.h	183;"	d
+PAPI_FXU_IDL_idx	papiStdEventDefs.h	/^	PAPI_FXU_IDL_idx,		 \/*Cycles integer units are idle *\/$/;"	e	enum:__anon6
+PAPI_GRANUL	papi.h	431;"	d
+PAPI_GRN_MAX	papi.h	364;"	d
+PAPI_GRN_MIN	papi.h	359;"	d
+PAPI_GRN_PROC	papi.h	360;"	d
+PAPI_GRN_PROCG	papi.h	361;"	d
+PAPI_GRN_SYS	papi.h	362;"	d
+PAPI_GRN_SYS_CPU	papi.h	363;"	d
+PAPI_GRN_THR	papi.h	358;"	d
+PAPI_HIGH_LEVEL_INITED	papi.h	280;"	d
+PAPI_HIGH_LEVEL_TLS	papi.h	317;"	d
+PAPI_HUGE_STR_LEN	papi.h	463;"	d
+PAPI_HWINFO	papi.h	440;"	d
+PAPI_HW_INT	papiStdEventDefs.h	207;"	d
+PAPI_HW_INT_idx	papiStdEventDefs.h	/^	PAPI_HW_INT_idx,		 \/*Hardware interrupts *\/$/;"	e	enum:__anon6
+PAPI_INHERIT	papi.h	454;"	d
+PAPI_INHERIT_ALL	papi.h	421;"	d
+PAPI_INHERIT_NONE	papi.h	422;"	d
+PAPI_INIT_SLOTS	papi.h	457;"	d
+PAPI_INSTR_ADDRESS	papi.h	449;"	d
+PAPI_INT_INS	papiStdEventDefs.h	217;"	d
+PAPI_INT_INS_idx	papiStdEventDefs.h	/^	PAPI_INT_INS_idx,		 \/*Integer instructions executed *\/$/;"	e	enum:__anon6
+PAPI_L1_DCA	papiStdEventDefs.h	230;"	d
+PAPI_L1_DCA_idx	papiStdEventDefs.h	/^	PAPI_L1_DCA_idx,		 \/*L1 D Cache Access *\/$/;"	e	enum:__anon6
+PAPI_L1_DCH	papiStdEventDefs.h	228;"	d
+PAPI_L1_DCH_idx	papiStdEventDefs.h	/^	PAPI_L1_DCH_idx,		 \/*L1 D Cache Hit *\/$/;"	e	enum:__anon6
+PAPI_L1_DCM	papiStdEventDefs.h	166;"	d
+PAPI_L1_DCM_idx	papiStdEventDefs.h	/^	PAPI_L1_DCM_idx = 0,			   \/*Level 1 data cache misses *\/$/;"	e	enum:__anon6
+PAPI_L1_DCR	papiStdEventDefs.h	233;"	d
+PAPI_L1_DCR_idx	papiStdEventDefs.h	/^	PAPI_L1_DCR_idx,		 \/*L1 D Cache Read *\/$/;"	e	enum:__anon6
+PAPI_L1_DCW	papiStdEventDefs.h	236;"	d
+PAPI_L1_DCW_idx	papiStdEventDefs.h	/^	PAPI_L1_DCW_idx,		 \/*L1 D Cache Write *\/$/;"	e	enum:__anon6
+PAPI_L1_ICA	papiStdEventDefs.h	242;"	d
+PAPI_L1_ICA_idx	papiStdEventDefs.h	/^	PAPI_L1_ICA_idx,		 \/*L1 instruction cache accesses *\/$/;"	e	enum:__anon6
+PAPI_L1_ICH	papiStdEventDefs.h	239;"	d
+PAPI_L1_ICH_idx	papiStdEventDefs.h	/^	PAPI_L1_ICH_idx,		 \/*L1 instruction cache hits *\/$/;"	e	enum:__anon6
+PAPI_L1_ICM	papiStdEventDefs.h	167;"	d
+PAPI_L1_ICM_idx	papiStdEventDefs.h	/^	PAPI_L1_ICM_idx,		 \/*Level 1 instruction cache misses *\/$/;"	e	enum:__anon6
+PAPI_L1_ICR	papiStdEventDefs.h	245;"	d
+PAPI_L1_ICR_idx	papiStdEventDefs.h	/^	PAPI_L1_ICR_idx,		 \/*L1 instruction cache reads *\/$/;"	e	enum:__anon6
+PAPI_L1_ICW	papiStdEventDefs.h	248;"	d
+PAPI_L1_ICW_idx	papiStdEventDefs.h	/^	PAPI_L1_ICW_idx,		 \/*L1 instruction cache writes *\/$/;"	e	enum:__anon6
+PAPI_L1_LDM	papiStdEventDefs.h	189;"	d
+PAPI_L1_LDM_idx	papiStdEventDefs.h	/^	PAPI_L1_LDM_idx,		 \/*Level 1 load misses *\/$/;"	e	enum:__anon6
+PAPI_L1_STM	papiStdEventDefs.h	190;"	d
+PAPI_L1_STM_idx	papiStdEventDefs.h	/^	PAPI_L1_STM_idx,		 \/*Level 1 store misses *\/$/;"	e	enum:__anon6
+PAPI_L1_TCA	papiStdEventDefs.h	254;"	d
+PAPI_L1_TCA_idx	papiStdEventDefs.h	/^	PAPI_L1_TCA_idx,		 \/*L1 total cache accesses *\/$/;"	e	enum:__anon6
+PAPI_L1_TCH	papiStdEventDefs.h	251;"	d
+PAPI_L1_TCH_idx	papiStdEventDefs.h	/^	PAPI_L1_TCH_idx,		 \/*L1 total cache hits *\/$/;"	e	enum:__anon6
+PAPI_L1_TCM	papiStdEventDefs.h	172;"	d
+PAPI_L1_TCM_idx	papiStdEventDefs.h	/^	PAPI_L1_TCM_idx,		 \/*Level 1 total cache misses *\/$/;"	e	enum:__anon6
+PAPI_L1_TCR	papiStdEventDefs.h	257;"	d
+PAPI_L1_TCR_idx	papiStdEventDefs.h	/^	PAPI_L1_TCR_idx,		 \/*L1 total cache reads *\/$/;"	e	enum:__anon6
+PAPI_L1_TCW	papiStdEventDefs.h	260;"	d
+PAPI_L1_TCW_idx	papiStdEventDefs.h	/^	PAPI_L1_TCW_idx,		 \/*L1 total cache writes *\/$/;"	e	enum:__anon6
+PAPI_L2_DCA	papiStdEventDefs.h	231;"	d
+PAPI_L2_DCA_idx	papiStdEventDefs.h	/^	PAPI_L2_DCA_idx,		 \/*L2 D Cache Access *\/$/;"	e	enum:__anon6
+PAPI_L2_DCH	papiStdEventDefs.h	229;"	d
+PAPI_L2_DCH_idx	papiStdEventDefs.h	/^	PAPI_L2_DCH_idx,		 \/*L2 D Cache Hit *\/$/;"	e	enum:__anon6
+PAPI_L2_DCM	papiStdEventDefs.h	168;"	d
+PAPI_L2_DCM_idx	papiStdEventDefs.h	/^	PAPI_L2_DCM_idx,		 \/*Level 2 data cache misses *\/$/;"	e	enum:__anon6
+PAPI_L2_DCR	papiStdEventDefs.h	234;"	d
+PAPI_L2_DCR_idx	papiStdEventDefs.h	/^	PAPI_L2_DCR_idx,		 \/*L2 D Cache Read *\/$/;"	e	enum:__anon6
+PAPI_L2_DCW	papiStdEventDefs.h	237;"	d
+PAPI_L2_DCW_idx	papiStdEventDefs.h	/^	PAPI_L2_DCW_idx,		 \/*L2 D Cache Write *\/$/;"	e	enum:__anon6
+PAPI_L2_ICA	papiStdEventDefs.h	243;"	d
+PAPI_L2_ICA_idx	papiStdEventDefs.h	/^	PAPI_L2_ICA_idx,		 \/*L2 instruction cache accesses *\/$/;"	e	enum:__anon6
+PAPI_L2_ICH	papiStdEventDefs.h	240;"	d
+PAPI_L2_ICH_idx	papiStdEventDefs.h	/^	PAPI_L2_ICH_idx,		 \/*L2 instruction cache hits *\/$/;"	e	enum:__anon6
+PAPI_L2_ICM	papiStdEventDefs.h	169;"	d
+PAPI_L2_ICM_idx	papiStdEventDefs.h	/^	PAPI_L2_ICM_idx,		 \/*Level 2 instruction cache misses *\/$/;"	e	enum:__anon6
+PAPI_L2_ICR	papiStdEventDefs.h	246;"	d
+PAPI_L2_ICR_idx	papiStdEventDefs.h	/^	PAPI_L2_ICR_idx,		 \/*L2 instruction cache reads *\/$/;"	e	enum:__anon6
+PAPI_L2_ICW	papiStdEventDefs.h	249;"	d
+PAPI_L2_ICW_idx	papiStdEventDefs.h	/^	PAPI_L2_ICW_idx,		 \/*L2 instruction cache writes *\/$/;"	e	enum:__anon6
+PAPI_L2_LDM	papiStdEventDefs.h	191;"	d
+PAPI_L2_LDM_idx	papiStdEventDefs.h	/^	PAPI_L2_LDM_idx,		 \/*Level 2 load misses *\/$/;"	e	enum:__anon6
+PAPI_L2_LINES_IN_CNTR_IDX	llc_event_cntr.c	171;"	d	file:
+PAPI_L2_STM	papiStdEventDefs.h	192;"	d
+PAPI_L2_STM_idx	papiStdEventDefs.h	/^	PAPI_L2_STM_idx,		 \/*Level 2 store misses *\/$/;"	e	enum:__anon6
+PAPI_L2_TCA	papiStdEventDefs.h	255;"	d
+PAPI_L2_TCA_idx	papiStdEventDefs.h	/^	PAPI_L2_TCA_idx,		 \/*L2 total cache accesses *\/$/;"	e	enum:__anon6
+PAPI_L2_TCH	papiStdEventDefs.h	252;"	d
+PAPI_L2_TCH_idx	papiStdEventDefs.h	/^	PAPI_L2_TCH_idx,		 \/*L2 total cache hits *\/$/;"	e	enum:__anon6
+PAPI_L2_TCM	papiStdEventDefs.h	173;"	d
+PAPI_L2_TCM_idx	papiStdEventDefs.h	/^	PAPI_L2_TCM_idx,		 \/*Level 2 total cache misses *\/$/;"	e	enum:__anon6
+PAPI_L2_TCR	papiStdEventDefs.h	258;"	d
+PAPI_L2_TCR_idx	papiStdEventDefs.h	/^	PAPI_L2_TCR_idx,		 \/*L2 total cache reads *\/$/;"	e	enum:__anon6
+PAPI_L2_TCW	papiStdEventDefs.h	261;"	d
+PAPI_L2_TCW_idx	papiStdEventDefs.h	/^	PAPI_L2_TCW_idx,		 \/*L2 total cache writes *\/$/;"	e	enum:__anon6
+PAPI_L3_DCA	papiStdEventDefs.h	232;"	d
+PAPI_L3_DCA_idx	papiStdEventDefs.h	/^	PAPI_L3_DCA_idx,		 \/*L3 D Cache Access *\/$/;"	e	enum:__anon6
+PAPI_L3_DCH	papiStdEventDefs.h	195;"	d
+PAPI_L3_DCH_idx	papiStdEventDefs.h	/^	PAPI_L3_DCH_idx,		 \/*Level 3 Data Cache Hit *\/$/;"	e	enum:__anon6
+PAPI_L3_DCM	papiStdEventDefs.h	170;"	d
+PAPI_L3_DCM_idx	papiStdEventDefs.h	/^	PAPI_L3_DCM_idx,		 \/*Level 3 data cache misses *\/$/;"	e	enum:__anon6
+PAPI_L3_DCR	papiStdEventDefs.h	235;"	d
+PAPI_L3_DCR_idx	papiStdEventDefs.h	/^	PAPI_L3_DCR_idx,		 \/*L3 D Cache Read *\/$/;"	e	enum:__anon6
+PAPI_L3_DCW	papiStdEventDefs.h	238;"	d
+PAPI_L3_DCW_idx	papiStdEventDefs.h	/^	PAPI_L3_DCW_idx,		 \/*L3 D Cache Write *\/$/;"	e	enum:__anon6
+PAPI_L3_ICA	papiStdEventDefs.h	244;"	d
+PAPI_L3_ICA_idx	papiStdEventDefs.h	/^	PAPI_L3_ICA_idx,		 \/*L3 instruction cache accesses *\/$/;"	e	enum:__anon6
+PAPI_L3_ICH	papiStdEventDefs.h	241;"	d
+PAPI_L3_ICH_idx	papiStdEventDefs.h	/^	PAPI_L3_ICH_idx,		 \/*L3 instruction cache hits *\/$/;"	e	enum:__anon6
+PAPI_L3_ICM	papiStdEventDefs.h	171;"	d
+PAPI_L3_ICM_idx	papiStdEventDefs.h	/^	PAPI_L3_ICM_idx,		 \/*Level 3 instruction cache misses *\/$/;"	e	enum:__anon6
+PAPI_L3_ICR	papiStdEventDefs.h	247;"	d
+PAPI_L3_ICR_idx	papiStdEventDefs.h	/^	PAPI_L3_ICR_idx,		 \/*L3 instruction cache reads *\/$/;"	e	enum:__anon6
+PAPI_L3_ICW	papiStdEventDefs.h	250;"	d
+PAPI_L3_ICW_idx	papiStdEventDefs.h	/^	PAPI_L3_ICW_idx,		 \/*L3 instruction cache writes *\/$/;"	e	enum:__anon6
+PAPI_L3_LDM	papiStdEventDefs.h	180;"	d
+PAPI_L3_LDM_idx	papiStdEventDefs.h	/^	PAPI_L3_LDM_idx,		 \/*Level 3 load misses *\/$/;"	e	enum:__anon6
+PAPI_L3_STM	papiStdEventDefs.h	181;"	d
+PAPI_L3_STM_idx	papiStdEventDefs.h	/^	PAPI_L3_STM_idx,		 \/*Level 3 store misses *\/$/;"	e	enum:__anon6
+PAPI_L3_TCA	papiStdEventDefs.h	256;"	d
+PAPI_L3_TCA_idx	papiStdEventDefs.h	/^	PAPI_L3_TCA_idx,		 \/*L3 total cache accesses *\/$/;"	e	enum:__anon6
+PAPI_L3_TCH	papiStdEventDefs.h	253;"	d
+PAPI_L3_TCH_idx	papiStdEventDefs.h	/^	PAPI_L3_TCH_idx,		 \/*L3 total cache hits *\/$/;"	e	enum:__anon6
+PAPI_L3_TCM	papiStdEventDefs.h	174;"	d
+PAPI_L3_TCM_idx	papiStdEventDefs.h	/^	PAPI_L3_TCM_idx,		 \/*Level 3 total cache misses *\/$/;"	e	enum:__anon6
+PAPI_L3_TCR	papiStdEventDefs.h	259;"	d
+PAPI_L3_TCR_idx	papiStdEventDefs.h	/^	PAPI_L3_TCR_idx,		 \/*L3 total cache reads *\/$/;"	e	enum:__anon6
+PAPI_L3_TCW	papiStdEventDefs.h	262;"	d
+PAPI_L3_TCW_idx	papiStdEventDefs.h	/^	PAPI_L3_TCW_idx,		 \/*L3 total cache writes *\/$/;"	e	enum:__anon6
+PAPI_LD_INS	papiStdEventDefs.h	219;"	d
+PAPI_LD_INS_idx	papiStdEventDefs.h	/^	PAPI_LD_INS_idx,		 \/*Load instructions executed *\/$/;"	e	enum:__anon6
+PAPI_LIB_VERSION	papi.h	445;"	d
+PAPI_LLC_ACCESS_CNTR_IDX	llc_event_cntr.c	173;"	d	file:
+PAPI_LLC_MISS_CNTR_IDX	llc_event_cntr.c	172;"	d	file:
+PAPI_LOCATION_CORE	papi.h	/^   PAPI_LOCATION_CORE = 0,			\/**< Measures local to core      *\/$/;"	e	enum:__anon9
+PAPI_LOCATION_CPU	papi.h	/^   PAPI_LOCATION_CPU,				\/**< Measures local to CPU (HT?) *\/$/;"	e	enum:__anon9
+PAPI_LOCATION_PACKAGE	papi.h	/^   PAPI_LOCATION_PACKAGE,			\/**< Measures local to package   *\/$/;"	e	enum:__anon9
+PAPI_LOCATION_UNCORE	papi.h	/^   PAPI_LOCATION_UNCORE,			\/**< Measures uncore             *\/$/;"	e	enum:__anon9
+PAPI_LOCK_NUM	papi.h	334;"	d
+PAPI_LOCK_USR1	papi.h	332;"	d
+PAPI_LOCK_USR2	papi.h	333;"	d
+PAPI_LOW_LEVEL_INITED	papi.h	279;"	d
+PAPI_LST_INS	papiStdEventDefs.h	226;"	d
+PAPI_LST_INS_idx	papiStdEventDefs.h	/^	PAPI_LST_INS_idx,		 \/*Total load\/store inst. executed *\/$/;"	e	enum:__anon6
+PAPI_LSU_IDL	papiStdEventDefs.h	185;"	d
+PAPI_LSU_IDL_idx	papiStdEventDefs.h	/^	PAPI_LSU_IDL_idx,		 \/*Cycles load\/store units are idle *\/$/;"	e	enum:__anon6
+PAPI_MAX_CPUS	papi.h	442;"	d
+PAPI_MAX_HWCTRS	papi.h	439;"	d
+PAPI_MAX_INFO_TERMS	papi.h	895;"	d
+PAPI_MAX_MEM_HIERARCHY_LEVELS	papi.h	739;"	d
+PAPI_MAX_MPX_CTRS	papi.h	435;"	d
+PAPI_MAX_PRESET_EVENTS	papiStdEventDefs.h	34;"	d
+PAPI_MAX_STR_LEN	papi.h	461;"	d
+PAPI_MEM_RCY	papiStdEventDefs.h	201;"	d
+PAPI_MEM_RCY_idx	papiStdEventDefs.h	/^	PAPI_MEM_RCY_idx,		 \/*Cycles Stalled Waiting for Memory Read *\/$/;"	e	enum:__anon6
+PAPI_MEM_SCY	papiStdEventDefs.h	200;"	d
+PAPI_MEM_SCY_idx	papiStdEventDefs.h	/^	PAPI_MEM_SCY_idx,		 \/*Cycles Stalled Waiting for Memory Access *\/$/;"	e	enum:__anon6
+PAPI_MEM_WCY	papiStdEventDefs.h	202;"	d
+PAPI_MEM_WCY_idx	papiStdEventDefs.h	/^	PAPI_MEM_WCY_idx,		 \/*Cycles Stalled Waiting for Memory Write *\/$/;"	e	enum:__anon6
+PAPI_MH_CACHE_REPLACEMENT_POLICY	papi.h	735;"	d
+PAPI_MH_CACHE_TYPE	papi.h	728;"	d
+PAPI_MH_CACHE_WRITE_POLICY	papi.h	731;"	d
+PAPI_MH_MAX_LEVELS	papi.h	738;"	d
+PAPI_MH_TYPE_DATA	papi.h	724;"	d
+PAPI_MH_TYPE_EMPTY	papi.h	722;"	d
+PAPI_MH_TYPE_INST	papi.h	723;"	d
+PAPI_MH_TYPE_LRU	papi.h	733;"	d
+PAPI_MH_TYPE_PREF	papi.h	737;"	d
+PAPI_MH_TYPE_PSEUDO_LRU	papi.h	734;"	d
+PAPI_MH_TYPE_TLB	papi.h	736;"	d
+PAPI_MH_TYPE_TRACE	papi.h	726;"	d
+PAPI_MH_TYPE_UNIFIED	papi.h	727;"	d
+PAPI_MH_TYPE_UNKNOWN	papi.h	732;"	d
+PAPI_MH_TYPE_VECTOR	papi.h	725;"	d
+PAPI_MH_TYPE_WB	papi.h	730;"	d
+PAPI_MH_TYPE_WT	papi.h	729;"	d
+PAPI_MIN_STR_LEN	papi.h	460;"	d
+PAPI_MULTIPLEX	papi.h	427;"	d
+PAPI_MULTIPLEXING	papi.h	376;"	d
+PAPI_MULTIPLEX_DEFAULT	papi.h	414;"	d
+PAPI_MULTIPLEX_FORCE_SW	papi.h	415;"	d
+PAPI_NATIVE_AND_MASK	papiStdEventDefs.h	32;"	d
+PAPI_NATIVE_MASK	papiStdEventDefs.h	30;"	d
+PAPI_NOT_INIT	papi.h	373;"	d
+PAPI_NOT_INITED	papi.h	278;"	d
+PAPI_NTV_ENUM_DARR	papi.h	/^   PAPI_NTV_ENUM_DARR,			\/**< Enumerate events that support DAR (data address ranging) *\/$/;"	e	enum:__anon7
+PAPI_NTV_ENUM_DEAR	papi.h	/^   PAPI_NTV_ENUM_DEAR,			\/**< Enumerate DEAR (data event address register) events *\/$/;"	e	enum:__anon7
+PAPI_NTV_ENUM_GROUPS	papi.h	/^   PAPI_NTV_ENUM_GROUPS			\/**< Enumerate groups an event belongs to (e.g. POWER5) *\/$/;"	e	enum:__anon7
+PAPI_NTV_ENUM_IARR	papi.h	/^   PAPI_NTV_ENUM_IARR,			\/**< Enumerate events that support IAR (instruction address ranging) *\/$/;"	e	enum:__anon7
+PAPI_NTV_ENUM_IEAR	papi.h	/^   PAPI_NTV_ENUM_IEAR,			\/**< Enumerate IEAR (instruction event address register) events *\/$/;"	e	enum:__anon7
+PAPI_NTV_ENUM_OPCM	papi.h	/^   PAPI_NTV_ENUM_OPCM,			\/**< Enumerate events that support OPC (opcode matching) *\/$/;"	e	enum:__anon7
+PAPI_NTV_ENUM_UMASKS	papi.h	/^   PAPI_NTV_ENUM_UMASKS,		\/**< all individual bits for given group *\/$/;"	e	enum:__anon7
+PAPI_NTV_ENUM_UMASK_COMBOS	papi.h	/^   PAPI_NTV_ENUM_UMASK_COMBOS,	\/**< all combinations of mask bits for given group *\/$/;"	e	enum:__anon7
+PAPI_NTV_GROUP_AND_MASK	papi.h	520;"	d
+PAPI_NTV_GROUP_SHIFT	papi.h	521;"	d
+PAPI_NULL	papi.h	290;"	d
+PAPI_NUM_ERRORS	papi.h	276;"	d
+PAPI_NUM_LOCK	papi.h	331;"	d
+PAPI_NUM_TLS	papi.h	318;"	d
+PAPI_OK	papi.h	250;"	d
+PAPI_OVERFLOWING	papi.h	374;"	d
+PAPI_OVERFLOW_FORCE_SW	papi.h	407;"	d
+PAPI_OVERFLOW_HARDWARE	papi.h	408;"	d
+PAPI_PATH	makefile	/^PAPI_PATH = \/usr\/local\/papi\/include$/;"	m
+PAPI_PAUSED	papi.h	372;"	d
+PAPI_PRELOAD	papi.h	437;"	d
+PAPI_PRESET_AND_MASK	papiStdEventDefs.h	31;"	d
+PAPI_PRESET_BIT_BR	papi.h	510;"	d
+PAPI_PRESET_BIT_CACH	papi.h	513;"	d
+PAPI_PRESET_BIT_CND	papi.h	511;"	d
+PAPI_PRESET_BIT_FP	papi.h	518;"	d
+PAPI_PRESET_BIT_IDL	papi.h	509;"	d
+PAPI_PRESET_BIT_INS	papi.h	508;"	d
+PAPI_PRESET_BIT_L1	papi.h	514;"	d
+PAPI_PRESET_BIT_L2	papi.h	515;"	d
+PAPI_PRESET_BIT_L3	papi.h	516;"	d
+PAPI_PRESET_BIT_MEM	papi.h	512;"	d
+PAPI_PRESET_BIT_MSC	papi.h	507;"	d
+PAPI_PRESET_BIT_TLB	papi.h	517;"	d
+PAPI_PRESET_ENUM_AVAIL	papi.h	/^   PAPI_PRESET_ENUM_AVAIL, 		\/**< Enumerate events that exist here *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_BR	papi.h	/^   PAPI_PRESET_ENUM_BR,			\/**< Branch related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_CACH	papi.h	/^   PAPI_PRESET_ENUM_CACH,		\/**< Cache related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_CND	papi.h	/^   PAPI_PRESET_ENUM_CND,		\/**< Conditional preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_FP	papi.h	/^   PAPI_PRESET_ENUM_FP,			\/**< Floating Point related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_IDL	papi.h	/^   PAPI_PRESET_ENUM_IDL,		\/**< Stalled or Idle preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_INS	papi.h	/^   PAPI_PRESET_ENUM_INS,		\/**< Instruction related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_L1	papi.h	/^   PAPI_PRESET_ENUM_L1,			\/**< L1 cache related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_L2	papi.h	/^   PAPI_PRESET_ENUM_L2,			\/**< L2 cache related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_L3	papi.h	/^   PAPI_PRESET_ENUM_L3,			\/**< L3 cache related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_MEM	papi.h	/^   PAPI_PRESET_ENUM_MEM,		\/**< Memory related preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_MSC	papi.h	/^   PAPI_PRESET_ENUM_MSC,		\/**< Miscellaneous preset events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_ENUM_TLB	papi.h	/^   PAPI_PRESET_ENUM_TLB,		\/**< Translation Lookaside Buffer events *\/$/;"	e	enum:__anon7
+PAPI_PRESET_MASK	papiStdEventDefs.h	29;"	d
+PAPI_PRF_DM	papiStdEventDefs.h	194;"	d
+PAPI_PRF_DM_idx	papiStdEventDefs.h	/^	PAPI_PRF_DM_idx,		 \/*Prefetch data instruction caused a miss *\/$/;"	e	enum:__anon6
+PAPI_PROFIL	papi.h	436;"	d
+PAPI_PROFILING	papi.h	375;"	d
+PAPI_PROFIL_BUCKETS	papi.h	402;"	d
+PAPI_PROFIL_BUCKET_16	papi.h	396;"	d
+PAPI_PROFIL_BUCKET_32	papi.h	397;"	d
+PAPI_PROFIL_BUCKET_64	papi.h	398;"	d
+PAPI_PROFIL_COMPRESS	papi.h	395;"	d
+PAPI_PROFIL_DATA_EAR	papi.h	400;"	d
+PAPI_PROFIL_FORCE_SW	papi.h	399;"	d
+PAPI_PROFIL_INST_EAR	papi.h	401;"	d
+PAPI_PROFIL_POSIX	papi.h	392;"	d
+PAPI_PROFIL_RANDOM	papi.h	393;"	d
+PAPI_PROFIL_WEIGHTED	papi.h	394;"	d
+PAPI_QUIET	papi.h	384;"	d
+PAPI_REF_CYC	papiStdEventDefs.h	273;"	d
+PAPI_REF_CYC_idx	papiStdEventDefs.h	/^	PAPI_REF_CYC_idx,		 \/* Reference clock cycles *\/$/;"	e	enum:__anon6
+PAPI_RES_STL	papiStdEventDefs.h	223;"	d
+PAPI_RES_STL_idx	papiStdEventDefs.h	/^	PAPI_RES_STL_idx,		 \/*Cycles processor is stalled on resource *\/$/;"	e	enum:__anon6
+PAPI_RUNNING	papi.h	371;"	d
+PAPI_SHLIBINFO	papi.h	444;"	d
+PAPI_SP_OPS	papiStdEventDefs.h	269;"	d
+PAPI_SP_OPS_idx	papiStdEventDefs.h	/^	PAPI_SP_OPS_idx,		 \/* Floating point operations executed; optimized to count scaled single precision vector operations *\/$/;"	e	enum:__anon6
+PAPI_SR_INS	papiStdEventDefs.h	220;"	d
+PAPI_SR_INS_idx	papiStdEventDefs.h	/^	PAPI_SR_INS_idx,		 \/*Store instructions executed *\/$/;"	e	enum:__anon6
+PAPI_STL_CCY	papiStdEventDefs.h	205;"	d
+PAPI_STL_CCY_idx	papiStdEventDefs.h	/^	PAPI_STL_CCY_idx,		 \/*Cycles with No Instruction Completion *\/$/;"	e	enum:__anon6
+PAPI_STL_ICY	papiStdEventDefs.h	203;"	d
+PAPI_STL_ICY_idx	papiStdEventDefs.h	/^	PAPI_STL_ICY_idx,		 \/*Cycles with No Instruction Issue *\/$/;"	e	enum:__anon6
+PAPI_STOPPED	papi.h	370;"	d
+PAPI_SYC_INS	papiStdEventDefs.h	227;"	d
+PAPI_SYC_INS_idx	papiStdEventDefs.h	/^	PAPI_SYC_INS_idx,		 \/*Sync. inst. executed *\/$/;"	e	enum:__anon6
+PAPI_THREAD_LEVEL_INITED	papi.h	281;"	d
+PAPI_TIMESCOPE_POINT	papi.h	/^   PAPI_TIMESCOPE_POINT,			\/**< Data is an instantaneous value *\/$/;"	e	enum:__anon12
+PAPI_TIMESCOPE_SINCE_LAST	papi.h	/^   PAPI_TIMESCOPE_SINCE_LAST,		\/**< Data is from last read *\/$/;"	e	enum:__anon12
+PAPI_TIMESCOPE_SINCE_START	papi.h	/^   PAPI_TIMESCOPE_SINCE_START = 0,	\/**< Data is cumulative from start *\/$/;"	e	enum:__anon12
+PAPI_TIMESCOPE_UNTIL_NEXT	papi.h	/^   PAPI_TIMESCOPE_UNTIL_NEXT,		\/**< Data is until next read *\/$/;"	e	enum:__anon12
+PAPI_TLB_DM	papiStdEventDefs.h	186;"	d
+PAPI_TLB_DM_idx	papiStdEventDefs.h	/^	PAPI_TLB_DM_idx,		 \/*Data translation lookaside buffer misses *\/$/;"	e	enum:__anon6
+PAPI_TLB_IM	papiStdEventDefs.h	187;"	d
+PAPI_TLB_IM_idx	papiStdEventDefs.h	/^	PAPI_TLB_IM_idx,		 \/*Instr translation lookaside buffer misses *\/$/;"	e	enum:__anon6
+PAPI_TLB_SD	papiStdEventDefs.h	196;"	d
+PAPI_TLB_SD_idx	papiStdEventDefs.h	/^	PAPI_TLB_SD_idx,		 \/*Xlation lookaside buffer shootdowns (SMP) *\/$/;"	e	enum:__anon6
+PAPI_TLB_TL	papiStdEventDefs.h	188;"	d
+PAPI_TLB_TL_idx	papiStdEventDefs.h	/^	PAPI_TLB_TL_idx,		 \/*Total translation lookaside buffer misses *\/$/;"	e	enum:__anon6
+PAPI_TLS_ALL_THREADS	papi.h	323;"	d
+PAPI_TLS_HIGH_LEVEL	papi.h	321;"	d
+PAPI_TLS_NUM	papi.h	322;"	d
+PAPI_TLS_USR1	papi.h	319;"	d
+PAPI_TLS_USR2	papi.h	320;"	d
+PAPI_TOT_CYC	papiStdEventDefs.h	225;"	d
+PAPI_TOT_CYC_idx	papiStdEventDefs.h	/^	PAPI_TOT_CYC_idx,		 \/*Total cycles executed *\/$/;"	e	enum:__anon6
+PAPI_TOT_IIS	papiStdEventDefs.h	215;"	d
+PAPI_TOT_IIS_idx	papiStdEventDefs.h	/^	PAPI_TOT_IIS_idx,		 \/*Total instructions issued *\/$/;"	e	enum:__anon6
+PAPI_TOT_INS	papiStdEventDefs.h	216;"	d
+PAPI_TOT_INS_idx	papiStdEventDefs.h	/^	PAPI_TOT_INS_idx,		 \/*Total instructions executed *\/$/;"	e	enum:__anon6
+PAPI_UPDATETYPE_ARBITRARY	papi.h	/^   PAPI_UPDATETYPE_ARBITRARY = 0,	\/**< Data is cumulative from start *\/$/;"	e	enum:__anon13
+PAPI_UPDATETYPE_FIXEDFREQ	papi.h	/^   PAPI_UPDATETYPE_FIXEDFREQ,	    \/**< Data is read periodically *\/$/;"	e	enum:__anon13
+PAPI_UPDATETYPE_PULL	papi.h	/^   PAPI_UPDATETYPE_PULL,	        \/**< Data is pulled *\/$/;"	e	enum:__anon13
+PAPI_UPDATETYPE_PUSH	papi.h	/^   PAPI_UPDATETYPE_PUSH,	        \/**< Data is pushed *\/$/;"	e	enum:__anon13
+PAPI_USER_EVENTS_FILE	papi.h	455;"	d
+PAPI_USR1_LOCK	papi.h	329;"	d
+PAPI_USR1_TLS	papi.h	315;"	d
+PAPI_USR2_LOCK	papi.h	330;"	d
+PAPI_USR2_TLS	papi.h	316;"	d
+PAPI_VALUETYPE_ABSOLUTE	papi.h	/^   PAPI_VALUETYPE_ABSOLUTE,	        \/**< Data is from last read *\/$/;"	e	enum:__anon11
+PAPI_VALUETYPE_RUNNING_SUM	papi.h	/^   PAPI_VALUETYPE_RUNNING_SUM = 0,	\/**< Data is running sum from start *\/$/;"	e	enum:__anon11
+PAPI_VEC_DP	papiStdEventDefs.h	272;"	d
+PAPI_VEC_DP_idx	papiStdEventDefs.h	/^	PAPI_VEC_DP_idx,		 \/* Double precision vector\/SIMD instructions *\/$/;"	e	enum:__anon6
+PAPI_VEC_INS	papiStdEventDefs.h	222;"	d
+PAPI_VEC_INS_idx	papiStdEventDefs.h	/^	PAPI_VEC_INS_idx,		 \/*Vector\/SIMD instructions executed (could include integer) *\/$/;"	e	enum:__anon6
+PAPI_VEC_SP	papiStdEventDefs.h	271;"	d
+PAPI_VEC_SP_idx	papiStdEventDefs.h	/^	PAPI_VEC_SP_idx,		 \/* Single precision vector\/SIMD instructions *\/$/;"	e	enum:__anon6
+PAPI_VENDOR_AMD	papi.h	345;"	d
+PAPI_VENDOR_ARM	papi.h	350;"	d
+PAPI_VENDOR_CRAY	papi.h	347;"	d
+PAPI_VENDOR_FREESCALE	papi.h	349;"	d
+PAPI_VENDOR_IBM	papi.h	346;"	d
+PAPI_VENDOR_INTEL	papi.h	344;"	d
+PAPI_VENDOR_MIPS	papi.h	351;"	d
+PAPI_VENDOR_SUN	papi.h	348;"	d
+PAPI_VENDOR_UNKNOWN	papi.h	343;"	d
+PAPI_VERB_ECONT	papi.h	385;"	d
+PAPI_VERB_ESTOP	papi.h	386;"	d
+PAPI_VERSION	papi.h	222;"	d
+PAPI_VERSION_INCREMENT	papi.h	218;"	d
+PAPI_VERSION_MAJOR	papi.h	215;"	d
+PAPI_VERSION_MINOR	papi.h	216;"	d
+PAPI_VERSION_NUMBER	papi.h	214;"	d
+PAPI_VERSION_REVISION	papi.h	217;"	d
+PAPI_VER_CURRENT	papi.h	223;"	d
+PAPI_addr_range_option_t	papi.h	/^   } PAPI_addr_range_option_t;$/;"	t	typeref:struct:_papi_addr_range_option
+PAPI_address_map_t	papi.h	/^   } PAPI_address_map_t;$/;"	t	typeref:struct:_papi_address_map
+PAPI_all_thr_spec_t	papi.h	/^   } PAPI_all_thr_spec_t;$/;"	t	typeref:struct:_papi_all_thr_spec
+PAPI_attach_option_t	papi.h	/^   } PAPI_attach_option_t;$/;"	t	typeref:struct:_papi_attach_option
+PAPI_component_info_t	papi.h	/^   } PAPI_component_info_t;$/;"	t	typeref:struct:_papi_component_option
+PAPI_cpu_option_t	papi.h	/^      } PAPI_cpu_option_t;$/;"	t	typeref:struct:_papi_cpu_option
+PAPI_debug_handler_t	papi.h	/^   typedef int (*PAPI_debug_handler_t) (int code);$/;"	t
+PAPI_debug_option_t	papi.h	/^   } PAPI_debug_option_t;$/;"	t	typeref:struct:_papi_debug_option
+PAPI_descr_error	papi.h	1127;"	d
+PAPI_dmem_info_t	papi.h	/^	} PAPI_dmem_info_t;$/;"	t	typeref:struct:_dmem_t
+PAPI_domain_option_t	papi.h	/^   } PAPI_domain_option_t;$/;"	t	typeref:struct:_papi_domain_option
+PAPI_event_info_t	papi.h	/^   } PAPI_event_info_t;$/;"	t	typeref:struct:event_info
+PAPI_exe_info_t	papi.h	/^   } PAPI_exe_info_t;$/;"	t	typeref:struct:_papi_program_info
+PAPI_granularity_option_t	papi.h	/^   } PAPI_granularity_option_t;$/;"	t	typeref:struct:_papi_granularity_option
+PAPI_hw_info_t	papi.h	/^   } PAPI_hw_info_t;$/;"	t	typeref:struct:_papi_hw_info
+PAPI_inherit_option_t	papi.h	/^   } PAPI_inherit_option_t;$/;"	t	typeref:struct:_papi_inherit_option
+PAPI_itimer_option_t	papi.h	/^   } PAPI_itimer_option_t;$/;"	t	typeref:struct:_papi_itimer_option
+PAPI_mh_cache_info_t	papi.h	/^   } PAPI_mh_cache_info_t;$/;"	t	typeref:struct:_papi_mh_cache_info
+PAPI_mh_info_t	papi.h	/^   } PAPI_mh_info_t;$/;"	t	typeref:struct:_papi_mh_info
+PAPI_mh_level_t	papi.h	/^   } PAPI_mh_level_t;$/;"	t	typeref:struct:_papi_mh_level_info
+PAPI_mh_tlb_info_t	papi.h	/^   } PAPI_mh_tlb_info_t;$/;"	t	typeref:struct:_papi_mh_tlb_info
+PAPI_mpx_info_t	papi.h	/^   } PAPI_mpx_info_t;$/;"	t	typeref:struct:_papi_mpx_info
+PAPI_multiplex_option_t	papi.h	/^   } PAPI_multiplex_option_t;$/;"	t	typeref:struct:_papi_multiplex_option
+PAPI_option_t	papi.h	/^	} PAPI_option_t;$/;"	t	typeref:union:__anon8
+PAPI_overflow_handler_t	papi.h	/^  typedef void (*PAPI_overflow_handler_t) (int EventSet, void *address,$/;"	t
+PAPI_preload_info_t	papi.h	/^   } PAPI_preload_info_t;$/;"	t	typeref:struct:_papi_preload_option
+PAPI_shlib_info_t	papi.h	/^   } PAPI_shlib_info_t;$/;"	t	typeref:struct:_papi_shared_lib_info
+PAPI_sprofil_t	papi.h	/^   } PAPI_sprofil_t;$/;"	t	typeref:struct:_papi_sprofil
+PAPI_thread_id_t	papi.h	/^	typedef unsigned long PAPI_thread_id_t;$/;"	t
+PAPI_user_defined_events_file_t	papi.h	/^typedef char* PAPI_user_defined_events_file_t;$/;"	t
+PERF_ATTR_DISABLED	perf_event.h	119;"	d
+PERF_ATTR_EXCLUSIVE	perf_event.h	122;"	d
+PERF_ATTR_EXCL_HV	perf_event.h	125;"	d
+PERF_ATTR_EXCL_IDLE	perf_event.h	126;"	d
+PERF_ATTR_EXCL_KERL	perf_event.h	124;"	d
+PERF_ATTR_EXCL_USER	perf_event.h	123;"	d
+PERF_ATTR_INHERIT	perf_event.h	120;"	d
+PERF_ATTR_PINNED	perf_event.h	121;"	d
+PERF_EVENT_H_	perf_event.h	2;"	d
+PERF_EVENT_IOC_DISABLE	perf_event.h	95;"	d
+PERF_EVENT_IOC_ENABLE	perf_event.h	101;"	d
+PERF_EVENT_IOC_ENABLE	perf_event.h	94;"	d
+PERF_EVENT_IOC_PERIOD	perf_event.h	98;"	d
+PERF_EVENT_IOC_REFRESH	perf_event.h	96;"	d
+PERF_EVENT_IOC_RESET	perf_event.h	97;"	d
+PERF_EVENT_IOC_SET_FILTER	perf_event.h	100;"	d
+PERF_EVENT_IOC_SET_OUTPUT	perf_event.h	99;"	d
+PERF_EVENT_L1_DCM	perf_event.h	/^	PERF_EVENT_L1_DCM = 0,		\/* level 1 data cache miss, demand and prefetch *\/$/;"	e	enum:event_id
+PERF_EVENT_L2_TCM	perf_event.h	/^	PERF_EVENT_L2_TCM,			\/* level 2 cache miss, demand and prefetch *\/$/;"	e	enum:event_id
+PERF_EVENT_L3_TCA	perf_event.h	/^	PERF_EVENT_L3_TCA,			\/* level 3 cache access, demand and prefetch *\/$/;"	e	enum:event_id
+PERF_EVENT_L3_TCM	perf_event.h	/^	PERF_EVENT_L3_TCM,			\/* level 3 cache miss, demand and prefetch *\/$/;"	e	enum:event_id
+PERF_EVENT_MAX	perf_event.h	/^	PERF_EVENT_MAX,$/;"	e	enum:event_id
+PERF_FORMAT_GROUP	perf_event.h	/^	PERF_FORMAT_GROUP           = 1U << 3,$/;"	e	enum:perf_event_read_format
+PERF_FORMAT_ID	perf_event.h	/^	PERF_FORMAT_ID              = 1U << 2,$/;"	e	enum:perf_event_read_format
+PERF_FORMAT_MAX	perf_event.h	/^	PERF_FORMAT_MAX = 1U << 4,      \/* non-ABI *\/$/;"	e	enum:perf_event_read_format
+PERF_FORMAT_TOTAL_TIME_ENABLED	perf_event.h	/^	PERF_FORMAT_TOTAL_TIME_ENABLED      = 1U << 0,$/;"	e	enum:perf_event_read_format
+PERF_FORMAT_TOTAL_TIME_RUNNING	perf_event.h	/^	PERF_FORMAT_TOTAL_TIME_RUNNING      = 1U << 1,$/;"	e	enum:perf_event_read_format
+PERF_LLC_ACCESS_CNTR_IDX	llc_event_cntr.c	21;"	d	file:
+PERF_LLC_MISS_CNTR_IDX	llc_event_cntr.c	20;"	d	file:
+PERF_TYPE_BREAKPOINT	perf_event.h	/^	PERF_TYPE_BREAKPOINT        = 5,$/;"	e	enum:perf_type_id
+PERF_TYPE_HARDWARE	perf_event.h	/^	PERF_TYPE_HARDWARE          = 0,$/;"	e	enum:perf_type_id
+PERF_TYPE_HW_CACHE	perf_event.h	/^	PERF_TYPE_HW_CACHE          = 3,$/;"	e	enum:perf_type_id
+PERF_TYPE_MAX	perf_event.h	/^	PERF_TYPE_MAX,$/;"	e	enum:perf_type_id
+PERF_TYPE_RAW	perf_event.h	/^	PERF_TYPE_RAW               = 4,$/;"	e	enum:perf_type_id
+PERF_TYPE_RAW_SPEC	perf_event.h	/^	PERF_TYPE_RAW_SPEC          = 6,$/;"	e	enum:perf_type_id
+PERF_TYPE_SOFTWARE	perf_event.h	/^	PERF_TYPE_SOFTWARE          = 1,$/;"	e	enum:perf_type_id
+PERF_TYPE_TRACEPOINT	perf_event.h	/^	PERF_TYPE_TRACEPOINT        = 2,$/;"	e	enum:perf_type_id
+POLLUTOR_THRESHOLD	config.h	99;"	d
+PREDICTOR_INFO	config.h	11;"	d
+PREFETCH_BATCH	config.h	45;"	d
+REMAP_CACHE_AWARE_STATE	config.h	79;"	d
+RESTRICT_MAPPING_IDX	config.h	61;"	d
+S2C_MAP_SIZE	config.h	93;"	d
+S2C_MAP_UPDATE_INTERVAL_MAX	config.h	94;"	d
+SAMPLE_COMPLETE	chunk_monitor.c	206;"	d	file:
+SAMPLE_DENSITY	config.h	102;"	d
+SAMPLE_FREQUENCY	chunk_monitor.h	17;"	d
+SAMPLE_INTERVAL	config.h	100;"	d
+SAMPLE_RANGE	chunk_monitor.h	14;"	d
+SAMPLE_SHIFT	chunk_monitor.h	13;"	d
+SAMPLE_TIMES	chunk_monitor.h	16;"	d
+SAMPLE_UNINIT	chunk_monitor.c	38;"	d	file:
+SECOND_ROUND	chunk_monitor.h	26;"	d
+SHARED_CACHE_SZ	config.h	43;"	d
+SHARED_CACHE_SZ_IN_LINE	config.h	40;"	d
+SMALL_MEMORY_CHUNK	config.h	95;"	d
+START_SAMPLE	chunk_monitor.h	24;"	d
+STATIC_LIB	makefile	/^STATIC_LIB = ${OBJ_DIR}\/libpcmalloc.a$/;"	m
+STDLIB_HOOK_H_	stdlib_hook.h	2;"	d
+TARGET	makefile	/^TARGET = ${STATIC_LIB} ${DYNAMIC_LIB}$/;"	m
+TIMER_RESOLUTION	event_queue.h	13;"	d
+TIMER_SIG_TYPE	event_queue.c	19;"	d	file:
+TIMER_TYPE	event_queue.c	18;"	d	file:
+TIME_EVENT_QUEUE_H_	event_queue.h	2;"	d
+TOTAL_CALL_STACK_DEPTH	config.h	76;"	d
+UPPER_PAGE_ALIGN	config.h	54;"	d
+USE_GLIBC_BACKTRACE	config.h	19;"	d
+USE_PAPI	config.h	17;"	d
+UTL_BITMAP_H_	utl_bitmap.h	2;"	d
+UTL_BUILTIN_H_	utl_builtin.h	2;"	d
+UTL_CPUAFFI_H_	utl_cpuaffi.h	2;"	d
+UTL_WRAPPER_H_	utl_wrapper.h	2;"	d
+WAIT_FIRST_ACCESS	chunk_monitor.c	39;"	d	file:
+WAIT_NEXT_SAMPLE	chunk_monitor.c	207;"	d	file:
+WAIT_SUCCESSIVE_ACCESS	chunk_monitor.c	40;"	d	file:
+X86_64	config.h	25;"	d
+_PAPI	papi.h	23;"	d
+_PAPISTDEVENTDEFS	papiStdEventDefs.h	13;"	d
+__LINUX_COMPILER_H	utl_builtin.h	6;"	d
+__NR_perf_event_open	perf_event.h	104;"	d
+__USE_GNU	utl_cpuaffi.c	7;"	d	file:
+__aligned	utl_builtin.h	39;"	d
+__reserved_1	perf_event.h	/^				__reserved_1   : 47;$/;"	m	struct:perf_event_attr
+_dmem_t	papi.h	/^	typedef struct _dmem_t {$/;"	s
+_papi_addr_range_option	papi.h	/^   typedef struct _papi_addr_range_option { $/;"	s
+_papi_address_map	papi.h	/^   typedef struct _papi_address_map {$/;"	s
+_papi_all_thr_spec	papi.h	/^	typedef struct _papi_all_thr_spec {$/;"	s
+_papi_attach_option	papi.h	/^   typedef struct _papi_attach_option {$/;"	s
+_papi_component_option	papi.h	/^   typedef struct _papi_component_option {$/;"	s
+_papi_cpu_option	papi.h	/^      typedef struct _papi_cpu_option {$/;"	s
+_papi_debug_option	papi.h	/^   typedef struct _papi_debug_option {$/;"	s
+_papi_domain_option	papi.h	/^   typedef struct _papi_domain_option {$/;"	s
+_papi_granularity_option	papi.h	/^   typedef struct _papi_granularity_option {$/;"	s
+_papi_hw_info	papi.h	/^   typedef struct _papi_hw_info {$/;"	s
+_papi_inherit_option	papi.h	/^   typedef struct _papi_inherit_option {$/;"	s
+_papi_itimer_option	papi.h	/^   typedef struct _papi_itimer_option {$/;"	s
+_papi_mh_cache_info	papi.h	/^   typedef struct _papi_mh_cache_info {$/;"	s
+_papi_mh_info	papi.h	/^   typedef struct _papi_mh_info { $/;"	s
+_papi_mh_level_info	papi.h	/^   typedef struct _papi_mh_level_info {$/;"	s
+_papi_mh_tlb_info	papi.h	/^   typedef struct _papi_mh_tlb_info {$/;"	s
+_papi_mpx_info	papi.h	/^   typedef struct _papi_mpx_info {$/;"	s
+_papi_multiplex_option	papi.h	/^   typedef struct _papi_multiplex_option {$/;"	s
+_papi_preload_option	papi.h	/^   typedef struct _papi_preload_option {$/;"	s
+_papi_program_info	papi.h	/^   typedef struct _papi_program_info {$/;"	s
+_papi_shared_lib_info	papi.h	/^   typedef struct _papi_shared_lib_info {$/;"	s
+_papi_sprofil	papi.h	/^   typedef struct _papi_sprofil {$/;"	s
+active_chunk	locality_profile.c	/^static struct list_head active_chunk;$/;"	v	typeref:struct:list_head	file:
+active_context	locality_profile.c	/^static struct list_head active_context;$/;"	v	typeref:struct:list_head	file:
+active_page_sample	page_sample_map.c	/^static struct list_head active_page_sample;$/;"	v	typeref:struct:list_head	file:
+add_time_event	event_queue.c	/^add_time_event(struct timeval *tv, time_event_handler handler, $/;"	f
+addr	chunk_monitor.h	/^	unsigned long addr;$/;"	m	struct:page_sample
+addr	locality_profile.h	/^	unsigned long addr;$/;"	m	struct:memory_chunk
+addr	page_sample_map.c	/^	unsigned long addr;$/;"	m	struct:page_block	file:
+addr	papi.h	/^		PAPI_addr_range_option_t addr;$/;"	m	union:__anon8
+address_info	papi.h	/^      PAPI_address_map_t address_info;	 \/**< executable's address space info *\/$/;"	m	struct:_papi_program_info
+adjust_mapping	chunk_monitor.c	/^adjust_mapping(int target_mapping, struct memory_chunk *chunk)$/;"	f	file:
+alloc_context	locality_profile.h	/^struct alloc_context {$/;"	s
+associativity	papi.h	/^      int associativity;$/;"	m	struct:_papi_mh_cache_info
+associativity	papi.h	/^      int associativity;$/;"	m	struct:_papi_mh_tlb_info
+attach	papi.h	/^		PAPI_attach_option_t attach;$/;"	m	union:__anon8
+attach	papi.h	/^     unsigned int attach:1;                \/**< Supports attach *\/$/;"	m	struct:_papi_component_option
+attach_chunk_to_context	locality_profile.c	/^attach_chunk_to_context(void *p, size_t size,$/;"	f
+attach_must_ptrace	papi.h	/^     unsigned int attach_must_ptrace:1;	   \/**< Attach must first ptrace and stop the thread\/process*\/$/;"	m	struct:_papi_component_option
+attach_page_sample	page_sample_map.c	/^attach_page_sample(unsigned long addr)$/;"	f
+available_domains	papi.h	/^     int available_domains;       \/**< Available domains *\/ $/;"	m	struct:_papi_component_option
+available_granularities	papi.h	/^     int available_granularities; \/**< Available granularities *\/$/;"	m	struct:_papi_component_option
+base_sample_cycle	locality_profile.h	/^	int base_sample_cycle;$/;"	m	struct:memory_chunk
+bit_test	utl_bitmap.c	/^bit_test(struct bitmap *m, int n)$/;"	f
+bitmap	utl_bitmap.h	/^struct bitmap {$/;"	s
+bp_addr	perf_event.h	/^			uint64_t	bp_addr; $/;"	m	struct:perf_event_attr::__anon3::__anon4
+bp_len	perf_event.h	/^			uint64_t	bp_len;$/;"	m	struct:perf_event_attr::__anon3::__anon4
+bp_type	perf_event.h	/^			uint32_t	bp_type;$/;"	m	struct:perf_event_attr::__anon3::__anon4
+bsf	utl_builtin.h	24;"	d
+bsfl	utl_builtin.h	26;"	d
+bss_end	papi.h	/^      caddr_t bss_end;          \/**< End address of program bss segment *\/$/;"	m	struct:_papi_address_map
+bss_start	papi.h	/^      caddr_t bss_start;        \/**< Start address of program bss segment *\/$/;"	m	struct:_papi_address_map
+burst_skip_handler	chunk_monitor.c	/^burst_skip_handler(void *private, struct timeval *tv)$/;"	f	file:
+burst_skip_len	chunk_monitor.c	/^	uint64_t burst_skip_len;$/;"	m	struct:chunk_monitor	file:
+burst_skip_update	chunk_monitor.c	/^burst_skip_update(uint64_t *llc_event_cntr)$/;"	f	file:
+cache	papi.h	/^      PAPI_mh_cache_info_t cache[PAPI_MH_MAX_LEVELS];$/;"	m	struct:_papi_mh_level_info
+cache_line_under_open_mapping	pc_malloc.c	/^cache_line_under_open_mapping()$/;"	f
+cache_line_under_restrict_mapping	pc_malloc.c	/^cache_line_under_restrict_mapping()$/;"	f
+cache_region_sz	chunk_monitor.c	/^static int cache_region_sz;$/;"	v	file:
+cache_region_sz_in_line	chunk_monitor.c	/^static int cache_region_sz_in_line;$/;"	v	file:
+cache_size_under_open_mapping	pc_malloc.c	/^cache_size_under_open_mapping() $/;"	f
+cache_size_under_restrict_mapping	pc_malloc.c	/^cache_size_under_restrict_mapping() $/;"	f
+caddr_t	papi.h	/^	typedef char *caddr_t;$/;"	t
+call_stack	context_key.h	/^static uint64_t call_stack[TOTAL_CALL_STACK_DEPTH];$/;"	v
+check_interval	locality_profile.c	/^	int check_interval;$/;"	m	struct:size2context_entry	file:
+chunk	chunk_monitor.h	/^	struct memory_chunk *chunk;$/;"	m	struct:page_sample	typeref:struct:page_sample::memory_chunk
+chunk	locality_profile.h	/^	struct list_head chunk;$/;"	m	struct:alloc_context	typeref:struct:alloc_context::list_head
+chunk_alloc	locality_profile.c	/^chunk_alloc()$/;"	f	file:
+chunk_free	locality_profile.c	/^chunk_free(struct memory_chunk *chunk)$/;"	f	file:
+chunk_idx	locality_profile.c	/^	unsigned long chunk_idx;$/;"	m	struct:locality_profile	file:
+chunk_monitor	chunk_monitor.c	/^struct chunk_monitor {$/;"	s	file:
+chunk_monitor	chunk_monitor.c	/^} chunk_monitor;$/;"	v	typeref:struct:chunk_monitor
+chunk_monitor_destroy	chunk_monitor.c	/^chunk_monitor_destroy()$/;"	f
+chunk_monitor_init	chunk_monitor.c	/^chunk_monitor_init()$/;"	f
+chunk_under_monit	chunk_monitor.c	/^chunk_under_monit(struct memory_chunk *chunk)$/;"	f
+clock_mhz	papi.h	/^      int clock_mhz;                \/**< Deprecated *\/$/;"	m	struct:_papi_hw_info
+clr_bit	utl_bitmap.c	/^clr_bit(struct bitmap *m, int n)$/;"	f
+clz	utl_builtin.h	19;"	d
+clzl	utl_builtin.h	21;"	d
+cmp_info	papi.h	/^		PAPI_component_info_t *cmp_info;$/;"	m	union:__anon8
+cntr_buf_size	chunk_monitor.c	/^static const int cntr_buf_size = NR_LLC_PERFEVENT * sizeof(uint64_t);$/;"	v	file:
+cntr_buf_size	llc_event_cntr.c	/^static const int cntr_buf_size = LLC_CNTR_BUF_SIZE * sizeof(uint64_t);$/;"	v	file:
+cntr_umasks	papi.h	/^     unsigned int cntr_umasks:1;           \/**< counters have unit masks *\/$/;"	m	struct:_papi_component_option
+code	papi.h	/^      unsigned int code[PAPI_MAX_INFO_TERMS]; \/**< array of values that further $/;"	m	struct:event_info
+collect_chunk_level_sample	chunk_predictor.c	/^collect_chunk_level_sample(void *p)$/;"	f
+collect_page_sample	chunk_monitor.c	/^collect_page_sample(struct page_sample *sample, unsigned long addr)$/;"	f	file:
+comm	perf_event.h	/^				comm	       :  1, \/* include comm data     *\/$/;"	m	struct:perf_event_attr
+component_index	papi.h	/^      int component_index;           \/**< component this event belongs to *\/$/;"	m	struct:event_info
+component_type	papi.h	/^     int component_type;          \/**< Type of component *\/$/;"	m	struct:_papi_component_option
+config	perf_event.h	/^	uint64_t			config;$/;"	m	struct:perf_event_attr
+context	locality_profile.c	/^	struct list_head context;$/;"	m	struct:locality_profile	typeref:struct:locality_profile::list_head	file:
+context	locality_profile.h	/^	struct alloc_context *context;$/;"	m	struct:memory_chunk	typeref:struct:memory_chunk::alloc_context
+context_alloc	locality_profile.c	/^context_alloc()$/;"	f	file:
+context_free	locality_profile.c	/^context_free(struct alloc_context *context)$/;"	f	file:
+context_hash_map	locality_profile.c	/^	struct hash_map *context_hash_map;$/;"	m	struct:locality_profile	typeref:struct:locality_profile::hash_map	file:
+context_idx	locality_profile.c	/^	unsigned long context_idx;$/;"	m	struct:locality_profile	file:
+context_key	locality_profile.h	/^	uint64_t context_key;$/;"	m	struct:alloc_context
+context_set	locality_profile.c	/^	struct list_head context_set;$/;"	m	struct:size2context_entry	typeref:struct:size2context_entry::list_head	file:
+copy_llc_event_cntr	chunk_monitor.c	/^copy_llc_event_cntr(uint64_t *cntr_buf0, uint64_t *cntr_buf1)$/;"	f	file:
+cores	papi.h	/^      int cores;                    \/**< Number of cores per socket *\/$/;"	m	struct:_papi_hw_info
+count	papi.h	/^      int count;$/;"	m	struct:_papi_shared_lib_info
+count	papi.h	/^      unsigned int count;                \/**< number of terms (usually 1) $/;"	m	struct:event_info
+cpu	papi.h	/^		PAPI_cpu_option_t cpu;$/;"	m	union:__anon8
+cpu	papi.h	/^     unsigned int cpu:1;                   \/**< Supports specifying cpu number to use with event set *\/$/;"	m	struct:_papi_component_option
+cpu_max_mhz	papi.h	/^      int cpu_max_mhz;              \/**< Maximum supported CPU speed *\/$/;"	m	struct:_papi_hw_info
+cpu_min_mhz	papi.h	/^      int cpu_min_mhz;              \/**< Minimum supported CPU speed *\/$/;"	m	struct:_papi_hw_info
+cpu_num	papi.h	/^         unsigned int cpu_num;$/;"	m	struct:_papi_cpu_option
+cpuid_family	papi.h	/^      int cpuid_family;             \/**< cpuid family *\/$/;"	m	struct:_papi_hw_info
+cpuid_model	papi.h	/^      int cpuid_model;              \/**< cpuid model *\/$/;"	m	struct:_papi_hw_info
+cpuid_stepping	papi.h	/^      int cpuid_stepping;           \/**< cpuid stepping *\/$/;"	m	struct:_papi_hw_info
+crash	utl_hash_map.c	/^	struct list_head crash;$/;"	m	struct:map_member	typeref:struct:map_member::list_head	file:
+data	papi.h	/^     void **data;$/;"	m	struct:_papi_all_thr_spec
+data_end	papi.h	/^      caddr_t data_end;         \/**< End address of program data segment *\/$/;"	m	struct:_papi_address_map
+data_start	papi.h	/^      caddr_t data_start;       \/**< Start address of program data segment *\/$/;"	m	struct:_papi_address_map
+data_type	papi.h	/^      int data_type;                 \/**< data type returned by PAPI *\/$/;"	m	struct:event_info
+debug	papi.h	/^		PAPI_debug_option_t debug;$/;"	m	union:__anon8
+def_cidx	papi.h	/^      int def_cidx; \/**< this structure requires a component index to set default domains *\/$/;"	m	struct:_papi_domain_option
+def_cidx	papi.h	/^      int def_cidx; \/**< this structure requires a component index to set default granularity *\/$/;"	m	struct:_papi_granularity_option
+default_domain	papi.h	/^     int default_domain;          \/**< The default domain when this component is used *\/$/;"	m	struct:_papi_component_option
+default_granularity	papi.h	/^     int default_granularity;     \/**< The default granularity when this component is used *\/$/;"	m	struct:_papi_component_option
+defdomain	papi.h	/^		PAPI_domain_option_t defdomain;$/;"	m	union:__anon8
+defgranularity	papi.h	/^		PAPI_granularity_option_t defgranularity;$/;"	m	union:__anon8
+delete_bitmap	utl_bitmap.c	/^delete_bitmap(struct bitmap *m)$/;"	f
+delete_hash_map	utl_hash_map.c	/^delete_hash_map(struct hash_map* hmap)$/;"	f
+derived	papi.h	/^      char derived[PAPI_MIN_STR_LEN];    \/**< name of the derived type$/;"	m	struct:event_info
+description	papi.h	/^     char description[PAPI_MAX_STR_LEN];     \/**< Description of the component *\/$/;"	m	struct:_papi_component_option
+detach_chunk_from_context	locality_profile.c	/^detach_chunk_from_context(struct memory_chunk *chunk)$/;"	f
+detach_page_sample	page_sample_map.c	/^detach_page_sample(struct page_sample *page_sample)$/;"	f
+disable_page_sample	chunk_monitor.c	/^disable_page_sample(struct page_sample *sample)$/;"	f	file:
+disabled	papi.h	/^     int disabled;   \/**< 0 if enabled, otherwise error code from initialization *\/$/;"	m	struct:_papi_component_option
+disabled	perf_event.h	/^	uint64_t	disabled       :  1, \/* off by default        *\/$/;"	m	struct:perf_event_attr
+disabled_reason	papi.h	/^     char disabled_reason[PAPI_MAX_STR_LEN]; \/**< Reason for failure of initialization *\/$/;"	m	struct:_papi_component_option
+do_pend_event_queue	event_queue.c	/^do_pend_event_queue()$/;"	f	file:
+do_resume_event_queue	event_queue.c	/^do_resume_event_queue(struct timeval *now)$/;"	f	file:
+do_trigger_time_event	event_queue.c	/^do_trigger_time_event(struct timeval now)$/;"	f	file:
+domain	papi.h	/^		PAPI_domain_option_t domain;$/;"	m	union:__anon8
+domain	papi.h	/^      int domain;$/;"	m	struct:_papi_domain_option
+downward_bit_test	utl_bitmap.c	/^downward_bit_test(struct bitmap *m, int n)$/;"	f
+enable_on_exec	perf_event.h	/^				enable_on_exec :  1, \/* next exec enables     *\/$/;"	m	struct:perf_event_attr
+enable_page_sample	chunk_monitor.c	/^enable_page_sample(struct page_sample *sample)$/;"	f	file:
+end	papi.h	/^      caddr_t end;            \/**< user requested end address of an address range *\/$/;"	m	struct:_papi_addr_range_option
+end_off	papi.h	/^      int end_off;            \/**< hardware specified offset from end address *\/$/;"	m	struct:_papi_addr_range_option
+entry	utl_hash_map.c	/^	struct list_head entry;$/;"	m	struct:hmap_entry	typeref:struct:hmap_entry::list_head	file:
+event	event_queue.c	/^struct event {$/;"	s	file:
+event_code	papi.h	/^      unsigned int event_code;             \/**< preset (0x8xxxxxxx) or $/;"	m	struct:event_info
+event_fd	llc_event_cntr.c	/^static int event_fd[NR_LLC_PERFEVENT];$/;"	v	file:
+event_id	perf_event.h	/^enum event_id {$/;"	g
+event_info	papi.h	/^   typedef struct event_info {$/;"	s
+event_queue	event_queue.c	/^static struct time_event_queue event_queue; $/;"	v	typeref:struct:time_event_queue	file:
+event_set	llc_event_cntr.c	/^static int event_set = PAPI_NULL;$/;"	v	file:
+event_type	papi.h	/^      unsigned int event_type;           \/**< event type or category $/;"	m	struct:event_info
+events	event_queue.c	/^	struct list_head events;$/;"	m	struct:time_event_queue	typeref:struct:time_event_queue::list_head	file:
+events_file	papi.h	/^		PAPI_user_defined_events_file_t events_file;$/;"	m	union:__anon8
+eventset	papi.h	/^         int eventset;$/;"	m	struct:_papi_cpu_option
+eventset	papi.h	/^      int eventset;           \/**< eventset to restrict *\/$/;"	m	struct:_papi_addr_range_option
+eventset	papi.h	/^      int eventset;$/;"	m	struct:_papi_attach_option
+eventset	papi.h	/^      int eventset;$/;"	m	struct:_papi_domain_option
+eventset	papi.h	/^      int eventset;$/;"	m	struct:_papi_granularity_option
+eventset	papi.h	/^      int eventset;$/;"	m	struct:_papi_inherit_option
+eventset	papi.h	/^      int eventset;$/;"	m	struct:_papi_multiplex_option
+exclude_hv	perf_event.h	/^				exclude_hv     :  1, \/* ditto hypervisor      *\/$/;"	m	struct:perf_event_attr
+exclude_idle	perf_event.h	/^				exclude_idle   :  1, \/* don't count when idle *\/$/;"	m	struct:perf_event_attr
+exclude_kernel	perf_event.h	/^				exclude_kernel :  1, \/* ditto kernel          *\/$/;"	m	struct:perf_event_attr
+exclude_user	perf_event.h	/^				exclude_user   :  1, \/* don't count user      *\/$/;"	m	struct:perf_event_attr
+exclusive	perf_event.h	/^				exclusive      :  1, \/* only group on PMU     *\/$/;"	m	struct:perf_event_attr
+exe_info	papi.h	/^		PAPI_exe_info_t *exe_info;$/;"	m	union:__anon8
+fast_counter_read	papi.h	/^     unsigned int fast_counter_read:1;     \/**< Supports a user level PMC read instruction *\/$/;"	m	struct:_papi_component_option
+fast_real_timer	papi.h	/^     unsigned int fast_real_timer:1;       \/**< Supports a fast real timer *\/$/;"	m	struct:_papi_component_option
+fast_virtual_timer	papi.h	/^     unsigned int fast_virtual_timer:1;    \/**< Supports a fast virtual timer *\/$/;"	m	struct:_papi_component_option
+fclose	stdlib_hook.c	/^fclose(FILE *fp)$/;"	f
+ffs	utl_builtin.h	30;"	d
+ffsl	utl_builtin.h	32;"	d
+fill	utl_hash_map.c	/^	int fill;$/;"	m	struct:hash_map	file:
+flags	papi.h	/^      int flags;$/;"	m	struct:_papi_multiplex_option
+flags	papi.h	/^     int flags;$/;"	m	struct:_papi_itimer_option
+fopen	stdlib_hook.c	/^fopen(const char *path, const char *mode)$/;"	f
+fread	stdlib_hook.c	/^fread(void *ptr, size_t size, size_t nmemb, FILE *stream)$/;"	f
+free_chunk	locality_profile.c	/^static struct list_head free_chunk;$/;"	v	typeref:struct:list_head	file:
+free_context	locality_profile.c	/^static struct list_head free_context;$/;"	v	typeref:struct:list_head	file:
+free_event	event_queue.c	/^static struct list_head free_event;$/;"	v	typeref:struct:list_head	file:
+free_member	utl_hash_map.c	/^struct list_head free_member;$/;"	v	typeref:struct:list_head
+free_page_sample	page_sample_map.c	/^static struct list_head free_page_sample;$/;"	v	typeref:struct:list_head	file:
+freq	perf_event.h	/^				freq           :  1, \/* use freq, not period  *\/$/;"	m	struct:perf_event_attr
+fullname	papi.h	/^      char fullname[PAPI_HUGE_STR_LEN];  \/**< path + name *\/$/;"	m	struct:_papi_program_info
+func_fclose	stdlib_hook.c	/^typedef int (*func_fclose)(FILE *fp);$/;"	t	file:
+func_fopen	stdlib_hook.c	/^typedef void* (*func_fopen)(const char *path, const char *mode);$/;"	t	file:
+func_fread	stdlib_hook.c	/^typedef size_t (*func_fread)(void *ptr, size_t size, size_t nmemb, FILE *stream);$/;"	t	file:
+func_fwrite	stdlib_hook.c	/^typedef size_t (*func_fwrite)(const void *ptr, size_t size, size_t nmemb, FILE *stream);$/;"	t	file:
+func_read	stdlib_hook.c	/^typedef ssize_t (*func_read)(int fd, void *buf, size_t count);$/;"	t	file:
+func_write	stdlib_hook.c	/^typedef ssize_t (*func_write)(int fd, const void *buf, size_t count);$/;"	t	file:
+fwrite	stdlib_hook.c	/^fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)$/;"	f
+get_active_page_number	page_sample_map.c	/^get_active_page_number()$/;"	f
+get_base_sample_cycle	chunk_monitor.c	/^get_base_sample_cycle(unsigned long range)$/;"	f	file:
+get_context_key	context_key.h	/^get_context_key()$/;"	f
+get_cpu_affinity	utl_cpuaffi.c	/^get_cpu_affinity()$/;"	f
+get_key_mask	utl_hash_map.c	40;"	d	file:
+get_map_entry	utl_hash_map.c	/^get_map_entry(struct hash_map *hmap, uint64_t key)$/;"	f	file:
+get_map_member	utl_hash_map.c	/^get_map_member(struct hmap_entry *map_entry, uint64_t key)$/;"	f	file:
+get_map_slot	utl_hash_map.c	/^get_map_slot(unsigned long key, unsigned long mask, int key_len)$/;"	f	file:
+get_nr_sample	chunk_monitor.c	/^get_nr_sample(unsigned long range)$/;"	f	file:
+get_page_block	page_sample_map.c	/^get_page_block(unsigned long addr_blk_align)$/;"	f	file:
+get_page_sample	page_sample_map.c	/^get_page_sample(unsigned long addr)$/;"	f
+get_pollutor_samples	chunk_monitor.c	/^get_pollutor_samples(struct memory_chunk *chunk)$/;"	f
+get_predict_mr	chunk_predictor.c	/^get_predict_mr(struct alloc_context *context)$/;"	f	file:
+get_s2c_mapping_type	locality_profile.c	/^get_s2c_mapping_type(int size)$/;"	f
+get_sample_addr	chunk_monitor.c	/^get_sample_addr(unsigned long start, unsigned long end,$/;"	f	file:
+get_victim_samples	chunk_monitor.c	/^get_victim_samples(struct memory_chunk *chunk)$/;"	f
+granularity	papi.h	/^		PAPI_granularity_option_t granularity;$/;"	m	union:__anon8
+granularity	papi.h	/^      int granularity;$/;"	m	struct:_papi_granularity_option
+handler	event_queue.c	/^	time_event_handler handler;$/;"	m	struct:event	file:
+handler	papi.h	/^      PAPI_debug_handler_t handler;$/;"	m	struct:_papi_debug_option
+hardware_intr	papi.h	/^     unsigned int hardware_intr:1;         \/**< hw overflow intr, does not need to be emulated in software*\/$/;"	m	struct:_papi_component_option
+hardware_intr_sig	papi.h	/^     int hardware_intr_sig;       \/**< Signal used by hardware to deliver PMC events *\/$/;"	m	struct:_papi_component_option
+hash_map	utl_hash_map.c	/^struct hash_map {$/;"	s	file:
+hash_map_add_member	utl_hash_map.c	/^hash_map_add_member(struct hash_map *hmap, uint64_t key, void *val)$/;"	f
+hash_map_delete_member	utl_hash_map.c	/^hash_map_delete_member(struct hash_map *hmap, uint64_t key)$/;"	f
+hash_map_destroy	utl_hash_map.c	/^hash_map_destroy()$/;"	f
+hash_map_find_member	utl_hash_map.c	/^hash_map_find_member(struct hash_map *hmap, uint64_t key)$/;"	f
+hash_map_full	utl_hash_map.c	/^hash_map_full(struct hash_map *hmap)$/;"	f	file:
+hash_map_init	utl_hash_map.c	/^hash_map_init()$/;"	f
+hash_map_rebuild	utl_hash_map.c	/^hash_map_rebuild(struct hash_map *hmap)$/;"	f	file:
+heap	papi.h	/^	  long long heap;$/;"	m	struct:_dmem_t
+high_water_mark	papi.h	/^	  long long high_water_mark;$/;"	m	struct:_dmem_t
+hmap_entry	utl_hash_map.c	/^struct hmap_entry {$/;"	s	file:
+hot_page_block	page_sample_map.c	/^	struct page_block *hot_page_block;$/;"	m	struct:page_map	typeref:struct:page_map::page_block	file:
+hw_info	papi.h	/^		PAPI_hw_info_t *hw_info;$/;"	m	union:__anon8
+i_pollutor_ref	locality_profile.h	/^	uint32_t i_pollutor_ref;$/;"	m	struct:memory_chunk
+i_total_ref	locality_profile.h	/^	uint32_t i_total_ref;$/;"	m	struct:memory_chunk
+i_victim_ref	locality_profile.h	/^	uint32_t i_victim_ref;$/;"	m	struct:memory_chunk
+id	papi.h	/^     PAPI_thread_id_t *id;$/;"	m	struct:_papi_all_thr_spec
+idx	locality_profile.h	/^	unsigned long idx;$/;"	m	struct:alloc_context
+idx	locality_profile.h	/^	unsigned long idx;$/;"	m	struct:memory_chunk
+in_context_set	locality_profile.c	/^in_context_set(struct alloc_context *context,$/;"	f	file:
+inherit	papi.h	/^		PAPI_inherit_option_t inherit;$/;"	m	union:__anon8
+inherit	papi.h	/^      int inherit;$/;"	m	struct:_papi_inherit_option
+inherit	papi.h	/^     unsigned int inherit:1;               \/**< Supports child processes inheriting parents counters *\/$/;"	m	struct:_papi_component_option
+inherit	perf_event.h	/^				inherit	       :  1, \/* children inherit it   *\/$/;"	m	struct:perf_event_attr
+inherit_stat	perf_event.h	/^				inherit_stat   :  1, \/* per task counts       *\/$/;"	m	struct:perf_event_attr
+init_burst_skip	chunk_monitor.c	/^init_burst_skip()$/;"	f	file:
+init_context	locality_profile.c	/^init_context(uint64_t key, struct alloc_context *context)$/;"	f	file:
+init_page_block	page_sample_map.c	/^init_page_block(unsigned long addr)$/;"	f	file:
+init_page_sample	chunk_monitor.c	/^init_page_sample(struct page_sample *sample, struct memory_chunk *chunk,$/;"	f	file:
+install_stdlibapi_hook	stdlib_hook.c	/^install_stdlibapi_hook()$/;"	f
+internal_calloc	allocator.h	/^void* internal_calloc(int type, size_t n, size_t elem_size) {$/;"	f
+internal_free	allocator.h	/^void internal_free(void *p) {$/;"	f
+internal_malloc	allocator.h	/^void* internal_malloc(int type, size_t size) {$/;"	f
+invalid	locality_profile.c	/^	int invalid;$/;"	m	struct:size2context_entry	file:
+invalidate_s2c_entry	locality_profile.c	/^invalidate_s2c_entry(int size)$/;"	f
+is_burst_access_sample	chunk_monitor.c	200;"	d	file:
+is_victim_sample	chunk_monitor.c	203;"	d	file:
+itimer	papi.h	/^		PAPI_itimer_option_t itimer;$/;"	m	union:__anon8
+itimer_num	papi.h	/^     int itimer_num;$/;"	m	struct:_papi_itimer_option
+itimer_sig	papi.h	/^     int itimer_sig;$/;"	m	struct:_papi_itimer_option
+itv	event_queue.c	/^static struct itimerval itv;$/;"	v	typeref:struct:itimerval	file:
+kernel_multiplex	papi.h	/^     unsigned int kernel_multiplex:1;      \/**< In kernel multiplexing *\/$/;"	m	struct:_papi_component_option
+kernel_profile	papi.h	/^     unsigned int kernel_profile:1;        \/**< Has kernel profiling support (buffered interrupts or sprofil-like) *\/$/;"	m	struct:_papi_component_option
+kernel_version	papi.h	/^     char kernel_version[PAPI_MIN_STR_LEN];  \/**< Version of the kernel PMC support driver *\/$/;"	m	struct:_papi_component_option
+key	utl_hash_map.c	/^	uint64_t key;$/;"	m	struct:map_member	file:
+key_crash_in_hash_map	utl_hash_map.c	/^key_crash_in_hash_map(struct hash_map *hmap, uint64_t key)$/;"	f
+key_len	utl_hash_map.c	/^	int key_len;$/;"	m	struct:hash_map	file:
+key_mask	utl_hash_map.c	/^	unsigned long key_mask;$/;"	m	struct:hash_map	file:
+l2_lines_in_name	llc_event_cntr.c	/^char *l2_lines_in_name = L2_MISS_EVENT_NAME;$/;"	v
+last_chunk_sample_update	chunk_monitor.c	/^last_chunk_sample_update(struct memory_chunk *chunk, uint64_t *cntr)$/;"	f	file:
+last_chunk_sz	locality_profile.h	/^	size_t last_chunk_sz;$/;"	m	struct:alloc_context
+last_llc_access	llc_event_cntr.c	/^static uint64_t last_llc_access = 0;$/;"	v	file:
+last_llc_miss	llc_event_cntr.c	/^static uint64_t last_llc_miss = 0;$/;"	v	file:
+layout	context_key.h	/^struct layout$/;"	s
+level	papi.h	/^      PAPI_mh_level_t level[PAPI_MAX_MEM_HIERARCHY_LEVELS];$/;"	m	struct:_papi_mh_info
+level	papi.h	/^      int level;$/;"	m	struct:_papi_debug_option
+levels	papi.h	/^      int levels;$/;"	m	struct:_papi_mh_info
+lib_dir_env	papi.h	/^      char lib_dir_env[PAPI_MAX_STR_LEN];$/;"	m	struct:_papi_preload_option
+lib_dir_sep	papi.h	/^      char lib_dir_sep;$/;"	m	struct:_papi_preload_option
+lib_preload_env	papi.h	/^      char lib_preload_env[PAPI_MAX_STR_LEN];   $/;"	m	struct:_papi_preload_option
+lib_preload_sep	papi.h	/^      char lib_preload_sep;$/;"	m	struct:_papi_preload_option
+libc_fclose	stdlib_hook.c	/^static func_fclose libc_fclose;$/;"	v	file:
+libc_fopen	stdlib_hook.c	/^static func_fopen libc_fopen;$/;"	v	file:
+libc_fread	stdlib_hook.c	/^static func_fread libc_fread;$/;"	v	file:
+libc_fwrite	stdlib_hook.c	/^static func_fwrite libc_fwrite;$/;"	v	file:
+libc_read	stdlib_hook.c	/^static func_read libc_read;$/;"	v	file:
+libc_write	stdlib_hook.c	/^static func_write libc_write;$/;"	v	file:
+library	papi.h	/^	  long long library;$/;"	m	struct:_dmem_t
+likely	utl_builtin.h	7;"	d
+line_size	papi.h	/^      int line_size;$/;"	m	struct:_papi_mh_cache_info
+list_add	utl_list.h	/^list_add(struct list_head *entry, struct list_head *head)$/;"	f
+list_del	utl_list.h	/^list_del(struct list_head *entry)$/;"	f
+list_empty	utl_list.h	/^list_empty(struct list_head *list_head) $/;"	f
+list_entry	utl_list.h	43;"	d
+list_for_each_entry	utl_list.h	52;"	d
+list_head	utl_list.h	/^struct list_head {$/;"	s
+list_init	utl_list.h	/^list_init(struct list_head *list_head) $/;"	f
+llc_acc_at_skip_update	chunk_monitor.c	/^	uint64_t llc_acc_at_skip_update;$/;"	m	struct:chunk_monitor	file:
+llc_access_event_name	llc_event_cntr.c	/^char *llc_access_event_name = L3_ACCESS_EVENT_NAME;$/;"	v
+llc_event_cntr	chunk_monitor.c	/^static uint64_t llc_event_cntr[NR_LLC_PERFEVENT];$/;"	v	file:
+llc_event_cntr	chunk_monitor.h	/^	uint64_t llc_event_cntr[NR_LLC_PERFEVENT];$/;"	m	struct:page_sample
+llc_event_cntr_destroy	llc_event_cntr.c	/^llc_event_cntr_destroy()$/;"	f
+llc_event_cntr_init	llc_event_cntr.c	/^llc_event_cntr_init()$/;"	f
+llc_event_cntr_read	llc_event_cntr.c	/^llc_event_cntr_read(uint64_t *cntr_buf, int size)$/;"	f
+llc_event_cntr_start	llc_event_cntr.c	/^llc_event_cntr_start()$/;"	f
+llc_event_cntr_stop	llc_event_cntr.c	/^llc_event_cntr_stop()$/;"	f
+llc_miss_event_name	llc_event_cntr.c	/^char *llc_miss_event_name = L3_MISS_EVENT_NAME;$/;"	v
+llc_pollutor_ref	chunk_monitor.h	/^	uint32_t llc_pollutor_ref;$/;"	m	struct:page_sample
+llc_pollutor_ref	locality_profile.h	/^	uint32_t llc_pollutor_ref;$/;"	m	struct:memory_chunk
+llc_sz	chunk_monitor.c	/^static int llc_sz;$/;"	v	file:
+llc_sz_in_line	chunk_monitor.c	/^static int llc_sz_in_line;$/;"	v	file:
+llc_victim_ref	chunk_monitor.h	/^	uint32_t llc_victim_ref;$/;"	m	struct:page_sample
+llc_victim_ref	locality_profile.h	/^	uint32_t llc_victim_ref;$/;"	m	struct:memory_chunk
+locality_profile	locality_profile.c	/^struct locality_profile {$/;"	s	file:
+locality_profile	locality_profile.c	/^} locality_profile;$/;"	v	typeref:struct:locality_profile
+locality_profile_destroy	locality_profile.c	/^locality_profile_destroy()$/;"	f
+locality_profile_init	locality_profile.c	/^locality_profile_init()$/;"	f
+location	papi.h	/^      int location;                  \/**< location event applies to *\/$/;"	m	struct:event_info
+locked	papi.h	/^	  long long locked;$/;"	m	struct:_dmem_t
+long_descr	papi.h	/^      char long_descr[PAPI_HUGE_STR_LEN];  \/**< a longer description:$/;"	m	struct:event_info
+long_long	papi.h	547;"	d
+malloc_context_backtrace	context_key.h	/^malloc_context_backtrace()$/;"	f
+malloc_context_backtrace	context_key.h	98;"	d
+map	papi.h	/^      PAPI_address_map_t *map;$/;"	m	struct:_papi_shared_lib_info
+map	utl_bitmap.h	/^	unsigned long *map;$/;"	m	struct:bitmap
+map	utl_hash_map.c	/^	struct hmap_entry *map;$/;"	m	struct:hash_map	typeref:struct:hash_map::hmap_entry	file:
+map_member	utl_hash_map.c	/^struct map_member {$/;"	s	file:
+map_member_alloc	utl_hash_map.c	/^map_member_alloc()$/;"	f	file:
+map_member_exist	utl_hash_map.c	/^map_member_exist(struct hmap_entry *map_entry, uint64_t key)$/;"	f	file:
+map_member_free	utl_hash_map.c	/^map_member_free(struct map_member *member)$/;"	f	file:
+mapping_type	locality_profile.c	/^	int mapping_type;$/;"	m	struct:size2context_entry	file:
+mapping_type	locality_profile.h	/^	int mapping_type;$/;"	m	struct:memory_chunk
+mem_hierarchy	papi.h	/^      PAPI_mh_info_t mem_hierarchy; \/**< PAPI memory heirarchy description *\/$/;"	m	struct:_papi_hw_info
+members	utl_hash_map.c	/^	struct list_head members;$/;"	m	struct:hash_map	typeref:struct:hash_map::list_head	file:
+memory_chunk	locality_profile.h	/^struct memory_chunk {$/;"	s
+mhz	papi.h	/^      float mhz;                    \/**< Deprecated *\/$/;"	m	struct:_papi_hw_info
+mmap	perf_event.h	/^				mmap           :  1, \/* include mmap data     *\/$/;"	m	struct:perf_event_attr
+model	papi.h	/^      int model;                    \/**< Model number of CPU *\/$/;"	m	struct:_papi_hw_info
+model_string	papi.h	/^      char model_string[PAPI_MAX_STR_LEN];      \/**< Model string of CPU *\/$/;"	m	struct:_papi_hw_info
+monit_chunk	chunk_monitor.c	/^monit_chunk(struct memory_chunk *chunk)$/;"	f
+monitor_state	chunk_monitor.c	/^	int monitor_state;$/;"	m	struct:chunk_monitor	file:
+mr	locality_profile.h	/^	float mr;$/;"	m	struct:memory_chunk
+multiplex	papi.h	/^		PAPI_multiplex_option_t multiplex;$/;"	m	union:__anon8
+n	utl_hash_map.c	/^	int n;$/;"	m	struct:hmap_entry	file:
+name	papi.h	/^      char name[PAPI_HUGE_STR_LEN];$/;"	m	struct:_papi_address_map
+name	papi.h	/^      char name[PAPI_MAX_INFO_TERMS]         \/**< names of code terms: *\/$/;"	m	struct:event_info
+name	papi.h	/^     char name[PAPI_MAX_STR_LEN];            \/**< Name of the component we're using *\/$/;"	m	struct:_papi_component_option
+ncpu	papi.h	/^      int ncpu;                     \/**< Number of CPUs per NUMA Node *\/$/;"	m	struct:_papi_hw_info
+new_bitmap	utl_bitmap.c	/^new_bitmap(int size, int init_val)$/;"	f
+new_hash_map	utl_hash_map.c	/^new_hash_map()$/;"	f
+next	context_key.h	/^  struct layout *next;$/;"	m	struct:layout	typeref:struct:layout::layout
+next	utl_list.h	/^	struct list_head *next;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+next_entry	utl_list.h	49;"	d
+nightwatch_active	pc_malloc.c	/^nightwatch_active()$/;"	f	file:
+nightwatch_state	pc_malloc.c	/^static int nightwatch_state = NightWatch_UNINIT;$/;"	v	file:
+nnodes	papi.h	/^      int nnodes;                   \/**< Total Number of NUMA Nodes *\/$/;"	m	struct:_papi_hw_info
+note	papi.h	/^     char note[PAPI_HUGE_STR_LEN];          \/**< an optional developer note $/;"	m	struct:event_info
+nr_blk	utl_bitmap.h	/^	int nr_blk;$/;"	m	struct:bitmap
+nr_event	event_queue.c	/^	int nr_event;$/;"	m	struct:time_event_queue	file:
+nr_sample	locality_profile.h	/^	int nr_sample;$/;"	m	struct:memory_chunk
+nr_skip_update_attempt	chunk_monitor.c	/^	int nr_skip_update_attempt;$/;"	m	struct:chunk_monitor	file:
+ns	papi.h	/^      int ns;$/;"	m	struct:_papi_multiplex_option
+ns	papi.h	/^     int ns;$/;"	m	struct:_papi_itimer_option
+num	papi.h	/^     int num;$/;"	m	struct:_papi_all_thr_spec
+num_cntrs	papi.h	/^     int num_cntrs;               \/**< Number of hardware counters the component supports *\/$/;"	m	struct:_papi_component_option
+num_entries	papi.h	/^      int num_entries;$/;"	m	struct:_papi_mh_tlb_info
+num_lines	papi.h	/^      int num_lines;$/;"	m	struct:_papi_mh_cache_info
+num_mpx_cntrs	papi.h	/^     int num_mpx_cntrs;           \/**< Number of hardware counters the component or PAPI can multiplex supports *\/$/;"	m	struct:_papi_component_option
+num_native_events	papi.h	/^     int num_native_events;       \/**< Number of native events the component supports *\/$/;"	m	struct:_papi_component_option
+num_preset_events	papi.h	/^     int num_preset_events;       \/**< Number of preset events the component supports *\/$/;"	m	struct:_papi_component_option
+out_of_range	utl_bitmap.c	14;"	d	file:
+p	chunk_monitor.h	/^	struct list_head p;$/;"	m	struct:page_sample	typeref:struct:page_sample::list_head
+p	event_queue.c	/^	struct list_head p;$/;"	m	struct:event	typeref:struct:event::list_head	file:
+p	locality_profile.h	/^	struct list_head p;$/;"	m	struct:alloc_context	typeref:struct:alloc_context::list_head
+p	locality_profile.h	/^	struct list_head p;$/;"	m	struct:memory_chunk	typeref:struct:memory_chunk::list_head
+p	page_sample_map.c	/^	struct list_head p;$/;"	m	struct:page_block	typeref:struct:page_block::list_head	file:
+p	utl_hash_map.c	/^	struct list_head p;$/;"	m	struct:map_member	typeref:struct:map_member::list_head	file:
+page_block	page_sample_map.c	/^struct page_block {$/;"	s	file:
+page_block_list	page_sample_map.c	/^	struct list_head page_block_list;$/;"	m	struct:page_map	typeref:struct:page_map::list_head	file:
+page_block_map	page_sample_map.c	/^	struct hash_map *page_block_map;$/;"	m	struct:page_map	typeref:struct:page_map::hash_map	file:
+page_fault_handler	chunk_monitor.c	/^page_fault_handler(int sig, siginfo_t *si, void *context)$/;"	f	file:
+page_map	page_sample_map.c	/^struct page_map {$/;"	s	file:
+page_map	page_sample_map.c	/^} page_map;$/;"	v	typeref:struct:page_map
+page_sample	chunk_monitor.h	/^struct page_sample {$/;"	s
+page_sample	page_sample_map.c	/^	struct page_sample *page_sample[PAGE_BLOCK_SIZE];$/;"	m	struct:page_block	typeref:struct:page_block::page_sample	file:
+page_sample_alloc	page_sample_map.c	/^page_sample_alloc(unsigned long addr)$/;"	f	file:
+page_sample_complete	chunk_monitor.c	/^page_sample_complete(struct page_sample *sample)$/;"	f	file:
+page_sample_free	page_sample_map.c	/^page_sample_free(struct page_sample *page_sample)$/;"	f	file:
+page_sample_map_destroy	page_sample_map.c	/^page_sample_map_destroy()$/;"	f
+page_sample_map_init	page_sample_map.c	/^page_sample_map_init()$/;"	f
+page_size	papi.h	/^      int page_size;$/;"	m	struct:_papi_mh_tlb_info
+pagesize	papi.h	/^	  long long pagesize;$/;"	m	struct:_dmem_t
+papi_cntr_buf	llc_event_cntr.c	/^static long long papi_cntr_buf[LLC_CNTR_BUF_SIZE];$/;"	v	file:
+peak	papi.h	/^	  long long peak;$/;"	m	struct:_dmem_t
+pend_time_event_queue	event_queue.c	/^pend_time_event_queue()$/;"	f
+perf_cntr_buf	llc_event_cntr.c	/^static uint64_t perf_cntr_buf[LLC_CNTR_BUF_SIZE];$/;"	v	file:
+perf_event_attr	perf_event.h	/^struct perf_event_attr {$/;"	s
+perf_event_attr_setup	perf_event.c	/^perf_event_attr_setup(struct perf_event_attr *attr, int event_id, $/;"	f
+perf_event_read_format	perf_event.h	/^enum perf_event_read_format {$/;"	g
+perf_type_id	perf_event.h	/^enum perf_type_id {$/;"	g
+pinned	perf_event.h	/^				pinned	       :  1, \/* must always be on PMU *\/$/;"	m	struct:perf_event_attr
+popcount	utl_builtin.h	34;"	d
+popcountl	utl_builtin.h	36;"	d
+posix1b_timers	papi.h	/^     unsigned int posix1b_timers:1;        \/**< Using POSIX 1b interval timers (timer_create) instead of setitimer *\/$/;"	m	struct:_papi_component_option
+postfix	papi.h	/^      char postfix[PAPI_2MAX_STR_LEN];   \/**< string containing postfix $/;"	m	struct:event_info
+pr_base	papi.h	/^      void *pr_base;          \/**< buffer base *\/$/;"	m	struct:_papi_sprofil
+pr_off	papi.h	/^      caddr_t pr_off;         \/**< pc start address (offset) *\/$/;"	m	struct:_papi_sprofil
+pr_scale	papi.h	/^      unsigned pr_scale;      \/**< pc scaling factor: $/;"	m	struct:_papi_sprofil
+pr_size	papi.h	/^      unsigned pr_size;       \/**< buffer size *\/$/;"	m	struct:_papi_sprofil
+pre_walk	stdlib_hook.c	/^pre_walk(unsigned long start, unsigned long len)$/;"	f	file:
+precise_intr	papi.h	/^     unsigned int precise_intr:1;          \/**< Performance interrupts happen precisely *\/$/;"	m	struct:_papi_component_option
+precise_ip	perf_event.h	/^				precise_ip     :  2, \/* skid constraint       *\/$/;"	m	struct:perf_event_attr
+predict_mr	locality_profile.h	/^	float predict_mr[2];$/;"	m	struct:alloc_context
+predict_type	locality_profile.h	/^	int predict_type[2];$/;"	m	struct:alloc_context
+preload	papi.h	/^		PAPI_preload_info_t preload;$/;"	m	union:__anon8
+prev	utl_list.h	/^	struct list_head *prev;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+prev_entry	utl_list.h	46;"	d
+print_chunk	locality_profile.c	/^print_chunk(struct memory_chunk *chunk)$/;"	f
+private	event_queue.c	/^	void *private;$/;"	m	struct:event	file:
+private2event_map	event_queue.c	/^static struct hash_map *private2event_map;$/;"	v	typeref:struct:hash_map	file:
+process_active_chunk	locality_profile.c	/^process_active_chunk(process_func func)$/;"	f
+process_func	locality_profile.h	/^typedef int (*process_func)(struct memory_chunk *chunk);$/;"	t
+pte	papi.h	/^	  long long pte;$/;"	m	struct:_dmem_t
+read	stdlib_hook.c	/^read(int fd, void *buf, size_t count) $/;"	f
+read_format	perf_event.h	/^	uint64_t			read_format;$/;"	m	struct:perf_event_attr
+regist_page_fault_handler	chunk_monitor.c	/^regist_page_fault_handler()$/;"	f	file:
+remove_chunk_samples	chunk_monitor.c	/^remove_chunk_samples(struct memory_chunk *chunk)$/;"	f	file:
+remove_page_sample	chunk_monitor.c	/^remove_page_sample(struct page_sample *sample)$/;"	f	file:
+remove_sample_range	chunk_monitor.c	/^remove_sample_range(unsigned long start, unsigned long len)$/;"	f
+remove_time_event	event_queue.c	/^remove_time_event(void *private) $/;"	f
+reserved	papi.h	/^      int reserved[8];$/;"	m	struct:_papi_hw_info
+reserved	papi.h	/^     int reserved[8];             \/* *\/$/;"	m	struct:_papi_component_option
+reserved_bits	papi.h	/^     unsigned int reserved_bits:12;$/;"	m	struct:_papi_component_option
+resident	papi.h	/^	  long long resident;$/;"	m	struct:_dmem_t
+resume_time_event_queue	event_queue.c	/^resume_time_event_queue()$/;"	f
+return_address	context_key.h	/^  void *return_address;$/;"	m	struct:layout
+revision	papi.h	/^      float revision;               \/**< Revision of CPU *\/$/;"	m	struct:_papi_hw_info
+revive_sample_handler	chunk_monitor.c	/^revive_sample_handler(void *private, struct timeval *tv)$/;"	f	file:
+s2c_map	locality_profile.c	/^	struct size2context_entry *s2c_map;$/;"	m	struct:locality_profile	typeref:struct:locality_profile::size2context_entry	file:
+s2c_set	locality_profile.h	/^	struct list_head s2c_set;$/;"	m	struct:alloc_context	typeref:struct:alloc_context::list_head
+sample	locality_profile.h	/^	struct list_head sample;$/;"	m	struct:memory_chunk	typeref:struct:memory_chunk::list_head
+sample_cycle	locality_profile.h	/^	int sample_cycle;$/;"	m	struct:memory_chunk
+sample_freq	perf_event.h	/^		uint64_t		sample_freq;$/;"	m	union:perf_event_attr::__anon1
+sample_period	perf_event.h	/^		uint64_t		sample_period;$/;"	m	union:perf_event_attr::__anon1
+sample_skip	locality_profile.h	/^	int sample_skip;$/;"	m	struct:alloc_context
+sample_state	locality_profile.h	/^	int sample_state;$/;"	m	struct:memory_chunk
+sample_type	perf_event.h	/^	uint64_t			sample_type;$/;"	m	struct:perf_event_attr
+set_bit	utl_bitmap.c	/^set_bit(struct bitmap *m, int n)$/;"	f
+set_cpu_affinity	utl_cpuaffi.c	/^set_cpu_affinity(int id)$/;"	f
+set_nightwatch_active	pc_malloc.c	/^set_nightwatch_active()$/;"	f	file:
+set_s2c_mapping_type	locality_profile.c	/^set_s2c_mapping_type(int size, int mapping_type)$/;"	f
+set_timer	event_queue.c	/^set_timer(struct timeval *time)$/;"	f	file:
+shared	papi.h	/^	  long long shared;$/;"	m	struct:_dmem_t
+shlib_info	papi.h	/^		PAPI_shlib_info_t *shlib_info;$/;"	m	union:__anon8
+short_descr	papi.h	/^      char short_descr[PAPI_MIN_STR_LEN];  \/**< a short description suitable for $/;"	m	struct:event_info
+short_name	papi.h	/^     char short_name[PAPI_MIN_STR_LEN];      \/**< Short name of component,$/;"	m	struct:_papi_component_option
+sibling	chunk_monitor.h	/^	struct list_head sibling;$/;"	m	struct:page_sample	typeref:struct:page_sample::list_head
+sibling	locality_profile.h	/^	struct list_head sibling;$/;"	m	struct:alloc_context	typeref:struct:alloc_context::list_head
+sibling	locality_profile.h	/^	struct list_head sibling;$/;"	m	struct:memory_chunk	typeref:struct:memory_chunk::list_head
+size	locality_profile.h	/^	size_t size;$/;"	m	struct:memory_chunk
+size	papi.h	/^	  long long size;$/;"	m	struct:_dmem_t
+size	papi.h	/^      int size;$/;"	m	struct:_papi_mh_cache_info
+size	perf_event.h	/^	uint32_t			size;$/;"	m	struct:perf_event_attr
+size	utl_bitmap.h	/^	int size;$/;"	m	struct:bitmap
+size	utl_hash_map.c	/^	int size;$/;"	m	struct:hash_map	file:
+size2context_entry	locality_profile.c	/^struct size2context_entry {$/;"	s	file:
+skip_interval	locality_profile.h	/^	int skip_interval;$/;"	m	struct:alloc_context
+sockets	papi.h	/^      int sockets;                  \/**< Number of sockets *\/$/;"	m	struct:_papi_hw_info
+sp	context_key.h	/^  void *sp;$/;"	m	struct:layout
+spec_hw_config_addr	perf_event.h	/^			uint64_t	spec_hw_config_addr; $/;"	m	struct:perf_event_attr::__anon3::__anon5
+spec_hw_disable_config	perf_event.h	/^			uint64_t	spec_hw_disable_config; $/;"	m	struct:perf_event_attr::__anon3::__anon5
+spec_hw_event_addr	perf_event.h	/^			uint64_t	spec_hw_event_addr;$/;"	m	struct:perf_event_attr::__anon3::__anon5
+spec_hw_mask_bits	perf_event.h	/^			uint64_t	spec_hw_mask_bits; $/;"	m	struct:perf_event_attr::__anon3::__anon5
+stack	papi.h	/^	  long long stack;$/;"	m	struct:_dmem_t
+start	papi.h	/^      caddr_t start;          \/**< user requested start address of an address range *\/$/;"	m	struct:_papi_addr_range_option
+start_off	papi.h	/^      int start_off;          \/**< hardware specified offset from start address *\/$/;"	m	struct:_papi_addr_range_option
+start_time	event_queue.c	/^	struct timeval start_time;$/;"	m	struct:event	typeref:struct:event::timeval	file:
+state	chunk_monitor.h	/^	int state;$/;"	m	struct:page_sample
+state	event_queue.c	/^	volatile uint32_t state;$/;"	m	struct:time_event_queue	file:
+state	locality_profile.h	/^	int state;$/;"	m	struct:memory_chunk
+stop_monit_chunk	chunk_monitor.c	/^stop_monit_chunk(struct memory_chunk *chunk)$/;"	f
+support_version	papi.h	/^     char support_version[PAPI_MIN_STR_LEN]; \/**< Version of the support library *\/$/;"	m	struct:_papi_component_option
+symbol	papi.h	/^      char symbol[PAPI_HUGE_STR_LEN];      \/**< name of the event *\/$/;"	m	struct:event_info
+sync_set	utl_builtin.h	12;"	d
+sys_perf_event_open	perf_event.h	106;"	d
+task	perf_event.h	/^				task           :  1, \/* trace fork\/exit       *\/$/;"	m	struct:perf_event_attr
+text	papi.h	/^	  long long text;$/;"	m	struct:_dmem_t
+text_end	papi.h	/^      caddr_t text_end;         \/**< End address of program text segment *\/$/;"	m	struct:_papi_address_map
+text_start	papi.h	/^      caddr_t text_start;       \/**< Start address of program text segment *\/$/;"	m	struct:_papi_address_map
+threads	papi.h	/^      int threads;                  \/**< Number of hdw threads per core *\/$/;"	m	struct:_papi_hw_info
+tid	papi.h	/^      unsigned long tid;$/;"	m	struct:_papi_attach_option
+time_event_alloc	event_queue.c	/^time_event_alloc()$/;"	f	file:
+time_event_del	event_queue.c	/^time_event_del(struct event *event)$/;"	f	file:
+time_event_free	event_queue.c	/^time_event_free(struct event *event)$/;"	f	file:
+time_event_handler	event_queue.h	/^typedef void(*time_event_handler)(void*, struct timeval*);$/;"	t
+time_event_queue	event_queue.c	/^struct time_event_queue {$/;"	s	file:
+time_event_queue_destroy	event_queue.c	/^time_event_queue_destroy()$/;"	f
+time_event_queue_init	event_queue.c	/^time_event_queue_init()$/;"	f
+timer_num	papi.h	/^     int timer_num;				\/**< Number of the itimer or POSIX 1 timer used by the multiplex timer: PAPI_ITIMER *\/$/;"	m	struct:_papi_mpx_info
+timer_resolution	event_queue.c	/^static struct timeval timer_resolution;$/;"	v	typeref:struct:timeval	file:
+timer_sig	papi.h	/^     int timer_sig;				\/**< Signal number used by the multiplex timer, 0 if not: PAPI_SIGNAL *\/$/;"	m	struct:_papi_mpx_info
+timer_us	papi.h	/^     int timer_us;				\/**< uS between switching of sets: PAPI_MPX_DEF_US *\/$/;"	m	struct:_papi_mpx_info
+timescope	papi.h	/^      int timescope;                 \/**< from start, etc. *\/$/;"	m	struct:event_info
+tiny_chunk	pc_malloc.c	29;"	d	file:
+tlb	papi.h	/^      PAPI_mh_tlb_info_t   tlb[PAPI_MH_MAX_LEVELS];$/;"	m	struct:_papi_mh_level_info
+to_check	locality_profile.c	/^	int to_check;$/;"	m	struct:size2context_entry	file:
+total_ref	chunk_monitor.h	/^	uint32_t total_ref;$/;"	m	struct:page_sample
+total_ref	locality_profile.h	/^	uint32_t total_ref;$/;"	m	struct:memory_chunk
+totalcpus	papi.h	/^      int totalcpus;                \/**< Total number of CPUs in the entire system *\/$/;"	m	struct:_papi_hw_info
+trigger_time	event_queue.c	/^	struct timeval trigger_time;$/;"	m	struct:event	typeref:struct:event::timeval	file:
+trigger_time_event	event_queue.c	/^trigger_time_event(int signo)$/;"	f	file:
+tst_monit_complete	chunk_monitor.c	/^tst_monit_complete(struct memory_chunk *chunk)$/;"	f
+tv2usec	event_queue.h	/^tv2usec(struct timeval *t)$/;"	f
+tv_add	event_queue.h	/^tv_add(struct timeval *t0, struct timeval *t1)$/;"	f
+tv_at_skip_update	chunk_monitor.c	/^	struct timeval tv_at_skip_update;$/;"	m	struct:chunk_monitor	typeref:struct:chunk_monitor::timeval	file:
+tv_cmp	event_queue.h	/^tv_cmp(struct timeval *t0, struct timeval *t1) $/;"	f
+tv_sub	event_queue.h	/^tv_sub(struct timeval *t0, struct timeval *t1)$/;"	f
+type	papi.h	/^      int type; \/**< Empty, instr, data, vector, trace, unified *\/$/;"	m	struct:_papi_mh_cache_info
+type	papi.h	/^      int type; \/**< Empty, instr, data, vector, unified *\/$/;"	m	struct:_papi_mh_tlb_info
+type	perf_event.h	/^	uint32_t			type;$/;"	m	struct:perf_event_attr
+u_long_long	papi.h	548;"	d
+units	papi.h	/^      char units[PAPI_MIN_STR_LEN];  \/**< units event is measured in *\/$/;"	m	struct:event_info
+unlikely	utl_builtin.h	8;"	d
+update_chunk_sample	chunk_monitor.c	/^update_chunk_sample(struct page_sample *sample, uint64_t *cntr)$/;"	f	file:
+update_context_mapping_type	chunk_predictor.c	/^update_context_mapping_type(struct memory_chunk *chunk)$/;"	f
+update_freq	papi.h	/^      int update_freq;               \/**< how frequently event is updated *\/$/;"	m	struct:event_info
+update_s2c_map	locality_profile.c	/^update_s2c_map(struct alloc_context *context,$/;"	f	file:
+update_type	papi.h	/^      int update_type;               \/**< how event is updated *\/$/;"	m	struct:event_info
+upward_bit_test	utl_bitmap.c	/^upward_bit_test(struct bitmap *m, int n)$/;"	f
+usec2tv	event_queue.h	/^usec2tv(struct timeval *t, uint64_t usec) $/;"	f
+val	utl_hash_map.c	/^	void *val;$/;"	m	struct:map_member	file:
+value_type	papi.h	/^      int value_type;                \/**< sum or absolute *\/$/;"	m	struct:event_info
+vendor	papi.h	/^      int vendor;                   \/**< Vendor number of CPU *\/$/;"	m	struct:_papi_hw_info
+vendor_string	papi.h	/^      char vendor_string[PAPI_MAX_STR_LEN];     \/**< Vendor string of CPU *\/$/;"	m	struct:_papi_hw_info
+version	papi.h	/^     char version[PAPI_MIN_STR_LEN];         \/**< Version of this component *\/$/;"	m	struct:_papi_component_option
+virtual_vendor_string	papi.h	/^      char virtual_vendor_string[PAPI_MAX_STR_LEN]; $/;"	m	struct:_papi_hw_info
+virtual_vendor_version	papi.h	/^      char virtual_vendor_version[PAPI_MAX_STR_LEN];$/;"	m	struct:_papi_hw_info
+virtualized	papi.h	/^      int virtualized;              \/**< Running in virtual machine *\/$/;"	m	struct:_papi_hw_info
+wait_page_fault	chunk_monitor.h	/^	int wait_page_fault;$/;"	m	struct:page_sample
+wait_timer	chunk_monitor.h	/^	int wait_timer;$/;"	m	struct:page_sample
+wakeup_events	perf_event.h	/^		uint32_t		wakeup_events;	  \/* wakeup every n events *\/$/;"	m	union:perf_event_attr::__anon2
+wakeup_watermark	perf_event.h	/^		uint32_t		wakeup_watermark; \/* bytes before wakeup   *\/$/;"	m	union:perf_event_attr::__anon2
+watermark	perf_event.h	/^				watermark      :  1, \/* wakeup_watermark      *\/$/;"	m	struct:perf_event_attr
+wrap_calloc	utl_wrapper.h	8;"	d
+wrap_free	utl_wrapper.h	11;"	d
+wrap_malloc	utl_wrapper.h	9;"	d
+wrap_memset	utl_wrapper.h	13;"	d
+wrap_realloc	utl_wrapper.h	10;"	d
+write	stdlib_hook.c	/^write(int fd, const void *buf, size_t count)$/;"	f

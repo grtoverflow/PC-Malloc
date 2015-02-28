@@ -7,6 +7,7 @@
 
 
 #include "config.h"
+#include "allocator.h"
 #include "stdlib_hook.h"
 #include "chunk_monitor.h"
 #include "pc_malloc.h"
@@ -26,13 +27,19 @@ static func_fclose libc_fclose;
 static func_fread libc_fread;
 static func_fwrite libc_fwrite;
 
+static int hooked = 0;
+
+#define stdlib_hooked() (hooked == 1)
+#define set_stdlib_hook_state() (hooked = 1)
 
 int
 install_stdlibapi_hook()
 {
 	void *ld_handle;
 
-	DEACT_CACHE_CONTROL();
+	if (stdlib_hooked())
+		return 0;
+	disable_cache_management();
 	ld_handle = dlopen("libc.so.6", RTLD_LAZY);
 	libc_read = (func_read)dlsym(ld_handle, "read");
 	libc_write = (func_write)dlsym(ld_handle, "write");
@@ -40,7 +47,8 @@ install_stdlibapi_hook()
 	libc_fclose = (func_fclose)dlsym(ld_handle, "fclose");
 	libc_fread = (func_fread)dlsym(ld_handle, "fread");
 	libc_fwrite = (func_fwrite)dlsym(ld_handle, "fwrite");
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
+	set_stdlib_hook_state();
 
 	return 0;
 }
@@ -65,12 +73,17 @@ read(int fd, void *buf, size_t count)
 {
 	ssize_t ret;
 
-	pre_walk((unsigned long)buf, (unsigned long)count);
-	remove_sample_range((unsigned long)buf, (unsigned long)count);
+	if (!stdlib_hooked())
+		install_stdlibapi_hook();
 
-	DEACT_CACHE_CONTROL();
+	if (NightWatch_active()) {
+		pre_walk((unsigned long)buf, (unsigned long)count);
+		remove_sample_range((unsigned long)buf, (unsigned long)count);
+	}
+
+	disable_cache_management();
 	ret = libc_read(fd, buf, count);
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
 
 	return ret;
 }
@@ -80,12 +93,17 @@ write(int fd, const void *buf, size_t count)
 {
 	ssize_t ret;
 
-	pre_walk((unsigned long)buf, (unsigned long)count);
-	remove_sample_range((unsigned long)buf, (unsigned long)count);
+	if (!stdlib_hooked())
+		install_stdlibapi_hook();
 
-	DEACT_CACHE_CONTROL();
+	if (NightWatch_active()) {
+		pre_walk((unsigned long)buf, (unsigned long)count);
+		remove_sample_range((unsigned long)buf, (unsigned long)count);
+	}
+
+	disable_cache_management();
 	ret = libc_write(fd, buf, count);
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
 
 	return ret;
 }
@@ -96,9 +114,12 @@ fopen(const char *path, const char *mode)
 {
 	FILE *f;
 
-	DEACT_CACHE_CONTROL();
+	if (!stdlib_hooked())
+		install_stdlibapi_hook();
+
+	disable_cache_management();
 	f = libc_fopen(path, mode);
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
 
 	return f;
 }
@@ -108,9 +129,12 @@ fclose(FILE *fp)
 {
 	int ret;
 
-	DEACT_CACHE_CONTROL();
+	if (!stdlib_hooked())
+		install_stdlibapi_hook();
+
+	disable_cache_management();
 	ret = libc_fclose(fp);
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
 
 	return ret;
 }
@@ -120,12 +144,17 @@ fread(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
 	size_t ret;
 
-	pre_walk((unsigned long)ptr, (unsigned long)(size * nmemb));
-	remove_sample_range((unsigned long)ptr, (unsigned long)size * nmemb);
+	if (!stdlib_hooked())
+		install_stdlibapi_hook();
 
-	DEACT_CACHE_CONTROL();
+	if (NightWatch_active()) {
+		pre_walk((unsigned long)ptr, (unsigned long)(size * nmemb));
+		remove_sample_range((unsigned long)ptr, (unsigned long)size * nmemb);
+	}
+
+	disable_cache_management();
 	ret = libc_fread(ptr, size, nmemb, stream);
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
 
 	return ret;
 }
@@ -135,12 +164,17 @@ fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
 	size_t ret;
 
-	pre_walk((unsigned long)ptr, (unsigned long)(size * nmemb));
-	remove_sample_range((unsigned long)ptr, (unsigned long)size * nmemb);
+	if (!stdlib_hooked())
+		install_stdlibapi_hook();
 
-	DEACT_CACHE_CONTROL();
+	if (NightWatch_active()) {
+		pre_walk((unsigned long)ptr, (unsigned long)(size * nmemb));
+		remove_sample_range((unsigned long)ptr, (unsigned long)size * nmemb);
+	}
+
+	disable_cache_management();
 	ret = libc_fwrite(ptr, size, nmemb, stream);
-	ACT_CACHE_CONTROL();
+	enable_cache_management();
 
 	return ret;
 }

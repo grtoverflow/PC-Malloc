@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "utl_list.h"
+
 
 
 struct page_sample;
@@ -83,7 +85,7 @@ typedef int (*process_func)(struct memory_chunk *chunk);
 
 void process_active_chunk(process_func);
 
-struct alloc_context* get_alloc_context(int size);
+void* NightWatch_get_alloc_context(size_t size);
 
 
 

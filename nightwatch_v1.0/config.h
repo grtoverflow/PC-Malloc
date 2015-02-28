@@ -57,17 +57,16 @@
 	((addr) & PAGE_MASK)
 
 #ifndef PC_MALLOC_TYPE
-#define UNKNOWN_MAPPING			0
-#define RESTRICT_MAPPING		2
-#define OPEN_MAPPING			3
 #define RESTRICT_MAPPING_IDX		0
 #define OPEN_MAPPING_IDX		1
 #define NR_MAPPING			2
 #endif /* PC_MALLOC_TYPE */
 
+#if 0
 #define get_mapping_idx(type) ((type) - 2)
 #define valid_mapping_type(type) \
 ((type) == RESTRICT_MAPPING || (type) == OPEN_MAPPING)
+#endif
 
 
 /* call stack */
@@ -100,6 +99,14 @@
 #define SAMPLE_INTERVAL	5000000	/* us */
 #define MONIT_CONV_ERR			0.05
 #define SAMPLE_DENSITY			0.65
+
+
+#define NR_CACHE_MAPPING 	2
+#define RESTRICT_MAPPING	0
+#define OPEN_MAPPING		1
+#define UNKNOWN_MAPPING		2
+#define MMAP_OPEN_MAPPING		2
+#define MMAP_RESTRICT_MAPPING	3
 
 
 

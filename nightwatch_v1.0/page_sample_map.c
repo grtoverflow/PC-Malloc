@@ -57,7 +57,7 @@ init_page_block(unsigned long addr)
 	addr_blk_align = addr & PAGE_BLOCK_MASK;
 
 	block = (struct page_block *)
-		pc_malloc(RESTRICT_MAPPING, sizeof(struct page_block));
+		internal_malloc(RESTRICT_MAPPING, sizeof(struct page_block));
 	memset(block, 0, sizeof(struct page_block));
 	block->addr = addr_blk_align;
 
@@ -82,7 +82,7 @@ page_sample_alloc(unsigned long addr)
 
 	if (unlikely(list_empty(&free_page_sample))) {
 		page_sample = (struct page_sample*)
-			pc_malloc(OPEN_MAPPING, sizeof(struct page_sample));
+			internal_malloc(OPEN_MAPPING, sizeof(struct page_sample));
 	} else {
 		page_sample = next_entry(&free_page_sample, struct page_sample, p);	
 		list_del(&page_sample->p);
@@ -187,19 +187,19 @@ page_sample_map_destroy()
 	while (!list_empty(&page_map.page_block_list)) {
 		block = next_entry(&page_map.page_block_list, struct page_block, p);
 		list_del(&block->p);
-		pc_free(block);
+		internal_free(block);
 	}
 
 	while (!list_empty(&active_page_sample)) {
 		page_sample = next_entry(&active_page_sample, struct page_sample, p);
 		list_del(&page_sample->p);
-		pc_free(page_sample);
+		internal_free(page_sample);
 	}
 
 	while (!list_empty(&free_page_sample)) {
 		page_sample = next_entry(&free_page_sample, struct page_sample, p);
 		list_del(&page_sample->p);
-		pc_free(page_sample);
+		internal_free(page_sample);
 	}
 }
 
