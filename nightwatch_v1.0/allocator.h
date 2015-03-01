@@ -11,7 +11,7 @@
 
 extern void* tc_malloc_internal(size_t size, int type);
 extern void tc_free_internal(void *p);
-extern void switch_heap_type(void *p, int target_type);
+extern void switch_heap_type(void *p, size_t size, int target_type);
 extern void set_extend_info(void *p, void *extend_info);
 extern void* get_extend_info(void *p);
 

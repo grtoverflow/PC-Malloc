@@ -293,7 +293,6 @@ NightWatch_get_alloc_context(size_t size)
 	uint64_t key;
 	struct size2context_entry *sz2ctx_entry;
 
-printf("NightWatch_get_alloc_context called\n");
 	/* quick path */
 	sz2ctx_entry = NULL;
 	if (unlikely(size > S2C_MAP_SIZE)) {

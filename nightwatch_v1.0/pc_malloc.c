@@ -55,7 +55,6 @@ NightWatch_init()
 {
 	int ret;
 
-
 	disable_cache_management();
 	
 	ret = 0;

@@ -220,7 +220,7 @@ adjust_mapping(int target_mapping, struct memory_chunk *chunk)
 	       chunk->idx, chunk->context->idx);
 #endif /* MONITOR_INFO */
 
-	switch_heap_type((void*)chunk->addr, target_mapping);
+	switch_heap_type((void*)chunk->addr, chunk->size, target_mapping);
 	chunk->mapping_type = target_mapping;
 }
 
