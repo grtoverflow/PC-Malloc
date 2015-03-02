@@ -3157,6 +3157,8 @@ libtcmalloc_and_profiler_la_LIBADD = $(libtcmalloc_la_LIBADD)
 tcmalloc_and_profiler_unittest_SOURCES = $(tcmalloc_both_unittest_srcs)
 tcmalloc_and_profiler_unittest_CXXFLAGS = $(tcmalloc_both_unittest_cflags)
 tcmalloc_and_profiler_unittest_LDFLAGS = $(tcmalloc_both_unittest_lflags)
+
+# NIGHTWATCH ADD
 tcmalloc_and_profiler_unittest_LDADD = libtcmalloc_and_profiler.la ${CACHEEX_LIBS}
 
 # http://linux.die.net/man/1/pkg-config, http://pkg-config.freedesktop.org/wiki
