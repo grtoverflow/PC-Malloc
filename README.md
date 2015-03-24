@@ -35,7 +35,7 @@ Setup
 
 2.	Install PAPI. You can find the latest version of PAPI at http://icl.cs.utk.edu/papi/.
 
-2.	Install NightWatch library. The source code of NightWatch is under /nightwatch\_v1.0.
+2.	Install NightWatch library. The single thread version is nightwatch_v1.01_serial, and the multi-thread version is nightwatch_v2.0_parallel.
 
 3.	Modify memory allocator. If you are an allocator developer, and you may want to integrate NightWatch into your own memory allocator. Then you need to implement the interfaces defined in allocator.h. In this project, we have integrated NightWatch into tcmalloc. You can take the modified allocator (under /gperftools-2.4\_NW_externed\_v2.0) as example. Or if you just want to try a cache-aware allocator, the allocator can be directly used without further modification. To use the allocator, you need to relink your application with flag -ltcmalloc. For more detailed information, see /gperftools-2.4\_NW_externed\_v2.0/readme.txt.
 
