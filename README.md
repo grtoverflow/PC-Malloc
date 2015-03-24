@@ -33,7 +33,7 @@ Setup
 ---------
 1.	OS kernel update. NightWatch relies on page coloring technique to achieve cache resource allocation. Our kernel patch is under /kernel\_patch. This patch is for the linux kernel "kernel-2.6.32-71.el6". See /kernel\_patch/readme.txt for more details.
 
-2.	Install PAPI. You can find PAPI at http://icl.cs.utk.edu/papi/.
+2.	Install PAPI. You can find the latest version of PAPI at http://icl.cs.utk.edu/papi/.
 
 2.	Install NightWatch library. The source code of NightWatch library is under /nightwatch\_v1.0.
 
