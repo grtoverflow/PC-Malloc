@@ -14,9 +14,13 @@ NightWatch is designed for this goal. When integreted with NightWatch, a traditi
 Target Programs
 ---------
 NightWatch benefits programs in any of the following cases:
+
 1) Single program cases, where weak-locality data and strong-locality data are accessed in parallel.
+
 2) Multi-thread cases, where weak-locality data and strong-locality data are accessed in parallel.
+
 3) Multi-program cases, where some of the programs pollute the shared cache via accessing weak-locality data, while other programs need sufficient cache space for better performence.
+
 NOTE: NightWatch only focuses on dynamic memory allocations. It does not handle the cache assignment for the data in data segment, bss segment, or stack.
 
 
