@@ -11,6 +11,15 @@ From this point of view, it is necessary to integrate cache resource management 
 NightWatch is designed for this goal. When integreted with NightWatch, a traditional memory allocator can handle the resource management of cache: once an allocation request arrives, NightWatch quantifies the cache demand, and notifies the memory allocator to allocate memory with proper data-to-cache mapping.
 
 
+Target Programs
+---------
+NightWatch benefits programs in any of the following cases:
+1) Single program cases, where weak-locality data and strong-locality data are accessed in parallel.
+2) Multi-thread cases, where weak-locality data and strong-locality data are accessed in parallel.
+3) Multi-program cases, where some of the programs pollute the shared cache via accessing weak-locality data, while other programs need sufficient cache space for better performence.
+NOTE: NightWatch only focuses on dynamic memory allocations. It does not handle the cache assignment for the data in data segment, bss segment, or stack.
+
+
 Library Interfaces
 ---------
 The service of NightWatch is transparent to user's application. When integreted with NightWatch, a memory allocator does not need to modify the allocation interfaces. 
