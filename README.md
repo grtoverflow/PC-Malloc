@@ -13,7 +13,7 @@ NightWatch is designed for this goal. When integreted with NightWatch, a traditi
 
 Target Programs
 ---------
-NightWatch benefits programs in any of the following cases:
+NightWatch benefits your programs in any of the following cases:
 
 1) Single program cases, where weak-locality data and strong-locality data are accessed in parallel.
 
