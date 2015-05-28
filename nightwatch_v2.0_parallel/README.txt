@@ -18,3 +18,11 @@ L3_ACCESS_EVENT_NAME	L3 access event name in PAPI
 Install:
 make
 make install
+
+
+
+The following designs may need further study:
+1. Should the threads in a single process share allocation contexts?
+   If the memory chunks of different threads allocated from the same allocation context share the similar access locality, NightWatch will get better predition accuracy with less overhead.
+2. The remapping may introduce fragmentations. If this is a critical problem, then how to make the tradeoff between pollution control and fragmentation? 
+
