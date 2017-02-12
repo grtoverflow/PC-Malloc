@@ -10,6 +10,8 @@ From this point of view, it is necessary to integrate cache resource management 
 
 NightWatch is designed for this goal. When integreted with NightWatch, a traditional memory allocator can handle the resource management of cache: once an allocation request arrives, NightWatch quantifies its cache demand, and notifies the memory allocator to allocate memory with proper data-to-cache mapping.
 
+For more CGCL's open-source code, please visit https://github.com/CGCL-codes.
+
 
 Target Programs
 ---------
